@@ -409,17 +409,6 @@ button:hover {
     background-color: #29b8ce;
 }
 
-.body-validate {
-    font-family: 'open sans', Arial, sans-serif;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
 .flex-container {
     display: flex;
     justify-content: center;
@@ -430,10 +419,9 @@ button:hover {
 .success-message {
     display: flex;
     justify-content: center;
-    align-items: center;
-    align-items: center;
-    width: 70%;
+    text-align: center;
     height: 60vh;
+    margin: 15px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     flex-direction: column;

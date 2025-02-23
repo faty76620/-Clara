@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     
     createRequest($data);
-    header("Location: request_success.php");
+    header("Location: /clara/views/home/request_success.php");
 }
 
 // TRAITER LA VALIDATION/REJET D'UNE DEMANDE
@@ -67,7 +67,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'process_request') {
 $pendingRequests = getPendingRequests();
 
 // INCLURE LA VUE APRÈS AVOIR RÉCUPÉRÉ LES DONNÉES
-include '../views/admin/dashboard.php'; // Chemin corrigé
+include '../views/admin/dashboard.php'; 
 ?>
 
 

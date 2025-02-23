@@ -1,7 +1,7 @@
 <?php
 require_once 'database.php';
 
-// CRÉER UNE DEMANDE
+// FONCTION POUR CRÉER UNE DEMANDE
 function createRequest($data) {
     $conn = getConnexion();
     $stmt = $conn->prepare("INSERT INTO requests (firstname_admin, name_admin, role, mail_admin, firstname_establishment, adresse, type_role, siret, mail, phone, site, description, cgu, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en attente')");
@@ -12,7 +12,7 @@ function createRequest($data) {
     ]);
 }
 
-// RÉCUPÉRER UNE DEMANDE PAR ID
+// FONCTION POUR RÉCUPÉRER UNE DEMANDE PAR ID
 function getRequestById($id) {
     $conn = getConnexion();
     $stmt = $conn->prepare("SELECT * FROM requests WHERE id = ?");
@@ -20,14 +20,14 @@ function getRequestById($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// METTRE À JOUR LE STATUT D'UNE DEMANDE
+// FONCTION POUR METTRE À JOUR LE STATUT D'UNE DEMANDE (ATTENTE OU PAS)
 function updateRequestStatus($id, $status) {
     $conn = getConnexion();
     $stmt = $conn->prepare("UPDATE requests SET status = ? WHERE id = ?");
     $stmt->execute([$status, $id]);
 }
 
-// RÉCUPÉRER LES DEMANDES EN ATTENTE
+// FONCTION RÉCUPÉRER LES DEMANDES EN ATTENTE POUR QUE L'ADMIN PRINCIPAL LES VOIT
 function getPendingRequests() {
     $conn = getConnexion();
     $stmt = $conn->prepare("SELECT * FROM requests WHERE status = 'en attente'");
