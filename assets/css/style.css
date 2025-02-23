@@ -421,6 +421,7 @@ button:hover {
     justify-content: center;
     text-align: center;
     height: 60vh;
+    padding: 20px;
     margin: 15px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -436,7 +437,50 @@ button:hover {
     border-radius: 5px;
     margin-top: 20px; 
 }
- 
+
+/*****************************************************SESSION ADMIN*******************************************************/
+/*** GESTION DES DEMANDES D'INSCRIPTION ***/
+.dashboard {
+    margin-top: 50px;
+}
+
+.dashboard table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 20px; 
+}
+
+.dashboard th, td {
+     border: 1px solid #129cb1; 
+     padding: 8px; 
+     text-align: center; 
+}
+
+.dashboard th { 
+    background-color: #e4e8ff; 
+}
+
+.dashboard .success { 
+    color: green; 
+}
+
+.dashboard .error { 
+    color: red; 
+}
+
+.dashboard .btn-action { padding: 5px 10px; 
+    border: none; 
+    cursor: pointer; 
+}
+
+.btn-action .accept { 
+    background-color: green;
+}
+
+.btn-action .reject { 
+    background-color: red;
+}
+
 /*****************************************************PAGE CLARA**********************************************************/
 #clara {
     margin-top: 200px;

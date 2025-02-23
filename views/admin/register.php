@@ -1,20 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-    $title = "Inscription"; 
-    include __DIR__ . '/../../templates/head.php'; ?>
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/clara/assets/images/logo-onglet.png">
+    <link rel="preload" as="image" href="/clara/assets/images/img-banner.jpg">
+    <link rel="stylesheet" href="/clara/assets/css/style.css">
+    <link rel="stylesheet" href="/clara/assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:wght@100&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15ca748f1e.js" crossorigin="anonymous"></script>
+    <script defer src="/clara/assets/js.js"></script>
+    <title>Inscription utilisateur</title>
+</head>
 <body>
-    <h1>Inscription d'un nouvel utilisateur</h1>
-    <form action="../controllers/adminController.php?action=register_user" method="post">
-        <input type="hidden" name="establishment_id" value="<?php echo $request['establishment_id']; ?>">
-        <input type="hidden" name="role_id" value="2"> <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="username" value="<?php echo $request['mail_admin']; ?>" required><br>
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="password" required><br>
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" value="<?php echo $request['mail_admin']; ?>" required><br>
-        <button type="submit">Inscrire</button>
-    </form>
+    <?php 
+        include __DIR__ . '/../../templates/header_admin.php'; ?>
+    <main class="main">
+    <h2>Inscription d'un nouvel utilisateur</h2>
+    <div  class="flex-register">
+        <div class="register-container">
+            <form action="../controllers/adminController.php?action=register_user" method="post">
+                <!-- CHAMPS CACHÉS POUR L'ID DE L'ÉTABLISSEMENT ET LE RÔLE -->
+                <input type="hidden" name="establishment_id" value="<?= isset($request['establishment_id']) ? htmlspecialchars($request['establishment_id']) : ''; ?>">
+                <input type="hidden" name="role_id" value="2"> 
+        
+                <!-- NOM D'UTILISATEUR -->
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" 
+                value="<?= isset($request['mail_admin']) ? htmlspecialchars($request['mail_admin']) : ''; ?>" 
+                required><br>
+
+                <!-- MOT DE PASSE -->
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required><br>
+
+                <!-- CONFIRMATION MOT DE PASSE -->
+                <label for="confirm_password">Confirmer le mot de passe :</label>
+                <input type="password" id="confirm_password" name="confirm_password" required><br>
+
+                <!-- EMAIL -->
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" 
+                value="<?= isset($request['mail_admin']) ? htmlspecialchars($request['mail_admin']) : ''; ?>" 
+                required><br>
+
+                <button type="submit">Inscrire</button>
+            </form>
+        </div>
+    </div>
+    </main>
 </body>
 </html>
 
