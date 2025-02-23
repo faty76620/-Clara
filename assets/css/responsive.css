@@ -1,0 +1,142 @@
+/*** RESPONSIVE CONNEXION ***/
+@media (max-width: 480px) {
+    .form-login {
+        max-width: 90%;
+        padding: 20px;
+    }
+}
+
+/*** RESPONSIVE HEADER ***/
+@media screen and (max-width: 768px) {
+    #nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        margin: 0;
+        height: 100vh;
+        background-color: #129cb1;
+        color: white;
+        right: -200px; 
+        padding: 90px 0px 0px 0px;
+        overflow: hidden;
+        gap: 30px;
+        transition: right 0.3s ease-in-out;
+    }
+    
+    #burger {
+        display: block;
+        position: fixed;
+        right: 20px;
+        z-index: 1101;
+        top: 0;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+    
+    .banner {
+        display: none;
+    }
+
+    .banner-mobile {
+        display: block;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .img-banner {
+        height: 300px;
+        width: 100%;
+    }
+
+    .banner-img {
+        display: flex;
+        align-items: center;
+    }
+
+    .banner-img img {
+        width: 100% ;
+    }
+}
+
+/*** RESPONSIVE CARD ***/
+@media (max-width:768px) {
+    .line {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-left: 20px;
+        margin-right: 20px;
+    } 
+}
+
+@media (max-width:480px) {
+    .line {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/*** RESPONSIVE REGISTER ***/
+@media (max-width: 768px) {
+    .form-row {
+       flex-direction: column;
+}
+    
+    .separator {
+        display: none;
+    }
+
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media (max-width:1024px) {
+    .register-container img {
+        display: none;
+    }
+}
+
+/*** LISTES PATIENTS ***/
+@media (max-width:768px) {
+   
+    .list-patient {
+     display: block;
+    }
+ 
+    .table-add-patient {
+     display: none;
+     }
+ }
+
+ @media (max-width:768px) {
+   
+    .tabs {
+     display: none;
+    }
+}
+
+@media (min-width:768px) {
+   
+    .tabs_icon {
+        display: none;
+    }
+}
+
+/***REGISTER***/
+@media (max-width:768px) {
+    
+    .register-container form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .separator-line {
+        margin: 50px 0px;
+    }
+}
