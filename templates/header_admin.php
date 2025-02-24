@@ -1,5 +1,5 @@
 <header class="header">
-    <nav>
+    <nav class="nav-session">
         <img src="/clara/assets/images/logo.png" class="logo" alt="logo">
         <ul id="nav-links">
             <li><a href="/clara/views/admin/register.php" onclick="hideMenu()"><i class="fa-solid fa-pencil"></i></a></li>

@@ -16,6 +16,25 @@ function createRequest($data) {
     ]);
 }
 
+// FONCTION POUR CRÉER UN UTILISATEUR (en tant que nouvel utilisateur)
+function createUser($userData) {
+    try {
+        $conn = getConnexion();
+        $stmt = $conn->prepare("
+        INSERT INTO users (username, password, email, establishment_id, role_id)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
+        $stmt->execute([
+            $userData['username'], $userData['password'], $userData['email'],
+            $userData['establishment_id'], $userData['role_id']
+        ]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
+        return false;
+    }
+}
+
 // FONCTION POUR RÉCUPÉRER UNE DEMANDE PAR ID
 function getRequestById($id) {
     try {
@@ -55,6 +74,7 @@ function getPendingRequests() {
     }
 }
 ?>
+
 
 
 
