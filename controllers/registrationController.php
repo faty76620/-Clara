@@ -2,15 +2,12 @@
 require_once '../models/request.php';
 require_once '../models/user.php';
 
-// EVOIE DANS BASE DE DONNEES
-session_start();
-
+// TRAITER LA DEMANDE D'INSCRIPTION
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Filtrage et validation des entrées utilisateur
     $data = [
         'firstname_admin' => filter_input(INPUT_POST, 'firstname_admin', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-        'name_admin' => filter_input(INPUT_POST, 'name_admin', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-        'role' => filter_input(INPUT_POST, 'role', FILTER_VALIDATE_INT, ["options" => ["min_range" => 1, "max_range" => 2]]),
+        'lastname_admin' => filter_input(INPUT_POST, 'lastname_admin', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+        'role' => filter_input(INPUT_POST, 'role', FILTER_VALIDATE_INT),
         'mail_admin' => filter_input(INPUT_POST, 'mail_admin', FILTER_VALIDATE_EMAIL),
         'firstname_establishment' => filter_input(INPUT_POST, 'firstname_establishment', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
         'adresse' => filter_input(INPUT_POST, 'adresse', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
@@ -22,28 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'description' => filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
         'cgu' => isset($_POST['cgu']) ? 1 : 0
     ];
-
-    // VERIFICATION DES CHAMPS OPBLIGATOIRE
-    if (!$data['firstname_admin'] || !$data['name_admin'] || !$data['role'] || !$data['mail_admin'] || 
-        !$data['firstname_establishment'] || !$data['adresse'] || !$data['type_role'] || 
-        !$data['siret'] || !$data['mail'] || !$data['phone'] || !$data['description'] || !$data['cgu']) {
-        
-        $_SESSION['error'] = "Tous les champs obligatoires doivent être remplis correctement.";
-        header("Location: /clara/views/home/registration_form.php");
-        exit();
-    }
-
-    // Insertion en base de données
-    if (createRequest($data)) {
-        $_SESSION['success'] = "Votre demande a bien été enregistrée.";
-        header("Location: /clara/views/home/request_success.php");
-    } else {
-        $_SESSION['error'] = "Une erreur s'est produite lors de l'enregistrement.";
-        header("Location: /clara/views/home/rerequest_pending.php");
-    }
-    exit();
+    
+    createRequest($data);
+    header("Location: /clara/views/home/request_success.php");
 }
-
 
 // TRAITER LA VALIDATION/REJET D'UNE DEMANDE
 function processRequest($requestId, $status) {
@@ -55,7 +34,7 @@ function processRequest($requestId, $status) {
     } elseif ($status === 'rejeté') {
         // ENVOYER EMAIL (à implémenter)
     }
-    header("Location: /clara/views/admin/request_pending.php");
+    header("Location: ../views/admin/request_pending.php");
 }
 
 // CRÉER UN UTILISATEUR À PARTIR D'UNE DEMANDE
@@ -88,8 +67,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'process_request') {
 $pendingRequests = getPendingRequests();
 
 // INCLURE LA VUE APRÈS AVOIR RÉCUPÉRÉ LES DONNÉES
-include '../views/admin/dashboard.php'; 
+include '../views/admin/dashboard.php'; // Chemin corrigé
 ?>
+
 
 
 

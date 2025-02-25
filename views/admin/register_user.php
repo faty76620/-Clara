@@ -23,14 +23,12 @@
         <div class="register-container">
             <form action="../controllers/adminController.php?action=register_user" method="post">
                 <!-- CHAMPS CACHÉS POUR L'ID DE L'ÉTABLISSEMENT ET LE RÔLE -->
-                <input type="hidden" name="establishment_id" value="<?= isset($request['establishment_id']) ? htmlspecialchars($request['establishment_id']) : ''; ?>">
+                <input type="hidden" name="establishment_id" required><br>
                 <input type="hidden" name="role_id" value="2"> 
         
                 <!-- NOM D'UTILISATEUR -->
                 <label for="username">Nom d'utilisateur :</label>
-                <input type="text" id="username" name="username" 
-                value="<?= isset($request['mail_admin']) ? htmlspecialchars($request['mail_admin']) : ''; ?>" 
-                required><br>
+                <input type="text" id="username" name="username" required><br>
 
                 <!-- MOT DE PASSE -->
                 <label for="password">Mot de passe :</label>
@@ -42,9 +40,7 @@
 
                 <!-- EMAIL -->
                 <label for="email">Email :</label>
-                <input type="email" id="email" name="email" 
-                value="<?= isset($request['mail_admin']) ? htmlspecialchars($request['mail_admin']) : ''; ?>" 
-                required><br>
+                <input type="email" id="email" name="email" required><br>
 
                 <button type="submit">Inscrire</button>
             </form>
@@ -53,4 +49,3 @@
     </main>
 </body>
 </html>
-

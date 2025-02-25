@@ -21,7 +21,7 @@
             <h2>Demande d'incription</h2>
             <div  class="flex-register">
                 <div class="register-container">
-                    <form action="/clara/controllers/registrationController.php" method="post">
+                    <form action="/clara/controllers/registrationController.php" method="POST">
                         <div class="register-admin">
                             <h3>Informations du responsable (Admin)</h3>
                             <div class="form-group">
@@ -31,9 +31,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="name_admin">Prénom du responsable :</label>
+                                <label for="lastname_admin">Prénom du responsable :</label>
                                 <div class="input-wrapper">
-                                    <input type="text" id="name_admin" name="name_admin" required>
+                                    <input type="text" id="lastname_admin" name="lastname_admin" required>
                                 </div>
                             </div>
                             <div class="form-group">

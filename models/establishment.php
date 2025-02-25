@@ -4,16 +4,17 @@ require_once '/clara/models/database.php';
 // FONCTION POUR CRÉER UN NOUVEL ÉTABLISSEMENT DANS LA BASE DE DONNÉES
 function createEstablishment($data) {
     $conn = getConnexion();
-    $stmt = $conn->prepare("INSERT INTO establishments (name, address, type, siret, email, phone, website, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO establishments (firstname, address, type, siret, phone, site, description, created_at, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
-        $data['name'],
+        $data['firstname'],
         $data['address'],
         $data['type'],
         $data['siret'],
-        $data['email'],
         $data['phone'],
-        $data['website'],
-        $data['description']
+        $data['site'],
+        $data['description'],
+        $data['created_at'],
+        $data['email']
     ]);
 }
 
@@ -28,17 +29,17 @@ function getEstablishmentById($id) {
 // FONCTION POUR METTRE À JOUR LES INFORMATIONS D'UN ÉTABLISSEMENT EXISTANT DANS LA BASE DE DONNÉES
 function updateEstablishment($id, $data) {
     $conn = getConnexion();
-    $stmt = $conn->prepare("UPDATE establishments SET name = ?, address = ?, type = ?, siret = ?, email = ?, phone = ?, website = ?, description = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE establishments SET firstname = ?, address = ?, type = ?, siret = ?, phone = ?, site = ?, description = ?, created_at = ?,  email = ? WHERE id = ?");
     $stmt->execute([
-        $data['name'],
+        $data['firstname'],
         $data['address'],
         $data['type'],
         $data['siret'],
-        $data['email'],
         $data['phone'],
-        $data['website'],
+        $data['site'],
         $data['description'],
-        $id
+        $data['created_at'],
+        $data['email']
     ]);
 }
 

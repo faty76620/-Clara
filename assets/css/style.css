@@ -416,7 +416,7 @@ button:hover {
     margin-bottom: 120px;
 }
 
-.success-message {
+.success-message, .erreur-message {
     display: flex;
     justify-content: center;
     text-align: center;

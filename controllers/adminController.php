@@ -1,53 +1,62 @@
 <?php
-session_start(); // DÉMARRAGE DE LA SESSION (POUR VÉRIFIER L'ADMIN)
+session_start();
+require_once __DIR__ . '/../models/request.php';
+require_once __DIR__ . '/../models/user.php';
 
-require_once '../models/request.php';
-require_once '../models/user.php';
-
-// VÉRIFIER SI UNE ACTION EST DEMANDÉE
-if (isset($_GET['action'])) {
+//VERIFIER QUE L'ACTION EST BIEN DEFINI DANS L'URL
+if (isset($_GET['action']) && isset($_GET['id'])) {
     $action = $_GET['action'];
+    $id = intval($_GET['id']); // Sécurise l'ID en le forçant en entier
 
-    try {
-        // INSCRIPTION D'UN NOUVEL UTILISATEUR
-        if ($action === 'register_user' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['email'])) {
-                createUser($_POST);
-                $_SESSION['success'] = "Utilisateur inscrit avec succès !";
-                header("Location: /clara/views/admin/dashboard.php");
-                exit();
-            } else {
-                $_SESSION['error'] = "Tous les champs sont obligatoires.";
-                header("Location: /clara/views/admin/register.php");
-                exit();
-            }
-        }
+    // VERIFIER SI LA DEMANDE EXISTE AVANT DE LA TRAITER
+    $request = getRequestById($id);
+    if (!$request) {
+        $_SESSION['error'] = "Demande non trouvée.";
+        header("Location: /clara/views/admin/request_pending.php");
 
-        // ACCEPTER UNE DEMANDE D'INSCRIPTION
-        if ($action === 'accept_request' && isset($_GET['id'])) {
-            $id = intval($_GET['id']);
-            updateRequestStatus($id, 'acceptée');
-            $_SESSION['success'] = "Demande acceptée avec succès.";
-            header("Location: admin_dashboard.php");
-            exit();
-        }
-
-        // REJETER UNE DEMANDE D'INSCRIPTION
-        if ($action === 'reject_request' && isset($_GET['id'])) {
-            $id = intval($_GET['id']);
-            updateRequestStatus($id, 'rejetée');
-            $_SESSION['error'] = "Demande rejetée.";
-            header("Location: admin_dashboard.php");
-            exit();
-        }
-
-    } catch (Exception $e) {
-        $_SESSION['error'] = "Une erreur est survenue : " . $e->getMessage();
-        header("Location: admin_dashboard.php");
         exit();
     }
-}
 
-// RÉCUPÉRER LES DEMANDES EN ATTENTE POUR L'AFFICHER DANS LE TABLEAU DE BORD
-$pendingRequests = getPendingRequests();
-?>
+    // ACCEPTER LA DEMANDE
+    if ($action === 'accept_request') {
+        // CHANGER LE STATUS EN ACCEPTEE
+        if (updateRequestStatus($id, 'acceptée')) {
+            $_SESSION['success'] = "Demande acceptée avec succès.";
+            // AJOUTER AUTOMATIQUEMENT L'UTILISATEUR DANS LA TABLE 'USERS'
+            $userData = [
+                'username' => $request['mail_admin'], // UTILISER EMAIL COMME IDENTIFIANT
+                'password' => password_hash('MotDePasseParDefaut123!', PASSWORD_DEFAULT), //MOT DE PASSE PAR DEFAULT A CHANGER
+                'email' => $request['mail_admin'],
+                'establishment_id' => 1, 
+                'role_id' => 1 
+            ];
+
+            createUser($userData);
+
+        } else {
+            $_SESSION['error'] = "Erreur lors de l'acceptation de la demande.";
+        }
+    }
+
+         // REFUSER LA DEMANDE
+    elseif ($action === 'reject_request') {
+        if (updateRequestStatus($id, 'refusée')) {
+            $_SESSION['success'] = "Demande refusée.";
+        } else {
+            $_SESSION['error'] = "Erreur lors du refus de la demande.";
+        }
+    }
+
+    // REDIRIGER VERS LA PAGES DES DEMANDES
+    header("Location: /clara/views/admin/request_pending.php");
+
+    exit();
+
+} else {
+    $_SESSION['error'] = "Action invalide.";
+
+    header("Location: /clara/views/admin/request_pending.php");
+        header("Location: /clara/views/admin/gestion_demandes.php");
+    
+        exit();
+    }
