@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/clara/assets/images/logo-onglet.png">
     <link rel="preload" as="image" href="/clara/assets/images/img-banner.jpg">
@@ -14,12 +14,20 @@
     <script defer src="/clara/assets/js.js"></script>
     <title>Demandes inscription</title>
 </head>   
-<?php 
-$pendingRequests = $pendingRequests ?? [];
-?>
 <body>
+    <?php 
+    require_once '../../models/database.php';
+    require_once '../../models/send_mail.php';
+    $conn = getConnexion();
+    // Récupérer les demandes en attente
+    $query = "SELECT * FROM requests WHERE status = 'pending'";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $pendingRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+
     <h2>Demandes d'inscription en attente</h2>
-    
+
     <?php if (empty($pendingRequests)): ?>
         <p>Aucune demande en attente.</p>
     <?php else: ?>
@@ -35,12 +43,12 @@ $pendingRequests = $pendingRequests ?? [];
             <tbody>
                 <?php foreach ($pendingRequests as $request): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($request['establishment']); ?></td>
+                        <td><?php echo htmlspecialchars($request['firstname_establishment']); ?></td>
                         <td><?php echo htmlspecialchars($request['lastname_admin']); ?></td>
-                        <td><?php echo htmlspecialchars($request['mail']); ?></td>
+                        <td><?php echo htmlspecialchars($request['mail_admin']); ?></td>
                         <td>
-                            <a href="/controllers/registrationController.php?action=approve&id=<?php echo $request['id']; ?>">Approuver</a>
-                            <a href="/controllers/registrationController.php?action=reject&id=<?php echo $request['id']; ?>">Rejeter</a>
+                            <a href="/clara/controllers/adminController.php?action=approve&id=<?php echo $request['id']; ?>">Approuver</a>
+                            <a href="/clara/controllers/adminController.php?action=reject&id=<?php echo $request['id']; ?>">Rejeter</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -21,7 +21,7 @@
             <h2>Demande d'incription</h2>
             <div  class="flex-register">
                 <div class="register-container">
-                    <form action="/clara/controllers/registrationController.php" method="POST">
+                    <form action="/clara/controllers/process_registration.php" method="POST">
                         <div class="register-admin">
                             <h3>Informations du responsable (Admin)</h3>
                             <div class="form-group">
