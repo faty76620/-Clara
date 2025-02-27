@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/clara/assets/images/logo-onglet.png">
-    <link rel="preload" as="image" href="/clara/assets/images/img-banner.jpg">
     <link rel="stylesheet" href="/clara/assets/css/style.css">
     <link rel="stylesheet" href="/clara/assets/css/responsive.css">
+    <link rel="preload" as="image" href="/clara/assets/images/img-banner.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:wght@100&display=swap" rel="stylesheet">
@@ -43,6 +43,18 @@
             </div>
             <div class="register">
                 <a href="/clara/views/auth/request_registration.php" class="btn">Demander l'inscription</a>
+            </div>
+        </section>
+        <section>
+            <div class="caregiver">
+                <div class="line">
+                    <a href=""><img src="/clara/assets/images/infirmier.jpg" alt="infirmier"></a> 
+                    <a href=""><img src="/clara/assets/images/aide-soignante.jpg" alt="aide-soignante">
+                </div> 
+                <div class="line">
+                    <a href=""><img src="/clara/assets/images/kine.jpg" alt="kinésithérapeute"></a>
+                    <a href=""><img src="/clara/assets/images/ergo.jpg" alt="ergothérapeute"></a> 
+                </div>
             </div>
         </section>
         <footer>

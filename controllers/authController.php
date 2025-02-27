@@ -13,8 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role_id'] = $user['role_id'];
 
-
-
             // REDIRECTION SELON LE ROLE
             if ($user['role_id'] == 1) { // Admin
                 header("Location: /clara/views/admin/dashboard.php");

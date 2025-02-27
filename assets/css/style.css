@@ -329,6 +329,14 @@ nav {
     margin-right: 10px;
 }
 
+.cardgiver {
+    display: flex;
+    flex-direction: column;
+}
+
+.caregiver img {
+    width: 200px;
+}
 /***************************************************PAGE INSCRIPTION********************************************************/
 .flex-register {
     display: flex;
@@ -441,13 +449,13 @@ button:hover {
 /*****************************************************SESSION ADMIN*******************************************************/
 /*** GESTION DES DEMANDES D'INSCRIPTION ***/
 .dashboard {
-    margin-top: 50px;
+    margin: 50px;
 }
 
 .dashboard table { 
-    width: 100%; 
     border-collapse: collapse; 
     margin-top: 20px; 
+    width: 100%;
 }
 
 .dashboard th, td {
@@ -462,25 +470,13 @@ button:hover {
 
 .dashboard .success { 
     color: green; 
+    cursor: pointer;
 }
 
 .dashboard .error { 
     color: red; 
+    cursor: pointer;
 }
-
-.dashboard .btn-action { padding: 5px 10px; 
-    border: none; 
-    cursor: pointer; 
-}
-
-.btn-action .accept { 
-    background-color: green;
-}
-
-.btn-action .reject { 
-    background-color: red;
-}
-
 /*****************************************************PAGE CLARA**********************************************************/
 #clara {
     margin-top: 200px;

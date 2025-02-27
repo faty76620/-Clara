@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/clara/assets/images/logo-onglet.png">
-    <link rel="preload" as="image" href="/clara/assets/images/img-banner.jpg">
     <link rel="stylesheet" href="/clara/assets/css/style.css">
     <link rel="stylesheet" href="/clara/assets/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,42 +17,41 @@
     <?php 
     require_once '../../models/database.php';
     require_once '../../models/send_mail.php';
+    require_once '../../models/request.php';
+
     $conn = getConnexion();
     // Récupérer les demandes en attente
-    $query = "SELECT * FROM requests WHERE status = 'pending'";
-    $stmt = $conn->prepare($query);
-    $stmt->execute();
-    $pendingRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $pendingRequests = getPendingRequests();
     ?>
-
+<section class="dashboard">
     <h2>Demandes d'inscription en attente</h2>
-
-    <?php if (empty($pendingRequests)): ?>
-        <p>Aucune demande en attente.</p>
-    <?php else: ?>
         <table>
             <thead>
                 <tr>
-                    <th>Nom de l'établissement</th>
-                    <th>Nom du responsable</th>
+                    <th>Date</th>
+                    <th>Nom</th>
                     <th>Email</th>
+                    <th>Etablissement</th>
+                    <th>Statut</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($pendingRequests as $request): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($request['firstname_establishment']); ?></td>
-                        <td><?php echo htmlspecialchars($request['lastname_admin']); ?></td>
-                        <td><?php echo htmlspecialchars($request['mail_admin']); ?></td>
+                    <td><?php htmlspecialchars($request['firstname_admin']) . " " . htmlspecialchars($request['lastname_admin']); ?></td>
+                    <td><?php htmlspecialchars($request['mail_admin']); ?></td>
+                    <td><?php htmlspecialchars($request['firstname_establishment']); ?></td>
+                    <td><?php htmlspecialchars($request['status']); ?></td>
+                    <td></td>
                         <td>
-                            <a href="/clara/controllers/adminController.php?action=approve&id=<?php echo $request['id']; ?>">Approuver</a>
-                            <a href="/clara/controllers/adminController.php?action=reject&id=<?php echo $request['id']; ?>">Rejeter</a>
+                            <a class="success" href="/clara/controllers/adminController.php?action=approve&id=<?php echo $request['id']; ?>">Approuver</a>
+                            <a class="error" href="/clara/controllers/adminController.php?action=reject&id=<?php echo $request['id']; ?>">Rejeter</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-    <?php endif; ?>
+    </section>
 </body>
 </html>

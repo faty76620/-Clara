@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/clara/assets/images/logo-onglet.png">
-    <link rel="preload" as="image" href="/clara/assets/images/img-banner.jpg">
     <link rel="stylesheet" href="/clara/assets/css/style.css">
     <link rel="stylesheet" href="/clara/assets/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">

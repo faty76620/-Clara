@@ -17,13 +17,4 @@ function hideMenu() {
   document.getElementById("burger").innerHTML = '<i class="fas fa-bars"></i>';
 }
 
- // VÉRIFICATION DU MOT DE PASSE AVANT SOUMISSION
- document.querySelector("form").addEventListener("submit", function(e) {
-  let password = document.getElementById("password").value;
-  let confirmPassword = document.getElementById("confirm_password").value;
 
-  if (password !== confirmPassword) {
-      e.preventDefault();
-      alert("Les mots de passe ne correspondent pas !");
-  }
-});
