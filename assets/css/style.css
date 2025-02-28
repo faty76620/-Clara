@@ -224,6 +224,44 @@ nav {
     border: 1px solid transparent;
 }
 
+/*bare de navigation de admin*/
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+    width: 100px;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background-color: #e4e8ff;
+    opacity: 0.7;
+}
+
+.sidebar ul {
+    width: 100px;
+}
+
+.sidebar a {
+    color: white;
+    font-size: 24px;
+    padding: 25px;
+    text-decoration: none;
+    display: block;
+    transition: background 0.3s;
+}
+
+.logo-dashboard {
+    width: 50px;
+    padding-bottom: 50px;
+}
+
+.sidebar a:hover {
+    background-color: #129cb1;
+    border-radius: 8px;
+}
+
 .banner {
     position: relative;
     width: 100%;
@@ -449,11 +487,14 @@ button:hover {
 /*****************************************************SESSION ADMIN*******************************************************/
 /*** GESTION DES DEMANDES D'INSCRIPTION ***/
 .dashboard {
-    margin: 50px;
+    margin: 110px 20px 0 110px;
 }
 
-.dashboard table { 
-    border-collapse: collapse; 
+.dashboard h2 {
+    margin-bottom: 60px;
+}
+
+.dashboard .table-request { 
     margin-top: 20px; 
     width: 100%;
 }
@@ -468,15 +509,73 @@ button:hover {
     background-color: #e4e8ff; 
 }
 
-.dashboard .success { 
-    color: green; 
+.btn-dashboard {
+    padding: 5px 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+
+}
+.btn-success { 
+    background-color: green; 
     cursor: pointer;
 }
 
-.dashboard .error { 
-    color: red; 
+.btn-reject { 
+    background-color: red; 
     cursor: pointer;
 }
+
+.action {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    justify-content: center;
+}
+
+.action a {
+    margin: 2px;
+}
+
+.cards-request {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.cards-request .card {
+    width: 70%;
+    background-color: #e4e8ff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+    margin-bottom: 50px;
+}
+
+.cards-request .action {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dashboard-search {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.dashboard-search input {
+    width: 220px;
+}
+
+.dashboard-search button {
+    width: 100px;
+    margin-left: 30px;
+}
+
 /*****************************************************PAGE CLARA**********************************************************/
 #clara {
     margin-top: 200px;
@@ -484,12 +583,12 @@ button:hover {
 
 #clara h2 {
     margin: 50px 0 20px 50px;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     margin-left: 50px;
 }
 
 #clara p {
-    margin: 50px;
+    margin: 20px;
 }
 
 #clara-barton {

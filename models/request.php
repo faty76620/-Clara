@@ -50,12 +50,25 @@ function updateRequestStatus($id, $status) {
 }
 
 // RÉCUPÉRER LES DEMANDES EN ATTENTE
-function getPendingRequests() {
+function getPendingRequests($search = '') {
     $conn = getConnexion();
-    $stmt = $conn->prepare("SELECT * FROM requests WHERE status = 'en attente' ORDER BY id DESC"); 
+    $query = "SELECT * FROM requests WHERE status = 'en attente'";
+
+    if (!empty($search)) {
+        $query .= " AND (firstname_establishment LIKE :search OR mail_admin LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
+    }
+
+    $query .= " ORDER BY created_at DESC";
+    $stmt = $conn->prepare($query);
+
+    if (!empty($search)) {
+        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+    }
+
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 ?>
 

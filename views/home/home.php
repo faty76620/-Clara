@@ -34,7 +34,7 @@
         </section>
         <section class="info-section">
             <h2>Pourquoi s'inscrire sur CLARA ?</h2>
-            <p>Notre site est spécialement conçu pour les services de soins a domicile et les cabinets de soins libéraux ayant maximum 10 employes. En inscrivant votre établissement, vous bénéficiez de nombreux avantages :</p>
+            <p>Notre site est spécialement conçu pour les services de soins a domicile et les cabinets de soins libéraux ayant maximum 10 salariés. En inscrivant votre établissement, vous bénéficiez de nombreux avantages :</p>
             <div class="advantages">
                 <div class="advantage"><i class="fas fa-check-circle"></i> Une organisation simplifiée gérant efficacement votre équipe</div>
                 <div class="advantage"><i class="fas fa-check-circle"></i> Un accèes rapide au informations patients</div>
