@@ -28,7 +28,7 @@
     <div id="alert-info" class="alert-info">
         <i class="fas fa-info-circle"></i>
         <p>
-            En tant qu'administrateur, vous pouvez <strong>"valider"</strong> ou <strong>"refuser"</strong>.
+            En tant qu'administrateur, vous pouvez <strong>"valider"</strong> ou <strong>"refuser"</strong> les demandes d'inscription.
             Cette procédure de sécurité vous permet de vérifier la légitimité des établissements.  
             <i class="fas fa-check-circle" style="color: green;"></i> <strong>Si la demande est approuvée :</strong> Un email automatique sera envoyé au représentant avec un <strong>identifiant</strong> et un <strong>mot de passe provisoire</strong>.  
             <i class="fas fa-times-circle" style="color: red;"></i> <strong>En cas de refus :</strong> Un email contenant un message expliquant le rejet sera envoyé.

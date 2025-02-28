@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:wght@100&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/15ca748f1e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script defer src="/clara/assets/js.js"></script>
     <title>Accueil</title>
 </head>
@@ -48,12 +48,32 @@
         <section>
             <div class="caregiver">
                 <div class="line">
-                    <a href=""><img src="/clara/assets/images/infirmier.jpg" alt="infirmier"></a> 
-                    <a href=""><img src="/clara/assets/images/aide-soignante.jpg" alt="aide-soignante">
+                    <div class="card">
+                        <div class="card-content">
+                            <a href=""><img src="/clara/assets/images/infirmier.jpg" alt="infirmier"></a> 
+                            <h3>Infirmier</h3>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <a href=""><img src="/clara/assets/images/aide-soignante.jpg" alt="aide-soignante"></a>
+                            <h3>Aide-soignant</h3>
+                        </div>
+                    </div>
                 </div> 
                 <div class="line">
-                    <a href=""><img src="/clara/assets/images/kine.jpg" alt="kinésithérapeute"></a>
-                    <a href=""><img src="/clara/assets/images/ergo.jpg" alt="ergothérapeute"></a> 
+                    <div class="card">
+                        <div class="card-content">
+                            <a href=""><img src="/clara/assets/images/kine.jpg" alt="kinésithérapeute"></a>
+                            <h3>kinésithérapeute</h3>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <a href=""><img src="/clara/assets/images/ergo.jpg" alt="ergothérapeute"></a> 
+                            <h3>Ergothérapeute</h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

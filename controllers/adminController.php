@@ -23,26 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
 
         if ($action === 'approve') {
             $conn->beginTransaction();
-
-        $password_plain = bin2hex(random_bytes(4)); // Génère un mot de passe temporaire aléatoire
-        $password_hashed = password_hash($password_plain, PASSWORD_DEFAULT);
-            
-        $stmt = $conn->prepare("INSERT INTO users (firstname, lastname, mail, password, establishment_id, role_id) 
-        VALUES (?, ?, ?, ?, ?, ?)");
-
-        $stmt->execute([
-        $request['firstname_admin'], 
-        $request['lastname_admin'], 
-        $email, 
-        $password_hashed, 
-        $establishment_id, 
-        $request['role']
-        ]);
-
-            // Mise à jour du statut de la demande
-            updateRequestStatus($id, 'accepted');
-
-            // Insérer l'établissement
+        
+            // Générer un mot de passe temporaire
+            $password_plain = bin2hex(random_bytes(4));
+            $password_hashed = password_hash($password_plain, PASSWORD_DEFAULT);
+        
+            // Insérer l'établissement en premier
             $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, email) 
                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
@@ -55,12 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
                 htmlspecialchars($request['description']), 
                 htmlspecialchars($request['mail'])
             ]);
-            $establishment_id = $conn->lastInsertId();
+            
+            // Récupérer l'ID de l'établissement nouvellement inséré
+            $establishment_id = $conn->lastInsertId();  
 
-            // Insérer l'utilisateur (admin)
+            // Maintenant qu'on a l'ID de l'établissement, on peut insérer l'utilisateur
             $stmt = $conn->prepare("INSERT INTO users (firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
             VALUES (?, ?, ?, ?, ?, ?, 1)");
-            
+        
             $stmt->execute([
                 htmlspecialchars($request['firstname_admin']), 
                 htmlspecialchars($request['lastname_admin']), 
@@ -69,10 +57,13 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
                 $establishment_id, 
                 htmlspecialchars($request['role'])
             ]);
-
+        
+            // Mise à jour du statut de la demande
+            updateRequestStatus($id, 'accepted');
+        
             $conn->commit();
-
-            // Envoyer un email d'acceptation avec le mot de passe temporaire
+        
+            // Envoyer un email d'acceptation
             $subject = "Demande d'inscription acceptée";
             $message = "<h2>Bonjour $firstname,</h2>";
             $message .= "<p>Votre demande d'inscription a été acceptée.</p>";
@@ -81,14 +72,14 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
             $message .= "<p>Veuillez vous connecter et changer votre mot de passe dès que possible.</p>";
             $message .= "<p>Cordialement,</p>";
             $message .= "<p>L'équipe de Clara</p>";
-
+        
             if (sendEmail($email, $subject, $message)) {
                 echo "Demande approuvée et email envoyé.";
             } else {
                 echo "Demande approuvée, mais l'email n'a pas pu être envoyé.";
             }
-
-        } elseif ($action === 'reject') {
+        } 
+        elseif ($action === 'reject') { 
             updateRequestStatus($id, 'rejected');
 
             // Envoyer un email de refus
@@ -117,4 +108,5 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
     die("Accès non autorisé.");
 }
 ?>
+
 
