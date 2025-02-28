@@ -167,7 +167,7 @@ nav {
 
 #nav-links a {
     text-decoration: none;
-    color: white;
+    color: #49667f;
     font-weight: bold;
     transition: color 0.3s;
 }
@@ -487,11 +487,12 @@ button:hover {
 /*****************************************************SESSION ADMIN*******************************************************/
 /*** GESTION DES DEMANDES D'INSCRIPTION ***/
 .dashboard {
-    margin: 110px 20px 0 110px;
+    margin: 80px 20px 0 110px;
 }
 
 .dashboard h2 {
     margin-bottom: 60px;
+    margin-left: 20px;
 }
 
 .dashboard .table-request { 
@@ -574,6 +575,66 @@ button:hover {
 .dashboard-search button {
     width: 100px;
     margin-left: 30px;
+}
+
+.dashboard .alert-info {
+    position: relative;
+    background-color:#129cb1;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.alert-info i {
+    font-size: 20px;
+    color: #29b8ce;
+}
+
+.fa-info-circle {
+    margin-right: 5px;
+}
+
+.alert-info p {
+    font-size: 14px;
+    color: #e4e8ff;
+}
+
+#close-alert {
+    cursor: pointer;
+    font-size: 18px;
+    margin-bottom: 85px;
+}
+
+/* Animation pour l'affichage */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation pour la fermeture */
+.fadeOut {
+    animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
 }
 
 /*****************************************************PAGE CLARA**********************************************************/

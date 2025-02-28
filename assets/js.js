@@ -18,3 +18,13 @@ function hideMenu() {
 }
 
 
+//
+document.addEventListener("DOMContentLoaded", function () {
+  const alertBox = document.getElementById("alert-info");
+  const closeBtn = document.getElementById("close-alert");
+
+  closeBtn.addEventListener("click", function () {
+      alertBox.classList.add("fadeOut");
+      setTimeout(() => alertBox.style.display = "none", 500);
+  });
+});

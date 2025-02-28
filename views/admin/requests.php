@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:wght@100&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/15ca748f1e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script defer src="/clara/assets/js.js"></script>
     <title>Demandes inscription</title>
 </head>   
@@ -25,6 +25,19 @@
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     ?>
     <main class="dashboard">
+    <div id="alert-info" class="alert-info">
+        <i class="fas fa-info-circle"></i>
+        <p>
+            En tant qu'administrateur, vous pouvez <strong>"valider"</strong> ou <strong>"refuser"</strong>.
+            Cette procédure de sécurité vous permet de vérifier la légitimité des établissements.  
+            <i class="fas fa-check-circle" style="color: green;"></i> <strong>Si la demande est approuvée :</strong> Un email automatique sera envoyé au représentant avec un <strong>identifiant</strong> et un <strong>mot de passe provisoire</strong>.  
+            <i class="fas fa-times-circle" style="color: red;"></i> <strong>En cas de refus :</strong> Un email contenant un message expliquant le rejet sera envoyé.
+        </p>
+        <div id="close-alert"><i class="fa-solid fa-square-xmark"></i>
+        </div>
+    </div>
+
+
         <h2>Demandes d'inscription en attente</h2>
         <form method="GET">
             <div class="dashboard-search">
