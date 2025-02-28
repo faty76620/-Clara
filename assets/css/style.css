@@ -370,10 +370,13 @@ nav {
 .cardgiver {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    width: 100%;
 }
 
 .caregiver img {
-    width: 200px;
+    width: 400px;
+    height: 250px;
 }
 /***************************************************PAGE INSCRIPTION********************************************************/
 .flex-register {
