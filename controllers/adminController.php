@@ -17,17 +17,45 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
             die("Erreur : Demande introuvable.");
         }
 
-        // Générer un mot de passe temporaire
+        // Récupérer email et prénom
         $email = htmlspecialchars($request['mail_admin']);
         $firstname = htmlspecialchars($request['firstname_admin']);
+        $lastname = htmlspecialchars($request['lastname_admin']);
+        $phone = htmlspecialchars($request['phone']);
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            die("Erreur : Email invalide.");
+        }
+
+        // Vérification du numéro de téléphone (format FR : 02XXXXXXXX, 06XXXXXXXX, 07XXXXXXXX ou 09XXXXXXXX)
+        if (!preg_match("/^0(2|6|7|9)\d{8}$/", $phone)) {
+            die("Erreur : Numéro de téléphone invalide.");
+        }
+
+        // Vérifier si l'email existe déjà dans la base de données
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE mail = ?");
+        $stmt->execute([$email]);
+        $emailExists = $stmt->fetchColumn();
+  
+        if ($emailExists > 0) {
+            die("Erreur : Cet email est déjà utilisé.");
+        }
+
+        // Génération d'un identifiant unique (username)
+        $username = strtolower(substr($firstname, 0, 1) . $lastname . rand(100, 999));
+
+        // Générer un mot de passe temporaire
+        $password_plain = bin2hex(random_bytes(4));
+        $password_hashed = password_hash($password_plain, PASSWORD_DEFAULT);
+
+        // Vérifier que le mot de passe n'est pas vide
+        if (empty($password_plain)) {
+            die("Erreur : Le mot de passe ne peut pas être vide.");
+        }
 
         if ($action === 'approve') {
             $conn->beginTransaction();
-        
-            // Générer un mot de passe temporaire
-            $password_plain = bin2hex(random_bytes(4));
-            $password_hashed = password_hash($password_plain, PASSWORD_DEFAULT);
-        
+
             // Insérer l'établissement en premier
             $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, email) 
                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -45,17 +73,18 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
             // Récupérer l'ID de l'établissement nouvellement inséré
             $establishment_id = $conn->lastInsertId();  
 
-            // Maintenant qu'on a l'ID de l'établissement, on peut insérer l'utilisateur
-            $stmt = $conn->prepare("INSERT INTO users (firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
-            VALUES (?, ?, ?, ?, ?, ?, 1)");
+            // Insérer l'utilisateur
+            $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
         
             $stmt->execute([
-                htmlspecialchars($request['firstname_admin']), 
-                htmlspecialchars($request['lastname_admin']), 
+                $username, 
+                $firstname, 
+                $lastname, 
                 $email, 
                 $password_hashed, 
                 $establishment_id, 
-                htmlspecialchars($request['role'])
+                htmlspecialchars($request['role']),
             ]);
         
             // Mise à jour du statut de la demande
@@ -67,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
             $subject = "Demande d'inscription acceptée";
             $message = "<h2>Bonjour $firstname,</h2>";
             $message .= "<p>Votre demande d'inscription a été acceptée.</p>";
-            $message .= "<p><strong>Email :</strong> $email</p>";
+            $message .= "<p><strong>Identifiant :</strong> $username</p>";
             $message .= "<p><strong>Mot de passe temporaire :</strong> $password_plain</p>";
             $message .= "<p>Veuillez vous connecter et changer votre mot de passe dès que possible.</p>";
             $message .= "<p>Cordialement,</p>";
@@ -108,5 +137,6 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
     die("Accès non autorisé.");
 }
 ?>
+
 
 

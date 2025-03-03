@@ -1,6 +1,5 @@
 <?php
-var_dump($_POST);
-//TRAITEMENTS DES DONNEES A L'ENVOI
+// TRAITEMENT DES DONNEES A L'ENVOI
 require_once '../models/database.php'; 
 require_once '../models/request.php'; 
 
@@ -12,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Récupérer les données du formulaire et les sécuriser
     $firstname_admin = htmlspecialchars(trim($_POST['firstname_admin']));
     $lastname_admin = htmlspecialchars(trim($_POST['lastname_admin']));
-    $role = intval($_POST['role']);
+    $role = htmlspecialchars(trim($_POST['role'])); 
     $mail_admin = filter_var($_POST['mail_admin'], FILTER_SANITIZE_EMAIL);
     $firstname_establishment = htmlspecialchars(trim($_POST['firstname_establishment']));
     $adresse = htmlspecialchars(trim($_POST['adresse']));
@@ -26,14 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $password_plain = bin2hex(random_bytes(4));
        
-        try {
-            // Démarrer une transaction
-            $conn->beginTransaction();
-            // Insérer la demande dans la table `requests`
-            createRequest([
+    try {
+        // Démarrer une transaction
+        $conn->beginTransaction();
+        // Insérer la demande dans la table `requests`
+        createRequest([
             'firstname_admin' => $firstname_admin,
             'lastname_admin' => $lastname_admin,
-            'role' => $role,
+            'role' => $role, 
             'mail_admin' => $mail_admin,
             'firstname_establishment' => $firstname_establishment,
             'adresse' => $adresse,
@@ -46,27 +45,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             'cgu' => $cgu,
         ]);
 
-            // Valider la transaction
-            $conn->commit();
+        // Valider la transaction
+        $conn->commit();
 
-            echo "Votre demande a été soumise avec succès. Vous recevrez un email après validation par un administrateur.";
-            header("Location: ../views/home/request_success.php");
-            exit();
+        echo "Votre demande a été soumise avec succès. Vous recevrez un email après validation par un administrateur.";
+        header("Location: ../views/home/request_success.php");
+        exit();
 
-        } catch (Exception $e) {
-            // Annuler la transaction en cas d'erreur
-            $conn->rollBack();
-            echo "Erreur lors de la soumission de la demande : " . $e->getMessage();
-            header("Location: ../views/home/request_erreur.php");
-            exit();
-        }
-    } else {
-        echo "Requête invalide.";
+    } catch (Exception $e) {
+        // Annuler la transaction en cas d'erreur
+        $conn->rollBack();
+        echo "Erreur lors de la soumission de la demande : " . $e->getMessage();
+        header("Location: ../views/home/request_erreur.php");
+        exit();
     }
+} else {
+    echo "Requête invalide.";
+}
 
 ?>
-
-
 
 
 

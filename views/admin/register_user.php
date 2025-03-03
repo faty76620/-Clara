@@ -16,7 +16,7 @@
 <body>
     <?php 
         include __DIR__ . '/../../templates/header_admin.php'; ?>
-    <main class="main">
+    <main class="dashboard">
     <h2>Inscription d'un nouvel utilisateur</h2>
     <div  class="flex-register">
         <div class="register-container">

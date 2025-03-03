@@ -26,9 +26,6 @@ a {
 }
 
 /**********************************************CONNEXION********************************************/
-.header {
-    height:100%; 
-}
 
 #logo-connexion {
     height: 200px;
@@ -132,6 +129,26 @@ a {
     box-shadow: 0 0 5px rgba(41, 184, 206, 0.5);
 }
 
+.body-background {
+    background-color: #e4e8ff;
+}
+
+.new_password {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 30px;
+    margin: 50px;
+}
+
+.new_password h2 {
+    margin-bottom: 40px;
+}
+
+.new_password .form-login {
+    margin-bottom: 20px;
+}
 /******************************************** PAGE ACCUEIL **************************************************/
 
 /* Barre de navigation */
@@ -404,9 +421,9 @@ nav {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 60%;
+    width: 50%;
+    padding: 50px;
     border-radius: 10px;
-    padding: 50px 120px;
     margin-bottom: 50px;
 }
 
@@ -415,7 +432,6 @@ nav {
     flex-direction: column;
     width: 100%;
     justify-content: space-between;
-    padding: 70px;
 }
 
 .register-container input, textarea {

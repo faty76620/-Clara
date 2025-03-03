@@ -36,21 +36,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="role">Rôle :</label>
-                                <div class="input-wrapper">
-                                    <select id="role" name="role" required>
-                                        <option value="1">Admin</option>
-                                        <option value="2">Utilisateur</option>
-                                    </select>
-                                </div>
-                            </br>
-                            </div>
-                            <div class="form-group">
                                 <label for="mail_admin">Email du responsable :</label>
                                 <div class="input-wrapper">
                                     <input type="email" id="mail_admin" name="mail_admin" required>
                                 </div>
                             </div>
+                            <select  name="role">
+                                <option value="1">Admin</option>
+                                <option value="2">Manager</option>
+                                <option value="3">Utilisateur</option>
+                            </select>
                             <br>
                             <div class="img-register">
                                 <img src="/clara/assets/images/soignante.gif" alt="soignante prnenant une fleur">
