@@ -30,6 +30,18 @@ function updatePassword($user_id, $new_password) {
     $stmt = $conn->prepare("UPDATE users SET password = ?, must_change_password = 0 WHERE id = ?");
     return $stmt->execute([$hashed_password, $user_id]);
 }
+    //ASSURER AVOIR UN ADMIN
+    $conn = getConnexion();
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE role_id = 1");
+    $stmt->execute();
+    $adminExists = $stmt->fetchColumn();
+
+    if ($adminExists > 0) {
+    echo "Un administrateur existe déjà.";
+    } else {
+    // Création de l'admin
+}
+
 ?>
 
 

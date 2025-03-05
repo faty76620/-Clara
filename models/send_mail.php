@@ -18,7 +18,7 @@ use PHPMailer\PHPMailer\Exception;
                 $mail->Port       = 2525;                  
         
                 // Définir l'expéditeur et le destinataire
-                $mail->setFrom('no-reply@clara.com', 'Clara');
+                $mail->setFrom('admin@clara.com', 'Clara Admin');
                 $mail->addAddress($to);
         
                 $headers = "MIME-Version: 1.0" . "\r\n";

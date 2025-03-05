@@ -29,7 +29,7 @@
                         À son image, La technologie peut jouer un rôle essentiel pour soutenir et faciliter le travail des soignants.
                     </p>
                 </div>
-                <div class="line">
+                <div class="card-container">
                     <div class="card">
                         <div class="card-content">
                             <h3>Notre mission</h3>
@@ -51,8 +51,6 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-                <div class="line">
                     <div class="card">
                         <div class="card-content">
                             <h3>Nos valeurs</h3>
@@ -67,7 +65,7 @@
                         <div class="card-content">
                             <h3>Nos services</h3>
                             <ul>
-                                <li>Création de sites web sur mesure</li>
+                                <li>Assure une bonne securité</li>
                                 <li>Plannings intéractives</li>
                                 <li>Dossiers patients dématérialisés</li>
                             </ul>
@@ -76,9 +74,6 @@
                 </div>
             </div>
         </main> 
-        <footer>
         <?php include __DIR__ . '/../../templates/footer.php';?>
-        </footer>   
-
-    </body>
+</body>
 </html>

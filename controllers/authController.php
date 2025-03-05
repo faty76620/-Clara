@@ -5,7 +5,7 @@ require_once '../models/send_mail.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['username']) && isset($_POST['password'])) {
-        // Connexion utilisateur
+        // Connexion avec identifiant et mot de passe
         $username = htmlspecialchars($_POST['username']);
         $password = $_POST['password'];
 
@@ -42,14 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: /clara/views/auth/login.php");
             exit();
         }
-
+        // creer un nouveau mot de passe
         $user_id = $_SESSION['user_id'];
         $old_password = trim($_POST['old_password']);
         $new_password = trim($_POST['new_password']);
         $confirm_password = trim($_POST['confirm_password']);
 
         $user = getUserById($user_id);
-
+        //virifie si mot de passe est corect
         if (!$user || !password_verify($old_password, $user['password'])) {
             header("Location: /clara/views/auth/change_password.php?error=L'ancien mot de passe est incorrect.");
             exit();

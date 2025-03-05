@@ -22,7 +22,7 @@
                 <div class="register-container">
                     <form action="/clara/controllers/process_registration.php" method="POST">
                         <div class="register-admin">
-                            <h3>Informations du responsable (Admin)</h3>
+                            <h3>Informations du responsable</h3>
                             <div class="form-group">
                                 <label for="firstname_admin">Nom du responsable :</label>
                                 <div class="input-wrapper">
@@ -41,11 +41,7 @@
                                     <input type="email" id="mail_admin" name="mail_admin" required>
                                 </div>
                             </div>
-                            <select  name="role">
-                                <option value="1">Admin</option>
-                                <option value="2">Manager</option>
-                                <option value="3">Utilisateur</option>
-                            </select>
+                                <input type="hidden" name="role" value="2">
                             <br>
                             <div class="img-register">
                                 <img src="/clara/assets/images/soignante.gif" alt="soignante prnenant une fleur">

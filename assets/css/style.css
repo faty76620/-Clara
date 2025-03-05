@@ -25,6 +25,9 @@ a {
     color: inherit;
 }
 
+ul li {
+    list-style-type:circle;
+}
 /**********************************************CONNEXION********************************************/
 
 #logo-connexion {
@@ -48,6 +51,10 @@ a {
     justify-content: center;
     flex-direction: column; 
     width: 100%;
+}
+
+.form-login {
+    background-color: #fff;
 }
 
 .form-login input {
@@ -89,7 +96,7 @@ a {
 
 .group-form i {
     position: absolute;
-    margin: 22px 0 0 12px;
+    margin: 27px 0 0 12px;
     margin-bottom: 30px;
     transform: translateY(-50%);
 }
@@ -129,8 +136,11 @@ a {
     box-shadow: 0 0 5px rgba(41, 184, 206, 0.5);
 }
 
+.password-forgot a {
+    font-size: 14px;
+}
 .body-background {
-    background-color: #e4e8ff;
+    background-color: #f9f9f9;
 }
 
 .new_password {
@@ -160,7 +170,7 @@ nav {
     width: 100%;
     position: fixed;
     justify-content: space-between;
-    background-color: #e4e8ff;
+    background-color: #f9f9f9;
     opacity: 0.8; 
 }
 
@@ -187,58 +197,17 @@ nav {
     color: #49667f;
     font-weight: bold;
     transition: color 0.3s;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
 }
 
 #nav-links a:hover {
   color:#29b8ce;
 }
 
-/* Style de base pour le menu */
-#nav-links {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
 #nav-links li {
     position: relative;
-}
-
-#nav-links a {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-}
-
-#select select {
-    color: #49667f; 
-    font-weight: bold;
-    background: transparent;
-    border: none; 
-    font-family: 'open sans', Arial, sans-serif; 
-    padding-top: 10px;
-    padding-left: 20px;
-    font-size: 16px;
-}
-
-#select select:hover {
-    cursor: pointer; 
-    color: #29b8ce;
-}
-
-#select select option {
-    color: white;
-    background: #129cb1; 
-}
-
-#select {
-    text-align: center;
-}
-
-#select select:focus {
-    outline: none;
-    border: 1px solid transparent;
 }
 
 /*bare de navigation de admin*/
@@ -282,15 +251,17 @@ nav {
 .banner {
     position: relative;
     width: 100%;
-    height: 700px;
-    background-image: url("/clara/assets/images/img-banner.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    height: 100vh;
+    background: url("/clara/assets/images/img-banner.jpg") center/cover no-repeat;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.banner-img {
+    display: none;
 }
 
 .banner .overlay {
@@ -315,19 +286,11 @@ nav {
     margin: 10px 0;
 }
 
-.banner-mobile {
-    display: none;
-}
-
 #burger {
     display: none;
     cursor: pointer;
     font-size: 24px;
     color: white;
-}
-
-.banner-img {
-    display: none;
 }
 
 .btn {
@@ -347,12 +310,11 @@ nav {
 }
 
 .btn:hover {
-    background-color: #1b697f;
+    background-color: #49667f;
 }
 
 .info-section {
-    text-align: center;
-    padding: 50px 20px;
+    padding: 50px 90px;
     background-color: white;
 }
 
@@ -371,7 +333,7 @@ nav {
 .advantage {
     display: flex;
     align-items: center;
-    background-color: #e4e8ff;
+    background-color: #f9f9f9;
     padding: 15px;
     border-radius: 10px;
     width: 300px;
@@ -385,31 +347,48 @@ nav {
 }
 
 .caregiver {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+    text-align: center;
+    background-color: #f9f9f9; 
+    margin: auto;
+    padding-top: 20px;
 }
 
-.caregiver img {
+.caregiver h2 {
+    margin-bottom: 20px;
+}
+
+.caregiver-container {
+    margin: 50px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 20px;
+    justify-content: center;
+    max-width: 1000px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
     width: 100%;
     height: 250px;
-    border-radius: 8px;
-    object-fit: cover;
+    object-fit: cover; 
+    display: block;
 }
 
-.caregiver .card {
-    width: 100%;
-    padding-bottom: 40px;
-    border-radius: 8px;
-    cursor: pointer;
+.card-content {
+    padding: 15px;
 }
 
-.caregiver line {
-    margin-left: 50px;
-    margin-right: 50px;
-}
 /***************************************************PAGE INSCRIPTION********************************************************/
 .flex-register {
     display: flex;
@@ -584,11 +563,14 @@ button:hover {
 .cards-request .card {
     width: 70%;
     background-color: #e4e8ff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    width: 280px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 50px;
 }
+
 
 .cards-request .action {
     display: flex;
@@ -691,100 +673,66 @@ button:hover {
     font-weight: 600;
 }
 
-.card {
-    width: 100%;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    background-color: #d9d9d9;
-    transition: background-color 0.5s ease-in-out
-}
-
-.card:hover {
-    background-color: #29b8ce;
-}
-
-.card li {
-    color: #49667f
-}
-
-/***CARTES FONCTIONALITES***/
-
-#features h2 {
-    margin-top: 70px;
-    margin-left: 30px;
-}
-
 .card-container {
-    width: 100%;
-    margin-top: 30px;
-}
-
-.line {
-    display: flex;
-    flex-direction: row;
+    margin-top: 80px;
+    display: grid;
+    gap: 20px;
     padding: 20px;
-    gap: 40px;
-}
-
-.card-actions {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-  
-.card-actions a {
-    text-decoration: none;
-    border-radius: 8px;
-    padding: 10px 15px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-  
-.main-button {
-    background-color: #49667f;
-    color: #f0f0f0;
-    font-weight: bold;
-}
-  
-.main-button:hover {
-    background-color: #29b8ce;
-}
-
-.details-button {
-    background-color: #f8f9fa;
-    color: #49667f;
-    border: 1px solid #49667f;
-}
-  
-.details-button:hover {
-    background-color: #29b8ce;
-    color: #f0f0f0;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
 }
   
 /******************************************* PAGES FONCTIONALITÉS *********************************************************/
 .main {
- padding-top: 150px;
- margin: 0 50px;
- margin-bottom: 50px;
-} 
-
-.main h2 {
-    margin-bottom: 40px;
+    padding: 130px 30px;
 }
 
-.planning-day img {
-    width: 100%;
-    margin-top: 30px;
-    margin-bottom: 50px;
+.features h2 {
+    margin-bottom: 20px;
 }
 
-.planning-week img {
-    margin-bottom: 50px;
-    width: 100%;
+.intro-text {
+    margin-bottom: 40px; 
 }
 
-.text-patients p, .text-planning p {
+.features-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+.feature {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 90%;
+    height: 350px;
+    max-width: 500px;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.feature i {
+    font-size: 40px;
     color: #49667f;
+    margin-bottom: 10px;
+}
+
+/******************************************** MENTIONS LEGALE ************************************************************/
+.mentions h2{
+    margin-bottom: 50px;
+}
+
+.mentions-legales {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 30px;
+}
+
+.mentions-legales table {
+    margin-bottom: 50px;
 }
 
 /******************************************** DOSSIERS PATIENTS **********************************************************/

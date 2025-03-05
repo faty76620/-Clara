@@ -24,8 +24,6 @@
             </div>
         </div>
     </main>
-    <footer>
-        <?php include __DIR__ . '/../../templates/footer.php';?>
-    </footer>   
+        <?php include __DIR__ . '/../../templates/footer.php';?>  
 </body>
 </html>

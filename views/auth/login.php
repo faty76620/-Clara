@@ -24,7 +24,7 @@
     <?php endif; ?>
     <div class="part-connect">
         <div class="logo-connect">
-            <img id="logo-connexion" src="/clara/assets/images/logo.png">
+            <a href="/clara/views/home/home.php"><img id="logo-connexion" src="/clara/assets/images/logo.png"></a>
         </div>
         <div class="container-form-login">
             <form action="/clara/controllers/authController.php" method="POST" class="form-login">
