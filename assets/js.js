@@ -18,7 +18,7 @@ function hideMenu() {
 }
 
 
-//
+//FERMETURE DE L'ALERTE (INFORMATION PROCESSUS INSCRIPTION ADMIN)
 document.addEventListener("DOMContentLoaded", function () {
   const alertBox = document.getElementById("alert-info");
   const closeBtn = document.getElementById("close-alert");
@@ -28,3 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => alertBox.style.display = "none", 500);
   });
 });
+
+
+
+
+

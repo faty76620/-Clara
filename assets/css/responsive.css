@@ -1,11 +1,23 @@
 /*** RESPONSIVE CONNEXION ***/
-@media screen and (min-width:480px) and  (max-width: 768px) {
+@media screen and  (max-width: 768px) {
     .form-login {
         margin: 20px;
     }
 
-    p a {
+    p, a, li {
         font-size: 14px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+       font-size: 16px;
+    }
+
+    .logo {
+        height: 90px;
     }
 }
 
@@ -48,11 +60,16 @@
     .banner-img {
         display: flex;
         align-items: center;
+        justify-content: center;
     }
 
+    .scroll-banner {
+        display: none;
+    }
+    
     .banner-img img {
         width: 100% ;
-        height: 350px;
+        display: flex;
     }
 
 }
