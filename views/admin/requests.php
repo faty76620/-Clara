@@ -19,11 +19,15 @@
     require_once '../../models/database.php';
     require_once '../../models/send_mail.php';
     require_once '../../models/request.php';
-
+    //recuperation des demande en attentes
     $pendingRequests = getPendingRequests();
+
     // Récupération de la recherche
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+
     ?>
+
     <main class="dashboard">
     <div id="alert-info" class="alert-info">
         <i class="fas fa-info-circle"></i>
@@ -36,9 +40,7 @@
         <div id="close-alert"><i class="fa-solid fa-square-xmark"></i>
         </div>
     </div>
-
-
-        <h2>Demandes d'inscription en attente</h2>
+    <div class="container-title"><h2>Demandes d'inscription en attente</h2></div>
         <form method="GET">
             <div class="dashboard-search">
                 <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
@@ -67,7 +69,7 @@
                             <td><?= htmlspecialchars($request['type_role']); ?></td>
                             <td><?= htmlspecialchars($request['status']); ?></td>
                             <td>
-                                <a href="/clara/views/admin/requests.php?id=<?= $request['id']; ?>">Voir plus</a>
+                            <a href="test-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
                             </td>
                             <td>
                                 <div class="action">
@@ -94,8 +96,8 @@
                         <p><?= htmlspecialchars($request['created_at']); ?></p>
                         <p><?= htmlspecialchars($request['type_role']); ?></p>
                         <p><?= htmlspecialchars($request['status']); ?></p>
-                        <div>
-                            <a href="/clara/views/admin/requests.php?id=<?= $request['id']; ?>">Voir plus</a>
+                        <div>  
+                        <a href="requests.php?id=<?= htmlspecialchars($request['id']); ?>">Détails</a>
                         </div>
                         <div class="action">
                             <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>

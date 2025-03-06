@@ -110,6 +110,13 @@
     }
 }
 
+@media screen and (max-width:950px) {
+    .subtitle-job {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 /*** LISTES PATIENTS ***/
 @media screen and (max-width:768px) {
    
@@ -174,4 +181,17 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+}
+
+/* DASHBOARD ADMIN */
+@media screen and (max-width:900px) {
+   .details table {
+    display: none;
+   } 
+
+   .details-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+   }
 }

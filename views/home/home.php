@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="banner-img">
-                <img src="/clara/assets/images/image-banner.jpg" alt="soignante aidant une patiente a se lever">
+                <img src="/clara/assets/images/img-banner.jpg" alt="soignante aidant une patiente a se lever">
             </div>
         </section>
         <section class="info-section">

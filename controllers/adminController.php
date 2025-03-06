@@ -12,7 +12,6 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
     try {
         // Récupérer les informations de la demande
         $request = getRequestById($id);
-
         if (!$request) {
             die("Erreur : Demande introuvable.");
         }

@@ -17,7 +17,7 @@
     <?php 
         include __DIR__ . '/../../templates/header_admin.php'; ?>
     <main class="dashboard">
-    <h2>Inscription d'un nouvel utilisateur</h2>
+    <div class="container-title"><h2>Inscription d'un utilisateur</h2></div>
     <div  class="flex-register">
         <div class="register-container">
             <form action="../controllers/adminController.php?action=register_user" method="post">
@@ -41,7 +41,11 @@
                 <label for="email">Email :</label>
                 <input type="email" id="email" name="email" required><br>
 
-                <button type="submit">Inscrire</button>
+                <div class="btn-container">
+            <button>
+                <a href="/clara/views/admin/requests.php" class="btn-back">Retour</a>
+            </button>
+        </div>
             </form>
         </div>
     </div>

@@ -105,8 +105,10 @@
                                 <input type="checkbox" name="cgu" class="cgu" required>j'accepte les <a href="#mention" style="color: black;">conditions générales d'utilisation</a>
                             </div>
                             <br>
-                            <div class="flex-btn-submit">
-                                <button type="submit">Soumettre</button>
+                            <div class="btn-details">
+                                <button>
+                                    <a href="/clara/views/admin/requests.php" class="btn-back">Retour</a>
+                                </button>
                             </div>
                         </div>
                     </form>

@@ -2,7 +2,6 @@
 session_start();
 require_once '../models/user.php';
 require_once '../models/send_mail.php';
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['username']) && isset($_POST['password'])) {
         // Connexion avec identifiant et mot de passe
@@ -35,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
     } 
-    
+
     elseif (isset($_POST['old_password']) && isset($_POST['new_password']) && isset($_POST['confirm_password'])) {
         // Changement de mot de passe
         if (!isset($_SESSION['user_id'])) {
