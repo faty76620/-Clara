@@ -68,7 +68,48 @@ function getPendingRequests($search = '') {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+// RÉCUPÉRER LES DEMANDES ACCEPTER
+function getApprovedRequests($search = '') {
+    $conn = getConnexion();
+    $query = "SELECT * FROM requests WHERE status = 'approuvée'";
+
+    if (!empty($search)) {
+        $query .= " AND (firstname_establishment LIKE :search OR mail_admin LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
+    }
+
+    $query .= " ORDER BY created_at DESC";
+    $stmt = $conn->prepare($query);
+
+    if (!empty($search)) {
+        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// RECUPERER LES DEMANDE REJETER
+function getRejectedRequests($search = '') {
+    $conn = getConnexion();
+    $query = "SELECT * FROM requests WHERE status = 'refusée'";
+
+    if (!empty($search)) {
+        $query .= " AND (firstname_establishment LIKE :search OR mail_admin LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
+    }
+
+    $query .= " ORDER BY created_at DESC";
+    $stmt = $conn->prepare($query);
+
+    if (!empty($search)) {
+        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
+
 
 
 

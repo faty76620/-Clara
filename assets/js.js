@@ -29,6 +29,31 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+//AFFICHAGES DES DEMANDES D'INSCRIPTION
+function showTab(tabId) {
+    // Masquer toutes les sections
+    document.querySelectorAll('.tab-content').forEach(function(section) {
+    section.classList.remove('active');
+    section.style.display = 'none';
+  });
+    // Retirer l'état actif de tous les boutons d'onglet
+    document.querySelectorAll('.tab-button').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+    // Afficher la section sélectionnée et activer le bouton correspondant
+    document.getElementById(tabId).classList.add('active');
+    document.getElementById(tabId).style.display = 'block';
+    // Pour le bouton, ajout de class active 
+    if (tabId === 'pending') {
+    document.getElementById('tab-pending').classList.add('active');
+    } else if (tabId === 'approved') {
+    document.getElementById('tab-approved').classList.add('active');
+    } else if (tabId === 'rejected') {
+    document.getElementById('tab-rejected').classList.add('active');
+  }
+}
+
+
 
 
 
