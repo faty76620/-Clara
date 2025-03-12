@@ -4,11 +4,21 @@ require_once 'database.php';
 // CRÉER UN UTILISATEUR
 function createUser($data) {
     $conn = getConnexion();
-    $stmt = $conn->prepare("INSERT INTO users (username, password, email, establishment_id, role_id) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$data['username'], $data['password'], $data['email'], $data['establishment_id'], $data['role_id']]);
+    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
+
+    return $stmt->execute([
+        $data['username'],
+        $data['firstname_admin'], 
+        $data['lastname_admin'], 
+        $data['mail_admin'], 
+        $data['password'], 
+        $data['establishment_id'], 
+        htmlspecialchars($data['role'])
+    ]);
 }
 
- // RECUPERER UN UTILISATEUR PAR UN ID
+// RECUPERER UN UTILISATEUR PAR UN ID
  function getUserByUsername($username) { 
     $conn = getConnexion();
     $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?"); 

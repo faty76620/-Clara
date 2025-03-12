@@ -8,7 +8,7 @@ use PHPMailer\PHPMailer\Exception;
         function sendEmail($to, $subject, $message) {
             $mail = new PHPMailer(true);
             try {
-                // Configuration du serveur SMTP (exemple avec Mailtrap)
+                // Configuration du serveur SMTP 
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.mailtrap.io'; 
                 $mail->SMTPAuth   = true;
@@ -33,7 +33,7 @@ use PHPMailer\PHPMailer\Exception;
                 $mail->send();     
                 return true;
             } catch (Exception $e) {
-                 // Log l'erreur pour le débogage (à enlever en production)
+                 
                 error_log("Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo);
                 return false; 
             }

@@ -1,21 +1,24 @@
 <?php
-require_once '/clara/models/database.php';
+require_once 'database.php';
 
 // FONCTION POUR CRÉER UN NOUVEL ÉTABLISSEMENT DANS LA BASE DE DONNÉES
-function createEstablishment($data) {
+function createEstablishment($request) {
     $conn = getConnexion();
-    $stmt = $conn->prepare("INSERT INTO establishments (firstname, address, type, siret, phone, site, description, created_at, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, mail) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
     $stmt->execute([
-        $data['firstname'],
-        $data['address'],
-        $data['type'],
-        $data['siret'],
-        $data['phone'],
-        $data['site'],
-        $data['description'],
-        $data['created_at'],
-        $data['email']
+        htmlspecialchars($request['firstname_establishment']), 
+        htmlspecialchars($request['adresse']), 
+        htmlspecialchars($request['type_role']), 
+        htmlspecialchars($request['siret']), 
+        htmlspecialchars($request['phone']), 
+        htmlspecialchars($request['site']), 
+        htmlspecialchars($request['description']), 
+        htmlspecialchars($request['mail'])
     ]);
+
+    return $conn->lastInsertId(); // Retourne l'ID du nouvel établissement 
 }
 
 // FONCTION POUR RÉCUPÉRER LES INFORMATIONS D'UN ÉTABLISSEMENT À PARTIR DE LA BASE DE DONNÉES EN UTILISANT SON ID

@@ -13,7 +13,7 @@
     <script defer src="/clara/assets/js.js"></script>
     <title>Demandes inscription</title>
 </head>   
-<body>
+<body class="body-background">
     <?php 
     include __DIR__ . '/../../templates/header_admin.php';
     require_once '../../models/database.php';
@@ -44,6 +44,8 @@
             <div class="dashboard-search">
                 <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
                 <button type="submit">Rechercher</button>
+                <!-- Bouton pour réinitialiser la recherche -->
+                <div class="reset"><a href="requests.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
             </div>
         </form>
         <!-- ONGLET POUR BASCULER SUR AUTRE TYPE DE DEMANDES -->

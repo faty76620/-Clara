@@ -15,7 +15,7 @@
 </head>
     <body>
         <?php 
-        include __DIR__ . '/../../templates/header.php'; ?>
+       include __DIR__ . '/../../templates/header.php'; ?>
         <main class="main">
             <div class="card-clara">
                 <h2>Qui somme nous ?</h2>

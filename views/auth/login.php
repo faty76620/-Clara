@@ -15,13 +15,10 @@
 </head>
 
 <body class="body-background">
-<?php if (isset($_GET['error'])): ?>
-        <p style="color: red;"><?php echo htmlspecialchars($_GET['error']); ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($_GET['success'])): ?>
-        <p style="color: green;"><?php echo htmlspecialchars($_GET['success']); ?></p>
-    <?php endif; ?>
+<?php if (isset($_SESSION['error'])) {
+    echo "<p class='error'>" . $_SESSION['error'] . "</p>";
+    unset($_SESSION['error']);
+} ?>
     <div class="part-connect">
         <div class="logo-connect">
             <a href="/clara/views/home/home.php"><img id="logo-connexion" src="/clara/assets/images/logo.png"></a>
