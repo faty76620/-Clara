@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="adresse">Adresse :</label>
+                                <label for="adresse">Adresse compléte :</label>
                                 <div class="input-wrapper">
                                     <input type="text" id="adresse" name="adresse" required>
                                 </div>

@@ -15,10 +15,20 @@
 </head>
 
 <body class="body-background">
-<?php if (isset($_SESSION['error'])) {
-    echo "<p class='error'>" . $_SESSION['error'] . "</p>";
-    unset($_SESSION['error']);
-} ?>
+<?php
+session_start();
+// Affichage des messages d'erreur
+if (isset($_SESSION['error'])) {
+    echo '<p>' . $_SESSION['error'] . '</p>';
+    unset($_SESSION['error']);  // Supprimer le message après l'affichage
+}
+
+// Affichage du message de succès
+if (isset($_SESSION['success'])) {
+    echo '<p>' . $_SESSION['success'] . '</p>';
+    unset($_SESSION['success']);  // Supprimer le message après l'affichage
+}
+?>
     <div class="part-connect">
         <div class="logo-connect">
             <a href="/clara/views/home/home.php"><img id="logo-connexion" src="/clara/assets/images/logo.png"></a>

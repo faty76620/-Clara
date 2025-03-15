@@ -1,9 +1,7 @@
-<?php
-require_once 'database.php';
 
-// CRÉER UN UTILISATEUR
-function createUser($data) {
-    $conn = getConnexion();
+<?php
+// CRÉER UN ADMIN (manager)
+function createAdmin($conn, $data) {
     $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
             VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
 
@@ -18,39 +16,97 @@ function createUser($data) {
     ]);
 }
 
-// RECUPERER UN UTILISATEUR PAR UN ID
- function getUserByUsername($username) { 
-    $conn = getConnexion();
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?"); 
-    $stmt->execute([$username]); return 
-    $stmt->fetch(PDO::FETCH_ASSOC); 
-} 
+// CRÉER UN UTILISATEUR 
+function createUser($conn, $data) {
+    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 1)"); 
 
-function getUserById($user_id) {
-    $conn = getConnexion();
-    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-    $stmt->execute([$user_id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    return $stmt->execute([
+        $data['username'],
+        $data['firstname_user'], 
+        $data['lastname_user'], 
+        $data['mail_user'], 
+        $data['password'], 
+        $_SESSION['establishment_id'], 
+        $data['role_user'] 
+    ]);
 }
 
-//METTRE A JOUR LE MOT DE PASSE METTRE LE NOUVEAU MOT DE PASSE
-function updatePassword($user_id, $new_password) {
-    $conn = getConnexion();
-    $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
-    $stmt = $conn->prepare("UPDATE users SET password = ?, must_change_password = 0 WHERE id = ?");
-    return $stmt->execute([$hashed_password, $user_id]);
-}
-    //ASSURER AVOIR UN ADMIN
-    $conn = getConnexion();
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE role_id = 1");
+// VERIFIER L'EXISTENCE D'UN IDENTIFIANT
+function checkUsernameExists($conn, $username) {
+    $sql = "SELECT COUNT(*) FROM users WHERE username = :username";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':username', $username);
     $stmt->execute();
-    $adminExists = $stmt->fetchColumn();
-
-    if ($adminExists > 0) {
-    echo "Un administrateur existe déjà.";
-    } else {
-    // Création de l'admin
+    return $stmt->fetchColumn() > 0;
 }
+
+//RECUPERER UN UTILISATEUR PAR SON ID
+function getUserById($conn, $user_id) {
+    $sql = "SELECT * FROM users WHERE id = :id";
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        echo "Erreur lors de la récupération de l'ID : " . $e->getMessage();
+        return false;
+    }
+}
+
+// RECUPERER UN UTILISATEUR PAR SON IDENTIFIANT
+function getUserByUsername($conn, $username) {
+    try {
+        $sql = "SELECT id, username, password, role_id, must_change_password, lastname FROM users WHERE username = :username LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $user ?: false; 
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
+        return false; 
+    }
+}
+
+// MISE A JOUR DU MOT DE PASSE
+function updateUserPassword($conn, $user_id, $new_password) {
+    try {
+        // Hachage sécurisé du mot de passe
+        $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+        if (!$hashed_password) {
+            throw new Exception("Erreur lors du hachage du mot de passe.");
+        }
+
+        $sql = "UPDATE users SET password = :password, must_change_password = 0 WHERE id = :user_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':password', $hashed_password, PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+    } catch (Exception $e) {
+        error_log("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
+        return false;
+    }
+}
+
+// FONCTION POUR VERIFIER SI UN MANAGER PAR ETABLISSEMENT  
+function checkManagerExists($conn, $establishment_id) {
+    try {
+        $sql = "SELECT COUNT(*) FROM users WHERE establishment_id = :establishment_id AND role_id = 1"; // 1 pour manager
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchColumn() > 0;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la vérification du manager : " . $e->getMessage());
+        return false;
+    }
+}
+
 
 ?>
 

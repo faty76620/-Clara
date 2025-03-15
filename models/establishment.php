@@ -60,4 +60,23 @@ function getAllEstablishments() {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+// FONCTION POUR RECUPERER LES ETABLISSEMENT APPROUV2
+function getApprovedEstablishments($conn) {
+    $sql = "SELECT id, name FROM establishments WHERE status = 'approved'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// FONCTION POUR VERIFIER SIUN ETABLISSEMENT EST APPROUVE
+function checkEstablishmentApproval($conn, $establishment_id) {
+    $sql = "SELECT * FROM establishments WHERE id = :establishment_id AND status = 'approved'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
 ?>

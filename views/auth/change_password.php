@@ -1,7 +1,10 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/clara/assets/images/logo-onglet.png">
     <link rel="stylesheet" href="/clara/assets/css/style.css">
     <link rel="stylesheet" href="/clara/assets/css/responsive.css">
@@ -14,32 +17,33 @@
     <title>Changer le mot de passe</title>
 </head>
 <body class="body-background">
+<div class="new_password">
+    <h2>Changer votre mot de passe</h2>
+    <?php session_start(); ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <p><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></p>
+    <?php endif; ?>
 
-    <div class="new_password">
-        <h2>Changer votre mot de passe</h2>
-        <?php if (isset($_GET['error'])): ?>
-        <p style="color: red;"><?php echo htmlspecialchars($_GET['error']); ?></p>
-        <?php endif; ?>
-        <?php if (isset($_GET['success'])): ?>
-        <p style="color: green;"><?php echo htmlspecialchars($_GET['success']); ?></p>
-        <?php endif; ?>
-        <form method="POST"action="/clara/controllers/authController.php" class="form-login">
-            <div class="group-form">
-                <label>Ancien mot de passe :</label>
-                <input type="password" name="old_password" required>
-            </div>
-            <div class="group-form">
-                <label>Nouveau mot de passe :</label>
-                <input type="password" name="new_password" required>
-            </div>
-            <div class="group-form">
-                <label>Confirmer le nouveau mot de passe :</label>
-                <input type="password" name="confirm_password" required>
-            </div>
-                <button type="submit">Mettre à jour</button>
-        </form>
-        <br>
-        <a href="dashboard.php">Retour au tableau de bord</a>
-    </div>
+    <?php if (isset($_SESSION['success'])): ?>
+        <p><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></p>
+    <?php endif; ?>
+
+    <form method="POST" action="/clara/controllers/updatePassword.php">
+        <div class="group-form">
+            <label>Ancien mot de passe :</label>
+            <input type="password" name="old_password" required>
+        </div>
+        <div class="group-form">
+            <label>Nouveau mot de passe :</label>
+            <input type="password" name="new_password" required>
+        </div>
+        <div class="group-form">
+            <label>Confirmer le nouveau mot de passe :</label>
+            <input type="password" name="confirm_password" required>
+        </div>
+        <button type="submit">Mettre à jour</button>
+    </form>
+    <br>
+</div>
 </body>
 </html>

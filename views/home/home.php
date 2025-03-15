@@ -35,9 +35,9 @@
             <h2>Bienvenue sur CLARA</h2>
             <p>Clara est une plateforme dédiée aux établissements de soins (SSIAD, cabinets médicaux, services infirmiers) qui facilite la gestion et la coordination des soins à domicile. Grâce à un accès sécurisé et structuré, chaque professionnel dispose des outils adaptés à son rôle pour assurer un suivi optimal des patients.</p><br>
             <h3>Comment accéder aux fonctionnalités ?</h3>
-            <p>L’utilisation de Clara est réservée aux établissements de santé. Pour bénéficier des fonctionnalités, il est nécessaire de faire une demande d’inscription, qui doit être validée avant l’accès à la plateforme.</p><br>
+            <p>L’utilisation de Clara est réservée aux établissements de santé. Pour bénéficier des fonctionnalités, il est nécessaire de faire une demande d’inscription, qui doit être validée avant l’accès à la plateforme.</p>
             <h3>Qui peut s’inscrire ?</h3>
-            <p>Seul le responsable soignant (responsable de coordination ou gestionnaire de cabinet médical) peut effectuer cette demande. Une fois l’établissement validé, il pourra créer des comptes pour son équipe soignant.</p><br>
+            <p>Seul le responsable soignant (responsable de coordination ou gestionnaire de cabinet médical) peut effectuer cette demande. Une fois l’établissement validé, il pourra créer des comptes pour son équipe soignant.</p>
             <h3>Pourquoi s’inscrire ?</h3>
             <div class="advantages">
                 <p class="advantage"><i class="fas fa-check-circle"></i>Gérez facilement les plannings et les soins</p>

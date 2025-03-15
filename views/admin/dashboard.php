@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// Vérifiez que l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /clara/views/auth/login.php");
+    exit();
+}
+// Récupérer le prénom de l'utilisateur depuis la session
+$lastname = isset($_SESSION['lastname']) ? $_SESSION['lastname'] : 'Utilisateur';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

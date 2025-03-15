@@ -53,18 +53,15 @@ function updateRequestStatus($id, $status) {
 function getPendingRequests($search = '') {
     $conn = getConnexion();
     $query = "SELECT * FROM requests WHERE status = 'en attente'";
-
     if (!empty($search)) {
         $query .= " AND (firstname_establishment LIKE :search OR mail_admin LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
     }
-
     $query .= " ORDER BY created_at DESC";
     $stmt = $conn->prepare($query);
 
     if (!empty($search)) {
         $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
     }
-
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -72,19 +69,15 @@ function getPendingRequests($search = '') {
 // RÉCUPÉRER LES DEMANDES ACCEPTER
 function getApprovedRequests($search = '') {
     $conn = getConnexion();
-    $query = "SELECT * FROM requests WHERE status = 'approuvée'";
-
+    $query = "SELECT * FROM requests WHERE status = 'accepté'";
     if (!empty($search)) {
         $query .= " AND (firstname_establishment LIKE :search OR mail_admin LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
     }
-
     $query .= " ORDER BY created_at DESC";
     $stmt = $conn->prepare($query);
-
     if (!empty($search)) {
         $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
     }
-
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -92,19 +85,15 @@ function getApprovedRequests($search = '') {
 // RECUPERER LES DEMANDE REJETER
 function getRejectedRequests($search = '') {
     $conn = getConnexion();
-    $query = "SELECT * FROM requests WHERE status = 'refusée'";
-
+    $query = "SELECT * FROM requests WHERE status = 'refusé'";
     if (!empty($search)) {
         $query .= " AND (firstname_establishment LIKE :search OR mail_admin LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
     }
-
     $query .= " ORDER BY created_at DESC";
     $stmt = $conn->prepare($query);
-
     if (!empty($search)) {
         $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
     }
-
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
