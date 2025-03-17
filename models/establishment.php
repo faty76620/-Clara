@@ -2,8 +2,7 @@
 require_once 'database.php';
 
 // FONCTION POUR CRÉER UN NOUVEL ÉTABLISSEMENT DANS LA BASE DE DONNÉES
-function createEstablishment($request) {
-    $conn = getConnexion();
+function createEstablishment($conn, $request) {
     $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, mail) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -21,55 +20,36 @@ function createEstablishment($request) {
     return $conn->lastInsertId(); // Retourne l'ID du nouvel établissement 
 }
 
-// FONCTION POUR RÉCUPÉRER LES INFORMATIONS D'UN ÉTABLISSEMENT À PARTIR DE LA BASE DE DONNÉES EN UTILISANT SON ID
-function getEstablishmentById($id) {
-    $conn = getConnexion();
+// FONCTION POUR RÉCUPÉRER LES INFORMATIONS D'UN ÉTABLISSEMENT À PARTIR DE SON ID
+function getEstablishmentById($conn, $id) {
     $stmt = $conn->prepare("SELECT * FROM establishments WHERE id = ?");
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// FONCTION POUR METTRE À JOUR LES INFORMATIONS D'UN ÉTABLISSEMENT EXISTANT DANS LA BASE DE DONNÉES
-function updateEstablishment($id, $data) {
-    $conn = getConnexion();
-    $stmt = $conn->prepare("UPDATE establishments SET firstname = ?, address = ?, type = ?, siret = ?, phone = ?, site = ?, description = ?, created_at = ?,  email = ? WHERE id = ?");
-    $stmt->execute([
-        $data['firstname'],
-        $data['address'],
-        $data['type'],
-        $data['siret'],
-        $data['phone'],
-        $data['site'],
-        $data['description'],
-        $data['created_at'],
-        $data['email']
-    ]);
-}
-
-// FONCTION POUR SUPPRIMER UN ÉTABLISSEMENT DE LA BASE DE DONNÉES EN UTILISANT SON ID
-function deleteEstablishment($id) {
-    $conn = getConnexion();
+// FONCTION POUR SUPPRIMER UN ÉTABLISSEMENT EN UTILISANT SON ID
+function deleteEstablishment($conn, $id) {
     $stmt = $conn->prepare("DELETE FROM establishments WHERE id = ?");
     $stmt->execute([$id]);
 }
 
-// FONCTION POUR RÉCUPÉRER TOUS LES ÉTABLISSEMENTS DE LA BASE DE DONNÉES
-function getAllEstablishments() {
-    $conn = getConnexion();
+// FONCTION POUR RÉCUPÉRER TOUS LES ÉTABLISSEMENTS
+function getAllEstablishments($conn) {
     $stmt = $conn->prepare("SELECT * FROM establishments");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// FONCTION POUR RECUPERER LES ETABLISSEMENT APPROUV2
-function getApprovedEstablishments($conn) {
-    $sql = "SELECT id, name FROM establishments WHERE status = 'approved'";
+// FONCTION POUR RECUPERER LES ETABLISSEMENTS ASSOCIES A DES UTILISATEURS AYANT LE role_id 2 (manager)
+function getEstablishmentsFromRole($conn) {
+    // Requête SQL pour récupérer l'ID de l'établissement dans la table users pour les utilisateurs ayant role_id = 2
+    $sql = "SELECT DISTINCT establishment_id FROM users WHERE role_id = 2"; 
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// FONCTION POUR VERIFIER SIUN ETABLISSEMENT EST APPROUVE
+// FONCTION POUR VÉRIFIER SI UN ÉTABLISSEMENT EST APPROUVÉ
 function checkEstablishmentApproval($conn, $establishment_id) {
     $sql = "SELECT * FROM establishments WHERE id = :establishment_id AND status = 'approved'";
     $stmt = $conn->prepare($sql);
@@ -77,6 +57,5 @@ function checkEstablishmentApproval($conn, $establishment_id) {
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
-
-
 ?>
+

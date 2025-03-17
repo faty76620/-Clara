@@ -1,3 +1,9 @@
+<?php
+require_once '../../models/establishment.php';
+$conn = getConnexion();
+$establishments = getEstablishmentsFromRole($conn);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,51 +20,47 @@
     <title>Tableau de bord</title>
 </head>
 <body>
-    <?php include __DIR__ . '/../../templates/header_manager.php'; 
-        require_once '../models/database.php'; 
-        require_once '../models/establishment.php'; 
-        
-        $conn = getConnexion();
-        
-        // Récupérer les établissements approuvés
-        $establishments = getApprovedEstablishments($conn);
-    ?>
+<?php
+session_start();
+if (isset($_SESSION['success'])) {
+    echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+    unset($_SESSION['success']); 
+}
+if (isset($_SESSION['error'])) {
+    echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+    unset($_SESSION['error']);
+}
+?>
+    <?php include __DIR__ . '/../../templates/header_manager.php'; ?>
     <main class="dashboard">
         <h2>Inscription utilisateur</h2>
         <div class="register-sessions">
-            <form action="process_user_registration.php" method="POST">
+            <form action="/clara/controllers/userControllers.php" method="POST">
                 <div class="group-form">
-                    <label for="lastname_admin">Nom</label>
-                    <input type="text" name="lastname_admin" id="lastname_admin" required><br>
+                    <label for="lastname_user">Nom</label>
+                    <input type="text" name="lastname_user" id="lastname_user" required><br>
                 </div>
                 <div class="group-form">
-                    <label for="firstname_admin">Prénom</label>
-                    <input type="text" name="firstname_admin" id="firstname_admin" required><br>
+                    <label for="firstname_user">Prénom</label>
+                    <input type="text" name="firstname_user" id="firstname_user" required><br>
                 </div>
                 <input type="hidden" name="role" value="3">
                 <div class="group-form">
-                    <label for="mail_admin">Email</label>
-                    <input type="email" name="mail_admin" id="mail_admin" required><br>
+                    <label for="mail_user">Email</label>
+                    <input type="email" name="mail_user" id="mail_user" required><br>
                 </div>
                 <div class="group-form">
                     <label for="phone">Numéro de téléphone</label>
                     <input type="text" name="phone" id="phone" required><br>
                 </div>
-                <div class="group-form">
-                <label for="status">Statut de l'établissement</label>
-                    <select name="status" id="status" required>
-                        <option value="pending">En attente</option>
-                        <option value="approved">Approuvé</option>
-                        <option value="rejected">Rejeté</option>
-                    </select>
-                </div>
+                <input type="hidden" name="role_id" value="3"> <!-- Champ caché pour le role_id -->
                 <div class="group-form">
                     <label for="establishment_id">Choisir un établissement</label>
                     <select name="establishment_id" id="establishment_id" required>
                         <?php
-                        // Afficher les établissements approuvés
+                        // Afficher chaque établissement dans la liste déroulante
                         foreach ($establishments as $establishment) {
-                        echo "<option value='{$establishment['id']}'>{$establishment['name']}</option>";
+                        echo "<option value='{$establishment['establishment_id']}'>Etablissement #{$establishment['establishment_id']}</option>";
                         }
                         ?> 
                     </select>
@@ -69,4 +71,8 @@
     </main>
 </body>
 </html>
+
+
+
+
 

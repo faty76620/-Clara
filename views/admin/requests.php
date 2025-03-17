@@ -27,6 +27,17 @@
     $approvedRequests = getApprovedRequests($search);
     $rejectedRequests = getRejectedRequests($search);
     ?>
+    <?php
+    session_start();
+    if (isset($_SESSION['success'])) {
+        echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+        unset($_SESSION['success']); 
+    }
+    if (isset($_SESSION['error'])) {
+        echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+        unset($_SESSION['error']);
+    }
+    ?>
     <main class="dashboard">
         <!--MESSAGE ALERTE-->
         <div id="alert-info" class="alert-info">

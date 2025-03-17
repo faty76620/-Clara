@@ -27,7 +27,7 @@ function createUser($conn, $data) {
         $data['lastname_user'], 
         $data['mail_user'], 
         $data['password'], 
-        $_SESSION['establishment_id'], 
+        $data['establishment_id'], 
         $data['role_user'] 
     ]);
 }
@@ -94,18 +94,15 @@ function updateUserPassword($conn, $user_id, $new_password) {
 
 // FONCTION POUR VERIFIER SI UN MANAGER PAR ETABLISSEMENT  
 function checkManagerExists($conn, $establishment_id) {
-    try {
-        $sql = "SELECT COUNT(*) FROM users WHERE establishment_id = :establishment_id AND role_id = 1"; // 1 pour manager
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
-        $stmt->execute();
-        
-        return $stmt->fetchColumn() > 0;
-    } catch (PDOException $e) {
-        error_log("Erreur lors de la vérification du manager : " . $e->getMessage());
-        return false;
-    }
+    // Requête pour vérifier s'il existe déjà un manager pour l'établissement
+    $sql = "SELECT COUNT(*) FROM users WHERE role_id = 2 AND establishment_id = :establishment_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
+    $stmt->execute();
+    // Si le compteur est supérieur à 0, un manager existe déjà pour cet établissement
+    return $stmt->fetchColumn() > 0;
 }
+
 
 
 ?>

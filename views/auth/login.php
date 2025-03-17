@@ -17,16 +17,13 @@
 <body class="body-background">
 <?php
 session_start();
-// Affichage des messages d'erreur
-if (isset($_SESSION['error'])) {
-    echo '<p>' . $_SESSION['error'] . '</p>';
-    unset($_SESSION['error']);  // Supprimer le message après l'affichage
-}
-
-// Affichage du message de succès
 if (isset($_SESSION['success'])) {
-    echo '<p>' . $_SESSION['success'] . '</p>';
-    unset($_SESSION['success']);  // Supprimer le message après l'affichage
+    echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+    unset($_SESSION['success']); 
+}
+if (isset($_SESSION['error'])) {
+    echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+    unset($_SESSION['error']);
 }
 ?>
     <div class="part-connect">

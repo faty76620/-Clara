@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); 
 require_once '../models/database.php';
 require_once '../models/user.php';
 
@@ -13,9 +13,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $username = htmlspecialchars(trim($_POST['username']));
         $password = htmlspecialchars(trim($_POST['password']));
         $user = getUserByUsername($conn, $username);
-
+        
+        if (!$user) {
+            $_SESSION['error'] = "Identifiant incorrect.";
+            header("Location: /clara/views/auth/login.php");
+            exit();
+        }
+        
         if (!$user || !isset($user['password']) || !password_verify($password, $user['password'])) {
-            $_SESSION['error'] = "Identifiant ou mot de passe incorrect.";
+            $_SESSION['error'] = "Mot de passe incorrect.";
             header("Location: /clara/views/auth/login.php");
             exit();
         }
@@ -45,3 +51,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+

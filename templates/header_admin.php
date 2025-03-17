@@ -7,7 +7,7 @@
             <a href="/clara/views/admin/establishment.php" onclick="hideMenu()"><i class="fas fa-hospital"></i></a></li>
             <a href="/clara/views/admin/privileges.php" onclick="hideMenu()"><i class="fas fa-users"></i></a>
             <a href="/clara/views/admin/safety.php" onclick="hideMenu()"><i class="fas fa-cogs"></i></a>
-            <a href="/clara/views/home/home.php" onclick="hideMenu()"><i class="fas fa-sign-out-alt"></i></a>   
+            <a href="/clara/controllers/logoutController.php"onclick="hideMenu()"><i class="fas fa-sign-out-alt"></i></a>  
         </div>
     </nav>
 </header>

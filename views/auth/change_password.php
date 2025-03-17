@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,15 +16,16 @@ session_start();
 <body class="body-background">
 <div class="new_password">
     <h2>Changer votre mot de passe</h2>
-    <?php session_start(); ?>
-    <?php if (isset($_SESSION['error'])): ?>
-        <p><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($_SESSION['success'])): ?>
-        <p><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></p>
-    <?php endif; ?>
-
+    <?php session_start();
+    if (isset($_SESSION['success'])) {
+        echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+        unset($_SESSION['success']); 
+    }
+    if (isset($_SESSION['error'])) {
+        echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+        unset($_SESSION['error']);
+    }
+    ?>
     <form method="POST" action="/clara/controllers/updatePassword.php">
         <div class="group-form">
             <label>Ancien mot de passe :</label>
