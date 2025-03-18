@@ -18,8 +18,9 @@
     include __DIR__ . '/../../templates/header_admin.php';
     require_once '../../models/establishment.php';
     require_once '../../models/database.php';
-
-    $establishments = getAllEstablishments();
+    
+    $conn = getConnexion();
+    $establishments = getAllEstablishments(($conn));
     ?>
     <main class="dashboard"> 
         <div class="container-title"><h2>Liste des établissements</h2></div> 

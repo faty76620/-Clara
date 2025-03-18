@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
             $conn->beginTransaction();
             // INSERE LA DEMANDE DANS LA TABLE 'requests'
-            createRequest([
+            createRequest($conn, [
                 'firstname_admin' => $firstname_admin,
                 'lastname_admin' => $lastname_admin,
                 'role' => $role, 
@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 'description' => $description,
                 'cgu' => $cgu,
             ]);
-
+            
             // VALIDE TRANSACTION 
             $conn->commit();
 

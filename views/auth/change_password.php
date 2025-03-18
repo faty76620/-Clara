@@ -16,7 +16,8 @@
 <body class="body-background">
 <div class="new_password">
     <h2>Changer votre mot de passe</h2>
-    <?php session_start();
+    <?php 
+     include __DIR__ . '/../../templates/session_start.php'; 
     if (isset($_SESSION['success'])) {
         echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
         unset($_SESSION['success']); 

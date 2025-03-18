@@ -22,13 +22,16 @@
     
     // RECUPERER LES RECHERCHE
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+    
+    $conn = getConnexion();
+    
     // RECUPERER LES DEMANDES SELON LEUR STATUTS
-    $pendingRequests = getPendingRequests($search);
-    $approvedRequests = getApprovedRequests($search);
-    $rejectedRequests = getRejectedRequests($search);
+    $pendingRequests = getPendingRequests($conn, $search); 
+    $approvedRequests = getApprovedRequests($conn, $search); 
+    $rejectedRequests = getRejectedRequests($conn, $search); 
     ?>
     <?php
-    session_start();
+ include __DIR__ . '/../../templates/session_start.php'; 
     if (isset($_SESSION['success'])) {
         echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
         unset($_SESSION['success']); 
@@ -218,7 +221,7 @@
                 <?php endif; ?>
             </tbody>
         </table>
-        <!-- AFFICHES DES DEMANDES VERSION TABLETTE MOBILE -->
+        <!-- AFFICHES DES DEMANDES REFUSÉES EN CARTE -->
         <div class="cards-request">
             <?php if (!empty($rejectedRequests)) : ?>
             <?php foreach ($rejectedRequests as $request) : ?>
@@ -237,6 +240,8 @@
             <p>Aucune demande refusée.</p>
             <?php endif; ?>
         </div>
-    </main>
+    </div>
+</main>
+<script src="/clara/assets/js/tabs.js"></script>
 </body>
 </html>

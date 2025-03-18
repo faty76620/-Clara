@@ -1,6 +1,4 @@
 <?php
-require_once 'database.php';
-
 // INSERTION DANS BASE DE DONNÉES
 function createRequest($conn, $data) {
     // Sécuriser les données

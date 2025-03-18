@@ -21,7 +21,7 @@ $establishments = getEstablishmentsFromRole($conn);
 </head>
 <body>
 <?php
-session_start();
+ include __DIR__ . '/../../templates/session_start.php'; 
 if (isset($_SESSION['success'])) {
     echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
     unset($_SESSION['success']); 

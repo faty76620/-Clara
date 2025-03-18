@@ -1,5 +1,5 @@
 <?php
-session_start();
+include __DIR__ . '/../../templates/session_start.php'; 
 require_once '../models/database.php';
 require_once '../models/request.php';
 require_once '../models/establishment.php';

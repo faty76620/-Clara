@@ -22,7 +22,7 @@
     // Vérifier si l'ID est passé dans l'URL
     if (isset($_GET['id']) && !empty($_GET['id'])) {
         $id = intval($_GET['id']); // Sécurisation de l'ID
-        $request = getRequestById($id); // Fonction pour récupérer la demande par ID
+        $request = getRequestById($conn, $id); // Fonction pour récupérer la demande par ID
 
         // Vérifier si la demande existe
         if (!$request) {
