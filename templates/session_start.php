@@ -27,8 +27,7 @@ if (isset($_SESSION['user_id'])) {
     $_SESSION['last_activity'] = time();
 }
 
-// Option : Déconnexion après fermeture du navigateur (pas besoin si `session.gc_maxlifetime` est configuré)
-ini_set('session.cookie_lifetime', 0);
 ?>
+
 
 

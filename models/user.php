@@ -83,7 +83,6 @@ function getUserById($conn, $user_id) {
     }
 }
 
-
 function updateUserPassword($conn, $user_id, $hashed_password) {
     try {
         $sql = "UPDATE users SET password = :password WHERE id = :user_id";

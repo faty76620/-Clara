@@ -1,18 +1,20 @@
 <?php
-
 require_once __DIR__ . '/../templates/session_start.php';
 require_once __DIR__ . '/../models/database.php';
 require_once __DIR__ . '/../models/user.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Connexion à la base de données
     $conn = getConnexion();
     if (!$conn) {
         die("Erreur de connexion à la base de données.");
     }
 
+    // Récupérer les données du formulaire
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
+    // Vérification des champs vides
     if (empty($username) || empty($password)) {
         $_SESSION['error'] = "Veuillez remplir tous les champs.";
         header("Location: /clara/views/auth/login.php");
@@ -21,6 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Récupérer l'utilisateur depuis la base de données
     $user = getUserByUsername($conn, $username);
+
+
+    $conn = getConnexion();
 
     error_log("Mot de passe soumis : " . $password);
     error_log("Mot de passe en base : " . $user['password']);
@@ -31,14 +36,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 
-    // Stocker les informations en session
+    // Stocker les informations de l'utilisateur en session
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['role_id'] = $user['role_id'];
     $_SESSION['firstname'] = $user['firstname']; 
     $_SESSION['lastname'] = $user['lastname'];    
     $_SESSION['must_change_password'] = $user['must_change_password'];
-
     
     // Si l'utilisateur doit changer son mot de passe, le rediriger vers la page de changement de mot de passe
     if ($user['must_change_password'] == 1) {

@@ -1,6 +1,6 @@
 <?php
- include __DIR__ . '/../../templates/session_start.php'; 
- 
+include __DIR__ . '/../../templates/session_start.php'; 
+
 // Vérifiez que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header("Location: /clara/views/auth/login.php");
@@ -38,7 +38,8 @@ $lastname = isset($_SESSION['lastname']) ? $_SESSION['lastname'] : 'Utilisateur'
 </head>
 <body>
     <?php 
-        include __DIR__ . '/../../templates/header_admin.php'; ?>
+       include __DIR__ . '/../../templates/header_admin.php'; 
+    ?>
         <main class="dashboard">
             <h2>Bonjour, <?php echo htmlspecialchars($lastname); ?> !</h2>
         </main>
