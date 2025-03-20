@@ -18,10 +18,11 @@
     include __DIR__ . '/../../templates/header_admin.php';
     require_once '../../models/database.php';
     require_once '../../models/request.php';
-
+    
     // Vérifier si l'ID est passé dans l'URL
     if (isset($_GET['id']) && !empty($_GET['id'])) {
-        $id = intval($_GET['id']); // Sécurisation de l'ID
+        $conn = getConnexion();
+        $id = intval($_GET['id']); 
         $request = getRequestById($conn, $id); // Fonction pour récupérer la demande par ID
 
         // Vérifier si la demande existe

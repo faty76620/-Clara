@@ -14,10 +14,8 @@
     <title>Mot de passe oublié</title>
 </head>
 <body>
-        <?php 
-            include __DIR__ . '/../../templates/header.php'; ?>
          <?php
-    
+        include __DIR__ . '/../../templates/header.php';
         if (isset($_SESSION['error'])) {
             echo "<p style='color: red;'>".$_SESSION['error']."</p>";
             unset($_SESSION['error']);
@@ -30,7 +28,7 @@
         <main class="main">
             <h2>Reinitialisation du mot de passe</h2>
             <div class="register-sessions">
-                <form action="/clara/controllers/regetPassword-process.php" method="POST">
+            <form action="/controllers/resetPassword-process.php" method="POST">
                     <div class="form-group">
                         <label for="email">Email :</label>
                         <input type="email" id="email" name="email" style="width: 50%;" required>

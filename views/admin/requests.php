@@ -168,7 +168,7 @@
                 </tbody>
             </table>
             <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-request">
+            <div class="cards-requests">
                 <?php if (!empty($approvedRequests)) : ?>
                 <?php foreach ($approvedRequests as $request) : ?>
                 <div class="card">

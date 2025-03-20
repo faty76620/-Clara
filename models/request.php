@@ -26,9 +26,14 @@ function createRequest($conn, $data) {
 
 // RÉCUPÉRER UNE DEMANDE PAR ID
 function getRequestById($conn, $id) {
-    $stmt = $conn->prepare("SELECT * FROM requests WHERE id = ?");
-    $stmt->execute([$id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    try {
+        $stmt = $conn->prepare("SELECT * FROM requests WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        error_log("Erreur lors de la récupération de la demande : " . $e->getMessage());
+        return false;
+    }
 }
 
 // METTRE À JOUR LE STATUT D'UNE DEMANDE 

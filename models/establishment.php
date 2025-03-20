@@ -27,12 +27,6 @@ function getEstablishmentById($conn, $id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// FONCTION POUR SUPPRIMER UN ÉTABLISSEMENT EN UTILISANT SON ID
-function deleteEstablishment($conn, $id) {
-    $stmt = $conn->prepare("DELETE FROM establishments WHERE id = ?");
-    $stmt->execute([$id]);
-}
-
 // FONCTION POUR RÉCUPÉRER TOUS LES ÉTABLISSEMENTS
 function getAllEstablishments($conn) {
     $stmt = $conn->prepare("SELECT * FROM establishments");
@@ -57,5 +51,30 @@ function checkEstablishmentApproval($conn, $establishment_id) {
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
-?>
 
+
+// METTRE A JOUR UN ETABLISSEMENT
+function updateEstablishment($conn, $id, $firstname, $phone, $adresse, $mail, $description) {
+    try {
+        $stmt = $conn->prepare("UPDATE establishments SET firstname = ?, phone = ?, adresse = ?, mail = ?, description = ? WHERE id = ?");
+        return $stmt->execute([$firstname, $phone, $adresse, $mail, $description, $id]);
+    } catch (Exception $e) {
+        error_log("Erreur mise à jour établissement : " . $e->getMessage());
+        return false;
+    }
+}
+
+//FONCTION POUR SUPPRIMER UN ETABLISSEMENT EN UTILISANT SONT ID
+function deleteEstablishment($conn, $id) {
+    try {
+        $stmt = $conn->prepare("DELETE FROM establishments WHERE id = ?");
+        $stmt->execute([$id]);
+        return true;
+    } catch (Exception $e) {
+        error_log("Erreur lors de la suppression : " . $e->getMessage());
+        return false;
+    }
+}
+
+
+?>

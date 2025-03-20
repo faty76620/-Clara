@@ -106,6 +106,14 @@
     .flex-register {
         padding: 0;
     }
+
+    .separator-line {
+        margin: 50px 0px;
+    }
+
+    .register {
+        display: none;
+    }
 }
 
 @media screen and (max-width:1024px) {
@@ -133,13 +141,6 @@
      }
  }
 
- @media screen and (max-width:768px) {
-   
-    .tabs {
-     display: none;
-    }
-}
-
 @media screen and (min-width:768px) {
    
     .tabs_icon {
@@ -147,36 +148,18 @@
     }
 }
 
-/***REGISTER***/
-@media screen and (max-width:768px) {
-    
-    .register-container form {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .separator-line {
-        margin: 50px 0px;
-    }
-}
-
-@media screen and (min-width:768px) {
-    .register {
-        display: none;
-    }
-}
-
+/***RESPONSIVE PAGES ADMIN ***/
 @media screen and (min-width:900px) {
-   .cards-request {
-    display: none;
-   }
+    .cards-requests {
+     display: none;
+    }
 }
 
 @media screen and (max-width:900px) {
-     .table-request {
-     display: none;
-    }
- }
+      .table-request {
+      display: none;
+     }
+} 
 
  /* FONCTIONNALITES */
 @media screen and (min-width: 768px) {

@@ -18,7 +18,6 @@
     include __DIR__ . '/../../templates/header_admin.php';
     require_once '../../models/establishment.php';
     require_once '../../models/database.php';
-    
     $conn = getConnexion();
     $establishments = getAllEstablishments(($conn));
     ?>
@@ -26,13 +25,15 @@
         <div class="container-title"><h2>Liste des établissements</h2></div> 
         
         <?php if (!empty($establishments)) : ?>
-            <table>
+            <table class="table-request">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nom</th>
                         <th>Téléphone</th>
-                        <th>Ville</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>En savoir plus</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -43,6 +44,10 @@
                         <td><?= htmlspecialchars($establishment['firstname']) ?></td>
                         <td><?= htmlspecialchars($establishment['phone']) ?></td>
                         <td><?= htmlspecialchars($establishment['adresse']) ?></td>
+                        <td><?= htmlspecialchars($establishment['mail']) ?></td>
+                        <td>
+                            <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
+                        </td>
                         <td>
                             <a href="edit_establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
                             <a href="delete_establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
@@ -53,16 +58,22 @@
             </table>
 
             <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-request">
+            <div class="cards-requests">
                 <?php foreach ($establishments as $establishment) : ?>
-                    <div class="cards">
+                    <div class="card">
                         <h3><?= htmlspecialchars($establishment['firstname']) ?></h3>
                         <p>ID : <?= htmlspecialchars($establishment['id']) ?></p>
                         <p>Téléphone : <?= htmlspecialchars($establishment['phone']) ?></p>
-                        <p>Ville : <?= htmlspecialchars($establishment['adresse']) ?></p>
+                        <p>Adresse : <?= htmlspecialchars($establishment['adresse']) ?></p>
+                        <p>Email : <?= htmlspecialchars($establishment['mail']) ?></p>
                         <div>
-                            <a href="edit_establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                            <a href="delete_establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
+                        <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
+                    </div>
+                        <div class="action">
+                            <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
+                            <a href="delete-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" 
+                            class="btn-dashboard delete" 
+                            onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
                         </div>
                     </div>
                     <?php endforeach; ?>

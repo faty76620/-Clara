@@ -1,9 +1,8 @@
 <!-- reset_password_process.php -->
 <?php
-
-require_once '../models/send_mail.php';
-require_once '../models/user.php';  
 require_once __DIR__ . '/../templates/session_start.php';
+require_once __DIR__ . '/../models/send_mail.php';
+require_once __DIR__ . '/../models/user.php';
 require_once __DIR__ . '/../models/database.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -18,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $token = $model->createPasswordResetToken($user['id'], $pdo);
 
         // Lien pour réinitialiser le mot de passe
-        $resetLink = "http://localhost/clara/Controllers/resetPassword.php?token=" . $token;
+        $resetLink = "http://localhost/clara/controllers/reset_password.php?token=" . $token;
 
         // Envoyer l'email avec le lien
         $subject = "Réinitialisation de votre mot de passe";
@@ -29,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             Ce lien expirera dans 1 heure.
         ";
         
-        // Envoi de l'email (utiliser une fonction d'envoi d'email, comme mail() ou PHPMailer)
+        // Envoi de l'email 
         if (sendEmail($email, $subject, $message)) {
             $_SESSION['success'] = "Un lien de réinitialisation a été envoyé à votre email.";
         } else {
@@ -39,6 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['error'] = "Cet email n'existe pas dans nos enregistrements.";
     }
     
-    header('Location: clara/views/auth/resetPassword-process.php');
+    header('Location: /clara/views/auth/login.php');
     exit();
 }

@@ -1,6 +1,4 @@
-<!-- reset_password.php -->
 <?php
-require_once __DIR__ . '/../templates/session_start.php';
 require_once __DIR__ . '/../models/database.php';
 require_once '/../reset_modelPassword.php'; 
 
@@ -8,6 +6,8 @@ require_once '/../reset_modelPassword.php';
 if (!isset($_GET['token'])) {
     die('Token manquant');
 }
+
+$conn = getConnexion();
 
 $token = $_GET['token'];
 $model = new PasswordResetModel();
@@ -25,18 +25,20 @@ if ($tokenData) {
         // Supprimer le token après utilisation
         $model->deleteToken($token, $pdo);
 
+        require_once __DIR__ . '/../templates/session_start.php';
+
         $_SESSION['success'] = "Votre mot de passe a été réinitialisé avec succès.";
-        header('Location: clara/views/auth/login.php');  // Redirige l'utilisateur vers la page de connexion
+        header('Location: /clara/views/auth/login.php');  // Redirige l'utilisateur vers la page de connexion
         exit();
     }
 } else {
     $_SESSION['error'] = "Le token est invalide ou a expiré.";
-    header('Location: clara/views/auth/reset_password.php');
+    header('Location: /clara/views/auth/reset_password.php');
     exit();
 }
 ?>
 
-<form action="clara/controllers/resetPassword-process.php?token=<?php echo htmlspecialchars($token); ?>" method="POST">
+<form action="/clara/controllers/resetPassword-process.php?token=<?php echo htmlspecialchars($token); ?>" method="POST">
     <label for="new_password">Nouveau mot de passe :</label>
     <input type="password" id="new_password" name="new_password" required>
     <button type="submit">Réinitialiser le mot de passe</button>
