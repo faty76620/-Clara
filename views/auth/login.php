@@ -53,7 +53,7 @@ if (isset($_SESSION['error'])) {
                     <button class="btn" type="submit">Connexion</button>
                 </div>
                 <div class="password-forgot">
-                    <a href="#" class="open-modal">Mot de passe oublié ?</a>
+                    <a href="forgot_pass.php" class="open-modal">Mot de passe oublié ?</a>
                 </div>
             </form>
         </div>

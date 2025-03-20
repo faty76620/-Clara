@@ -25,6 +25,7 @@ $lastname = isset($_SESSION['lastname']) ? $_SESSION['lastname'] : 'Utilisateur'
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/clara/assets/images/logo-onglet.png">
     <link rel="stylesheet" href="/clara/assets/css/style.css">

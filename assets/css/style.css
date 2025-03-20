@@ -34,6 +34,11 @@ a {
 ul li {
     list-style-type:circle;
 }
+
+.space {
+    height: 50vh;
+}
+
 /**********************************************CONNEXION********************************************/
 
 #logo-connexion {
