@@ -3,6 +3,7 @@ require_once '../templates/session_start.php';
 require_once '../models/database.php';
 require_once '../models/request.php';
 require_once '../models/establishment.php';
+require_once '../models/establishment.php';
 require_once '../models/user.php';
 require_once '../models/send_mail.php';
 
@@ -56,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
 
                 // METTRE À JOUR LE STATUT "ACCEPTÉ"
                 updateRequestStatus($conn, $id, 'accepté');
-
+                updateEstablishmentStatus($conn, $id, 'accepté');
                 $conn->commit();
 
                 // ENVOYER UN EMAIL DE CONFIRMATION

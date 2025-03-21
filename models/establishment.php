@@ -43,16 +43,6 @@ function getEstablishmentsFromRole($conn) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// FONCTION POUR VÉRIFIER SI UN ÉTABLISSEMENT EST APPROUVÉ
-function checkEstablishmentApproval($conn, $establishment_id) {
-    $sql = "SELECT * FROM establishments WHERE id = :establishment_id AND status = 'approved'";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-
 // METTRE A JOUR UN ETABLISSEMENT
 function updateEstablishment($conn, $id, $firstname, $phone, $adresse, $mail, $description) {
     try {
@@ -76,5 +66,61 @@ function deleteEstablishment($conn, $id) {
     }
 }
 
+// METTRE À JOUR LE STATUT DE L'ÉTABLISSEMENT 
+function updateEstablishmentStatus($conn, $id, $status) {
+    try {
+        $stmt = $conn->prepare("UPDATE establishments SET status = ? WHERE id = ?");
+        $stmt->execute([$status, $id]);
+        return true;
+    } catch (Exception $e) {
+        error_log("Erreur lors de la mise à jour du statut de l'établissement : " . $e->getMessage());
+        return false;
+    }
+}
+
+// RÉCUPÉRER LES ÉTABLISSEMENTS EN ATTENTE
+function getPendingEstablishments($conn, $search = '') {
+    $query = "SELECT * FROM establishments WHERE status = 'en attente'";
+    if (!empty($search)) {
+        $query .= " AND (firstname LIKE :search OR mail LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
+    }
+    $query .= " ORDER BY created_at DESC";
+    $stmt = $conn->prepare($query);
+    if (!empty($search)) {
+        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+    }
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// RÉCUPÉRER LES ÉTABLISSEMENTS ACCEPTÉS
+function getApprovedEstablishments($conn, $search = '') {
+    $query = "SELECT * FROM establishments WHERE status = 'accepté'";
+    if (!empty($search)) {
+        $query .= " AND (firstname LIKE :search OR mail LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
+    }
+    $query .= " ORDER BY created_at DESC";
+    $stmt = $conn->prepare($query);
+    if (!empty($search)) {
+        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+    }
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// RÉCUPÉRER LES ÉTABLISSEMENTS REFUSÉS
+function getRejectedEstablishments($conn, $search = '') {
+    $query = "SELECT * FROM establishments WHERE status = 'refusé'";
+    if (!empty($search)) {
+        $query .= " AND (firstname LIKE :search OR mail LIKE :search OR created_at LIKE :search OR type_role LIKE :search)";
+    }
+    $query .= " ORDER BY created_at DESC";
+    $stmt = $conn->prepare($query);
+    if (!empty($search)) {
+        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+    }
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 ?>

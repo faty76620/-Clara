@@ -64,9 +64,9 @@
         </form>
         <!-- ONGLET POUR BASCULER SUR AUTRE TYPE DE DEMANDES -->
         <div class="tabs">
-            <button id="tab-pending" class="tab-button active" onclick="showTab('pending')">Demandes en attente</button>
-            <button id="tab-approved" class="tab-button" onclick="showTab('approved')">Demandes acceptées</button>
-            <button id="tab-rejected" class="tab-button" onclick="showTab('rejected')">Demandes refusées</button>
+            <button id="tab-pending" class="tab-button active" onclick="showTab('pending')"><i class="fas fa-clock"></i><span class="tab-text">Etablissements en attente</span></button>
+            <button id="tab-approved" class="tab-button" onclick="showTab('approved')"><i class="fas fa-check-circle"></i><span class="tab-text">Etablissements acceptées</span></button>
+            <button id="tab-rejected" class="tab-button" onclick="showTab('rejected')"> <i class="fas fa-times-circle"></i><span class="tab-text">Etablissements refusées</span></button>
         </div>
         <!-- SECTION DES DEMANDES EN ATTENTE -->
         <div id="pending" class="tab-content active">
@@ -242,6 +242,5 @@
         </div>
     </div>
 </main>
-<script src="/clara/assets/js/tabs.js"></script>
 </body>
 </html>
