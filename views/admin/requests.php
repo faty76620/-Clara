@@ -30,17 +30,6 @@
     $approvedRequests = getApprovedRequests($conn, $search); 
     $rejectedRequests = getRejectedRequests($conn, $search); 
     ?>
-    <?php
- include __DIR__ . '/../../templates/session_start.php'; 
-    if (isset($_SESSION['success'])) {
-        echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
-        unset($_SESSION['success']); 
-    }
-    if (isset($_SESSION['error'])) {
-        echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
-        unset($_SESSION['error']);
-    }
-    ?>
     <main class="dashboard">
         <!--MESSAGE ALERTE-->
         <div id="alert-info" class="alert-info">
@@ -110,7 +99,7 @@
                 </tbody>
             </table>
             <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-request">
+            <div class="cards-requests">
                 <?php if (!empty($pendingRequests)) : ?>
                 <?php foreach ($pendingRequests as $request) : ?>
                 <div class="card">
@@ -120,7 +109,7 @@
                     <p><?= htmlspecialchars($request['type_role']); ?></p>
                     <p><?= htmlspecialchars($request['status']); ?></p>
                     <div>
-                        <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">Détails</a>
+                        <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
                     </div>
                     <div class="action">
                         <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
@@ -143,7 +132,8 @@
                         <th>Date</th>
                         <th>Type</th>
                         <th>Statut</th>
-                        <th>En savoir plus</th>
+                        <th class="details">En savoir plus</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -157,6 +147,12 @@
                         <td><?= htmlspecialchars($request['status']); ?></td>
                         <td>
                             <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
+                        </td>
+                        <td>
+                            <div class="action">
+                                <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
+                                <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -178,9 +174,14 @@
                     <p><?= htmlspecialchars($request['type_role']); ?></p>
                     <p><?= htmlspecialchars($request['status']); ?></p>
                     <div>
-                        <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">Détails</a>
+                        <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="detail">En savoir plus</a>
+                    </div>
+                    <div class="action">
+                        <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
+                        <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
                     </div>
                 </div>
+            </div>
                 <?php endforeach; ?>
                 <?php else : ?>
                 <p>Aucune demande acceptée.</p>
@@ -197,7 +198,7 @@
                     <th>Date</th>
                     <th>Type</th>
                     <th>Statut</th>
-                    <th>En savoir plus</th>
+                    <th class="details">En savoir plus</th>
                 </tr>
             </thead>
             <tbody>
@@ -212,6 +213,12 @@
                     <td>
                         <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
                     </td>
+                    <td>
+                        <div class="action">
+                            <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
+                            <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
+                        </div>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php else : ?>
@@ -222,7 +229,7 @@
             </tbody>
         </table>
         <!-- AFFICHES DES DEMANDES REFUSÉES EN CARTE -->
-        <div class="cards-request">
+        <div class="cards-requests">
             <?php if (!empty($rejectedRequests)) : ?>
             <?php foreach ($rejectedRequests as $request) : ?>
             <div class="card">
@@ -232,7 +239,12 @@
                 <p><?= htmlspecialchars($request['type_role']); ?></p>
                 <p><?= htmlspecialchars($request['status']); ?></p>
                 <div>
-                    <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">Détails</a>
+                    <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="detail">En savoir plus</a>
+                </div>
+                </div>
+                <div class="action">
+                    <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
+                    <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
                 </div>
             </div>
             <?php endforeach; ?>

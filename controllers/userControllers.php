@@ -81,4 +81,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header("Location: /clara/views/manager/register_user.php"); 
     exit();
 }
+
+// Liste des utilisateurs
+if (isset($_GET['action']) && $_GET['action'] == 'list') {
+    $conn = getConnexion();
+    $users = getUsersByRole($conn, 'user'); // Récupère les utilisateurs
+    require_once '../../views/manager/users_list.php';
+}
+
+// Suppression d'un utilisateur
+if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
+    $conn = getConnexion();
+    if (deleteUser($conn, $_GET['id'])) {
+        $_SESSION['success'] = "Utilisateur supprimé avec succès.";
+    } else {
+        $_SESSION['error'] = "Erreur lors de la suppression de l'utilisateur.";
+    }
+    header("Location: /clara/views/manager/users_list.php");
+    exit();
+}
 ?>

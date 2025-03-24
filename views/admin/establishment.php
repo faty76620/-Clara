@@ -50,6 +50,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Date</th>
                         <th>Nom</th>
                         <th>Téléphone</th>
                         <th>Adresse</th>
@@ -63,6 +64,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                         <?php foreach ($pendingEstablishments as $establishment) : ?>
                             <tr>
                                 <td><?= htmlspecialchars($establishment['id']) ?></td>
+                                <td><?= htmlspecialchars($establishment['created_at']) ?></td>
                                 <td><?= htmlspecialchars($establishment['firstname']) ?></td>
                                 <td><?= htmlspecialchars($establishment['phone']) ?></td>
                                 <td><?= htmlspecialchars($establishment['adresse']) ?></td>
@@ -89,12 +91,13 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                 <?php foreach ($pendingEstablishments as $establishment) : ?>
                 <div class="card">
                     <h3><?= htmlspecialchars($establishment['firstname']); ?></h3>
+                    <p>Date :<?= htmlspecialchars($establishment['created_at']); ?></p>
                     <p>ID :<?= htmlspecialchars($establishment['id']); ?></p>
                     <p>Telephone :<?= htmlspecialchars($establishment['phone']); ?></p>
                     <p>Adresse :<?= htmlspecialchars($establishment['adresse']); ?></p>
                     <p>Email :<?= htmlspecialchars($establishment['mail']); ?></p>
                     <div>
-                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
+                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="detail">En savoir plus</a>
                     </div>
                     <div class="action">
                         <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
@@ -104,7 +107,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                 </div>
                 <?php endforeach; ?>
                 <?php else : ?>
-                <p>Aucune demande en attente.</p>
+                <p>Aucune etablissement en attente.</p>
                 <?php endif; ?>
             </div>
         </div>
@@ -114,6 +117,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Date</th>
                         <th>Nom</th>
                         <th>Téléphone</th>
                         <th>Adresse</th>
@@ -127,6 +131,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                         <?php foreach ($approvedEstablishments as $establishment) : ?>
                             <tr>
                                 <td><?= htmlspecialchars($establishment['id']) ?></td>
+                                <td><?= htmlspecialchars($establishment['created_at']) ?></td>
                                 <td><?= htmlspecialchars($establishment['firstname']) ?></td>
                                 <td><?= htmlspecialchars($establishment['phone']) ?></td>
                                 <td><?= htmlspecialchars($establishment['adresse']) ?></td>
@@ -150,11 +155,12 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                 <div class="card">
                     <h3><?= htmlspecialchars($establishment['firstname']); ?></h3>
                     <p>ID :<?= htmlspecialchars($establishment['id']); ?></p>
+                    <p>Date :<?= htmlspecialchars($establishment['created_at']); ?></p>
                     <p>Telephone :<?= htmlspecialchars($establishment['phone']); ?></p>
                     <p>Adresse:<?= htmlspecialchars($establishment['adresse']); ?></p>
                     <p>Email :<?= htmlspecialchars($establishment['mail']); ?></p>
                     <div>
-                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
+                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="detail">En savoir plus</a>
                     </div>
                     <div class="action">
                         <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
@@ -163,6 +169,8 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                     </div>
                 </div>
                 <?php endforeach; ?>
+                <?php else : ?>
+                    <p>Aucune etablissement en attente.</p>
                 <?php endif; ?>
             </div>
         </div>
@@ -172,6 +180,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Date</th>
                         <th>Nom</th>
                         <th>Téléphone</th>
                         <th>Adresse</th>
@@ -185,6 +194,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                         <?php foreach ($rejectedEstablishments as $establishment) : ?>
                             <tr>
                                 <td><?= htmlspecialchars($establishment['id']) ?></td>
+                                <td><?= htmlspecialchars($establishment['created_at']) ?></td>
                                 <td><?= htmlspecialchars($establishment['firstname']) ?></td>
                                 <td><?= htmlspecialchars($establishment['phone']) ?></td>
                                 <td><?= htmlspecialchars($establishment['adresse']) ?></td>
@@ -207,12 +217,13 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                 <?php foreach ($rejectedEstablishments as $establishment) : ?>
                 <div class="card">
                     <h3><?= htmlspecialchars($establishment['firstname']); ?></h3>
-                    <p>ID :<?= htmlspecialchars($establishment['id']); ?></p>
-                    <p>Telephone :<?= htmlspecialchars($establishment['phone']); ?></p>
-                    <p>Adresse :<?= htmlspecialchars($establishment['adresse']); ?></p>
-                    <p>Email :<?= htmlspecialchars($establishment['mail']); ?></p>
+                    <p>ID : <?= htmlspecialchars($establishment['id']); ?></p>
+                    <p>Date : <?= htmlspecialchars($establishment['created_at']); ?></p>
+                    <p>Telephone : <?= htmlspecialchars($establishment['phone']); ?></p>
+                    <p>Adresse : <?= htmlspecialchars($establishment['adresse']); ?></p>
+                    <p>Email : <?= htmlspecialchars($establishment['mail']); ?></p>
                     <div>
-                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
+                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="detail">En savoir plus</a>
                     </div>
                     <div class="action">
                         <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
@@ -221,6 +232,8 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
                     </div>
                 </div>
                 <?php endforeach; ?>
+                <?php else : ?>
+                    <p>Aucune etablissement en attente.</p>
                 <?php endif; ?>
             </div>
         </div>

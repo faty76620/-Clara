@@ -193,11 +193,11 @@
 }
 
 @media screen and (min-width: 480px) {
-    .cards-requests .card {
-        box-shadow: 0 2px 4px rgba(0,0,0,0.0);
-        background-color: inherit;
+    .cards-requests {
+        padding: 20px;
     }
 }
+
  /* FONCTIONNALITES */
 @media screen and (min-width: 768px) {
     .features-container {

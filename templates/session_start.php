@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // Durée d'expiration en secondes (ex: 30 minutes)
-$session_duration = 30 * 60; 
+$session_duration = 60 * 60; 
 
 // Vérifier si l'utilisateur est connecté
 if (isset($_SESSION['user_id'])) { 

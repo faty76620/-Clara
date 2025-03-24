@@ -123,4 +123,16 @@ function getRejectedEstablishments($conn, $search = '') {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+// VERIFIE SI UN ETABLISSEMENT EXISTE DEJA AVEC LES MEME INFORMATIONS
+function checkExistingEstablishment($conn, $request) {
+    $sql = "SELECT id FROM establishments WHERE mail = :mail LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':mail', $request['mail_etablissement']);
+    $stmt->execute();
+    return $stmt->fetchColumn(); // Retourne l'ID de l'établissement s'il existe
+}
+
+// 
+
+
 ?>

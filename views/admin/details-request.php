@@ -13,7 +13,7 @@
     <script defer src="/clara/assets/js.js"></script>
     <title>Demandes inscription</title>
 </head>
-<body> 
+<body class="background"> 
 <?php
     include __DIR__ . '/../../templates/header_admin.php';
     require_once '../../models/database.php';
@@ -85,34 +85,57 @@
                 <td><?= htmlspecialchars($request['cgu']); ?></td>
             </tr>
         </table>
-        <div class="details-list">
-            <p><strong>Prénom Admin :</strong></p>
-            <p><?= htmlspecialchars($request['firstname_admin']); ?></p>
-            <p><strong>Nom Admin :</strong></p>
-            <p><?= htmlspecialchars($request['lastname_admin']); ?></>
-            <p><strong>Type de Rôle :</strong></p>
-            <p><?= htmlspecialchars($request['type_role']); ?></p>
-            <p><strong>Email Admin :</strong></td>
-            <p><strong>Nom de l'Établissement :</strong></p>
-            <p><?= htmlspecialchars($request['firstname_establishment']); ?></p>
-            <p><strong>Adresse :</strong></p>
-            <p><strong>Email de l'Établissement :</strong></p>
-            <p><?= htmlspecialchars($request['mail']); ?></p>
-            <p><strong>Téléphone :</strong></p>
-            <p><?= htmlspecialchars($request['phone']); ?></p>
-            <p><strong>Site Web :</strong></p>
-            <p><?= htmlspecialchars($request['site']); ?></p>
-            <p><strong>Description :</strong></p>
-            <p><?= htmlspecialchars($request['description']); ?></p>
-            <p><strong>CGU :</strong></p>
-            <p><?= htmlspecialchars($request['cgu']); ?></p>
+        <div class="cards-requests">  
+        <div class="card">
+            <div class="group-line">
+                <p><strong>Prénom Admin :</strong></p>
+                <p><?= htmlspecialchars($request['firstname_admin']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Nom Admin :</strong></p>
+                <p><?= htmlspecialchars($request['lastname_admin']); ?></>
+            </div>
+            <div class="group-line">
+                <p><strong>Type de Rôle :</strong></p>
+                <p><?= htmlspecialchars($request['type_role']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Email Admin :</strong></td>
+                <p><?= htmlspecialchars($request['mail_admin']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Nom de l'Établissement :</strong></p>
+                <p><?= htmlspecialchars($request['firstname_establishment']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Adresse :</strong></p>
+                <p><?= htmlspecialchars($request['firstname_establishment']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Email de l'Établissement :</strong></p>
+                <p><?= htmlspecialchars($request['mail']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Téléphone :</strong></p>
+                <p><?= htmlspecialchars($request['phone']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Site Web :</strong></p>
+                <p><?= htmlspecialchars($request['site']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>Description :</strong></p>
+                <p><?= htmlspecialchars($request['description']); ?></p>
+            </div>
+            <div class="group-line">
+                <p><strong>CGU :</strong></p>
+                <p><?= htmlspecialchars($request['cgu']); ?></p>
+            </div>
+        </div>
         </div>
         <div class="btn-container">
-        <button>
-            <a href="/clara/views/admin/requests.php" class="btn-back">Retour</a>
-        </button>
-        </div>
-      
+            <button><a href="requests.php" class="btn-back">Retour</a></button>
+        </div> 
     </div>
 </div>
 </main>

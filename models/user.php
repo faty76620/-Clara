@@ -1,35 +1,59 @@
-
 <?php
+
 // CRÉER UN ADMIN (manager)
 function createAdmin($conn, $data) {
-    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
+    try {
+        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())");
 
-    return $stmt->execute([
-        $data['username'],
-        $data['firstname_admin'], 
-        $data['lastname_admin'], 
-        $data['mail_admin'], 
-        $data['password'], 
-        $data['establishment_id'], 
-        htmlspecialchars($data['role'])
-    ]);
+        return $stmt->execute([
+            $data['username'],
+            $data['firstname_admin'], 
+            $data['lastname_admin'], 
+            $data['mail_admin'], 
+            $data['password'], 
+            $data['establishment_id'], 
+            3 // Le rôle d'un manager
+        ]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la création de l'admin : " . $e->getMessage());
+        return false;
+    }
 }
 
-// CRÉER UN UTILISATEUR 
+// CRÉER UN UTILISATEUR (soignant)
 function createUser($conn, $data) {
-    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, 1)"); 
+    try {
+        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())");
 
-    return $stmt->execute([
-        $data['username'],
-        $data['firstname_user'], 
-        $data['lastname_user'], 
-        $data['mail_user'], 
-        $data['password'], 
-        $data['establishment_id'], 
-        $data['role_user'] 
-    ]);
+        return $stmt->execute([
+            $data['username'],
+            $data['firstname_user'], 
+            $data['lastname_user'], 
+            $data['mail_user'], 
+            $data['password'], 
+            $data['establishment_id'], 
+            1 // Le rôle d'un utilisateur
+        ]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
+        return false;
+    }
+}
+
+// VERIFIER SI UN MANAGER EXISTE DEJA POUR ETABLISSEMENT
+function checkManagerExists($conn, $establishment_id) {
+    try {
+        $sql = "SELECT COUNT(*) FROM users WHERE role_id = 2 AND establishment_id = :establishment_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la vérification du manager : " . $e->getMessage());
+        return false;
+    }
 }
 
 // VERIFIER L'EXISTENCE D'UN IDENTIFIANT
@@ -39,10 +63,10 @@ function checkUsernameExists($conn, $username) {
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
-        return $stmt->fetchColumn() > 0;  // Renvoie true si l'utilisateur existe, sinon false
+        return $stmt->fetchColumn() > 0;
     } catch (PDOException $e) {
-        error_log("Erreur lors de la vérification de l'existence du username : " . $e->getMessage());
-        return false;  // Si une erreur survient, on retourne false
+        error_log("Erreur lors de la vérification du username : " . $e->getMessage());
+        return false;
     }
 }
 
@@ -51,114 +75,140 @@ function getUserByUsername($conn, $username) {
     try {
         $stmt = $conn->prepare("SELECT id, username, password, role_id, firstname, lastname, must_change_password FROM users WHERE username = :username LIMIT 1");
         $stmt->execute(['username' => $username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user) {
-            return $user;
-        } else {
-            // Aucun utilisateur trouvé
-            return null;
-        }
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     } catch (PDOException $e) {
-        // En cas d'erreur lors de l'exécution de la requête SQL, retourner un message d'erreur
-        return "Erreur lors de la récupération de l'utilisateur : " . $e->getMessage();
+        error_log("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
+        return false;
     }
 }
 
 // RECUPERER L'UTILISATEUR PAR SON ID
-function getUserById($conn, $user_id) {
+function getUserById($conn, $id) {
     try {
-        $query = "SELECT id, username, password, role_id, must_change_password, firstname, lastname, mail FROM users WHERE id = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->execute([$user_id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user) {
-            return $user;
-        } else {
-            // Aucun utilisateur trouvé avec cet ID
-            return null;
-        }
+        $stmt = $conn->prepare("
+            SELECT u.id, u.username, u.password, u.date_create, u.must_change_password, 
+                   u.firstname, u.lastname, u.mail, 
+                   u.establishment_id, e.firstname AS establishment_name, 
+                   u.role_id, r.nom AS role_name
+            FROM users u
+            LEFT JOIN establishments e ON u.establishment_id = e.id
+            LEFT JOIN roles r ON u.role_id = r.id
+            WHERE u.id = ?
+        ");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     } catch (PDOException $e) {
-        // En cas d'erreur lors de l'exécution de la requête SQL, retourner un message d'erreur
-        return "Erreur lors de la récupération de l'utilisateur : " . $e->getMessage();
+        error_log("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
+        return false;
     }
 }
 
-//METTRE A JOUR LE MOT DE PASSE A LA PREMIERE CONNEXION
+
+// METTRE A JOUR LE MOT DE PASSE
 function updateUserPassword($conn, $user_id, $hashed_password) {
     try {
-        $sql = "UPDATE users SET password = :password WHERE id = :user_id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $stmt = $conn->prepare("UPDATE users SET password = :password WHERE id = :user_id");
+        return $stmt->execute(['password' => $hashed_password, 'user_id' => $user_id]);
     } catch (PDOException $e) {
         error_log("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
         return false;
     }
 }
 
-class PasswordResetModel {
-    // VERIFIER SI L'EMAIL EXISTE
-    public function checkEmailExists($email, $pdo) {
-        $sql = "SELECT id, username FROM users WHERE mail = :email";
-        $stmt = $pdo->prepare($sql);
+// VERIFIER SI L'EMAIL EXISTE
+function checkEmailExists($email, $pdo) {
+    try {
+        $stmt = $pdo->prepare("SELECT id, username FROM users WHERE mail = :email");
         $stmt->execute(['email' => $email]);
         return $stmt->fetch();
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la vérification de l'email : " . $e->getMessage());
+        return false;
     }
-    
-    // CREATION D'UN TOKEN
-    public function createPasswordResetToken($userId, $pdo) {
-        $token = bin2hex(random_bytes(16)); // Génère un token sécurisé
-        $expiry = time() + 3600; // Expiration dans 1 heure
-    
-        $sql = "INSERT INTO password_resets (user_id, token, expiry) VALUES (:user_id, :token, :expiry)";
-        $stmt = $pdo->prepare($sql);
+}
+
+// CREATION D'UN TOKEN
+function createPasswordResetToken($userId, $pdo) {
+    try {
+        $token = bin2hex(random_bytes(16));
+        $expiry = time() + 3600;
+
+        $stmt = $pdo->prepare("INSERT INTO password_resets (user_id, token, expiry) VALUES (:user_id, :token, :expiry)");
         $stmt->execute(['user_id' => $userId, 'token' => $token, 'expiry' => $expiry]);
-    
+
         return $token;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la création du token : " . $e->getMessage());
+        return false;
     }
-    
-    // VERIFICATION DE LA VALIDATIONDU TOKEN
-    public function verifyToken($token, $pdo) {
-        $sql = "SELECT * FROM password_resets WHERE token = :token AND expiry > :current_time";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['token' => $token, 'current_time' => time()]);
-        return $stmt->fetch();
+}
+
+// SUPPRIMER UN TOKEN
+function deleteToken($token, $pdo) {
+    try {
+        $stmt = $pdo->prepare("DELETE FROM password_resets WHERE token = :token");
+        return $stmt->execute(['token' => $token]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression du token : " . $e->getMessage());
+        return false;
     }
-    
-    // MISE A JOUR DU MOT DE PASSE DANS USERS 'password'
-    public function updatePassword($userId, $newPassword, $pdo) {
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        $sql = "UPDATE users SET password = :password WHERE id = :user_id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['password' => $hashedPassword, 'user_id' => $userId]);
+}
+
+// METTRE A JOUR UN UTILISATEUR
+function updateUser($conn, $id, $firstname, $lastname, $mail, $establishment_id) {
+    try {
+        $stmt = $conn->prepare("UPDATE users SET firstname = ?, lastname = ?, mail = ?, establishment_id = ? WHERE id = ?");
+        return $stmt->execute([$firstname, $lastname, $mail, $establishment_id, $id]);
+    } catch (PDOException $e) {
+        error_log("Erreur mise à jour de l'utilisateur : " . $e->getMessage());
+        return false;
     }
-    
-    // SUPPRESSION DU TOKEN
-    public function deleteToken($token, $pdo) {
-        $sql = "DELETE FROM password_resets WHERE token = :token";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['token' => $token]);
+}
+
+// AFFICHER LES UTILISATEURS SELON LE RÔLE 
+
+function getUsersByRole($conn, $role, $search = '') {
+    try {
+        $searchQuery = $search ? "AND (u.firstname LIKE :search OR u.lastname LIKE :search OR u.mail LIKE :search)" : '';
+        $query = "
+            SELECT u.id, u.date_create, u.firstname, u.lastname, u.mail, 
+                   e.firstname AS establishment_name, 
+                   r.nom AS role_name
+            FROM users u
+            LEFT JOIN establishments e ON u.establishment_id = e.id
+            LEFT JOIN roles r ON u.role_id = r.id
+            WHERE r.nom = :role
+            $searchQuery
+        ";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindValue(':role', $role);
+        if ($search) {
+            $stmt->bindValue(':search', '%' . $search . '%');
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des utilisateurs : " . $e->getMessage());
+        return false;
     }
-    
 }
 
 
-
-// FONCTION POUR VERIFIER SI UN MANAGER PAR ETABLISSEMENT  
-function checkManagerExists($conn, $establishment_id) {
-    // Requête pour vérifier s'il existe déjà un manager pour l'établissement
-    $sql = "SELECT COUNT(*) FROM users WHERE role_id = 2 AND establishment_id = :establishment_id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
-    $stmt->execute();
-    // Si le compteur est supérieur à 0, un manager existe déjà pour cet établissement
-    return $stmt->fetchColumn() > 0;
+// SUPPRIMER UN UTILISATEUR
+function deleteUser($pdo, $userId) {
+    try {
+        $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+        return $stmt->execute([$userId]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression de l'utilisateur : " . $e->getMessage());
+        return false;
+    }
 }
-
-
-
 ?>
+
+
+
 
 
 

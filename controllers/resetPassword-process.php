@@ -1,4 +1,3 @@
-<!-- reset_password_process.php -->
 <?php
 require_once __DIR__ . '/../templates/session_start.php';
 require_once __DIR__ . '/../models/send_mail.php';
@@ -9,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     
     // Vérifier si l'email existe
-    $model = new PasswordResetModel();
     $user = $model->checkEmailExists($email, $pdo);
 
     if ($user) {
