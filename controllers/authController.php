@@ -24,9 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Récupérer l'utilisateur depuis la base de données
     $user = getUserByUsername($conn, $username);
 
-
-    $conn = getConnexion();
-
     error_log("Mot de passe soumis : " . $password);
     error_log("Mot de passe en base : " . $user['password']);
 
@@ -43,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $_SESSION['firstname'] = $user['firstname']; 
     $_SESSION['lastname'] = $user['lastname'];    
     $_SESSION['must_change_password'] = $user['must_change_password'];
-    
+      
     // Si l'utilisateur doit changer son mot de passe, le rediriger vers la page de changement de mot de passe
     if ($user['must_change_password'] == 1) {
         header("Location: /clara/views/auth/change_password.php");

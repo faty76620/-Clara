@@ -1,6 +1,6 @@
 <header class="header">
     <nav>
-        <div id="sidebar">
+        <div class="sidebar">
             <img src="/clara/assets/images/logo-dashboard.png" class="logo-dashboard" alt="logo">
             <a href="/clara/views/admin/dashboard.php" onclick="hideSidebar()"><i class="fas fa-home"></i></a>
             <a href="/clara/views/admin/requests.php" onclick="hideSidebar()"><i class="fas fa-hourglass-half"></i></a>

@@ -86,7 +86,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="5">Aucun responsable trouvé.</td>
+                            <td colspan="7">Aucun responsable trouvé.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -148,7 +148,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="6">Aucun utilisateur trouvé.</td>
+                            <td colspan="7">Aucun utilisateur trouvé.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

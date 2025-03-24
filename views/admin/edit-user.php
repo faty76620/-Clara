@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mail = $_POST['mail'];
     $establishment_id = $_POST['estasblishment_id'];
     $role_id = $_POST['role_id'];
-    if ( updateUser($conn, $id, $firstname, $lastname, $adresse, $mail, $establishment_id, $role_id)) {
+    if ( updateUser($conn, $id, $firstname, $lastname, $mail, $establishment_id, $role_id)) {
         header("Location: users.php?success=1");
         exit();
     } else {

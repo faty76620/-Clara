@@ -53,15 +53,16 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
 
                 $password_plain = bin2hex(random_bytes(4)); // Mot de passe temporaire
                 $password_hashed = password_hash($password_plain, PASSWORD_BCRYPT);
+
                 // Creer manager(admin)
                 createAdmin($conn, [
                     'username' => $username,
-                    'firstname' => $firstname,
-                    'lastname' => $lastname,
-                    'email' => $email,
+                    'firstname_admin' => $firstname,
+                    'lastname_admin' => $lastname,
+                    'mail_admin' => $email,
                     'password' => $password_hashed,
                     'establishment_id' => $establishment_id,
-                    'role' => 'manager'  
+                    'role' => $request['role']
                 ]);
             }
 
@@ -115,25 +116,6 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
     die("Accès non autorisé.");
 }
 
-
-// Liste des managers
-if (isset($_GET['action']) && $_GET['action'] == 'list') {
-    $conn = getConnexion();
-    $managers = getUsersByRole($conn, 'manager');
-    require_once '../../views/admin/managers_list.php';
-}
-
-// Suppression d'un manager
-if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
-    $conn = getConnexion();
-    if (deleteUser($conn, $_GET['id'])) {
-        $_SESSION['success'] = "Manager supprimé avec succès.";
-    } else {
-        $_SESSION['error'] = "Erreur lors de la suppression du manager.";
-    }
-    header("Location: /clara/views/admin/managers_list.php");
-    exit();
-}
 ?>
 
 

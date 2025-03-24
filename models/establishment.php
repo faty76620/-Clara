@@ -3,8 +3,8 @@ require_once 'database.php';
 
 // FONCTION POUR CRÉER UN NOUVEL ÉTABLISSEMENT DANS LA BASE DE DONNÉES
 function createEstablishment($conn, $request) {
-    $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, mail) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, mail, created_at, date_modify) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NULL)");
 
     $stmt->execute([
         htmlspecialchars($request['firstname_establishment']), 

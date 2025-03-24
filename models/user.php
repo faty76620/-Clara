@@ -1,10 +1,9 @@
 <?php
-
 // CRÉER UN ADMIN (manager)
 function createAdmin($conn, $data) {
     try {
         $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())");
+                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NULL)");
 
         return $stmt->execute([
             $data['username'],
@@ -13,7 +12,7 @@ function createAdmin($conn, $data) {
             $data['mail_admin'], 
             $data['password'], 
             $data['establishment_id'], 
-            3 // Le rôle d'un manager
+            2
         ]);
     } catch (PDOException $e) {
         error_log("Erreur lors de la création de l'admin : " . $e->getMessage());
@@ -21,11 +20,12 @@ function createAdmin($conn, $data) {
     }
 }
 
+
 // CRÉER UN UTILISATEUR (soignant)
 function createUser($conn, $data) {
     try {
         $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())");
+                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NULL)");
 
         return $stmt->execute([
             $data['username'],
@@ -34,7 +34,7 @@ function createUser($conn, $data) {
             $data['mail_user'], 
             $data['password'], 
             $data['establishment_id'], 
-            1 // Le rôle d'un utilisateur
+            3 // Le rôle d'un utilisateur
         ]);
     } catch (PDOException $e) {
         error_log("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
@@ -75,20 +75,26 @@ function getUserByUsername($conn, $username) {
     try {
         $stmt = $conn->prepare("SELECT id, username, password, role_id, firstname, lastname, must_change_password FROM users WHERE username = :username LIMIT 1");
         $stmt->execute(['username' => $username]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user) {
+            return $user;
+        } else {
+            // Aucun utilisateur trouvé
+            return null;
+        }
     } catch (PDOException $e) {
-        error_log("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
-        return false;
+        return "Erreur lors de la récupération de l'utilisateur : " . $e->getMessage();
     }
 }
+
 
 // RECUPERER L'UTILISATEUR PAR SON ID
 function getUserById($conn, $id) {
     try {
         $stmt = $conn->prepare("
-            SELECT u.id, u.username, u.password, u.date_create, u.must_change_password, 
+            SELECT u.id, u.username, u.password, u.date_create, must_change_password, 
                    u.firstname, u.lastname, u.mail, 
-                   u.establishment_id, e.firstname AS establishment_name, 
+                   u.establishment_id, e.firstname AS establishment_name,
                    u.role_id, r.nom AS role_name
             FROM users u
             LEFT JOIN establishments e ON u.establishment_id = e.id
@@ -103,12 +109,14 @@ function getUserById($conn, $id) {
     }
 }
 
-
 // METTRE A JOUR LE MOT DE PASSE
 function updateUserPassword($conn, $user_id, $hashed_password) {
     try {
-        $stmt = $conn->prepare("UPDATE users SET password = :password WHERE id = :user_id");
-        return $stmt->execute(['password' => $hashed_password, 'user_id' => $user_id]);
+        $sql = "UPDATE users SET password = :password WHERE id = :user_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        return $stmt->execute();
     } catch (PDOException $e) {
         error_log("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
         return false;
@@ -154,11 +162,10 @@ function deleteToken($token, $pdo) {
     }
 }
 
-// METTRE A JOUR UN UTILISATEUR
-function updateUser($conn, $id, $firstname, $lastname, $mail, $establishment_id) {
+function updateUser($conn, $id, $firstname, $lastname, $mail, $establishment_id, $role_id) {
     try {
-        $stmt = $conn->prepare("UPDATE users SET firstname = ?, lastname = ?, mail = ?, establishment_id = ? WHERE id = ?");
-        return $stmt->execute([$firstname, $lastname, $mail, $establishment_id, $id]);
+        $stmt = $conn->prepare("UPDATE users SET firstname = ?, lastname = ?, mail = ?, establishment_id = ?, role_id = ? WHERE id = ?");
+        return $stmt->execute([$firstname, $lastname, $mail, $establishment_id, $role_id, $id]);
     } catch (PDOException $e) {
         error_log("Erreur mise à jour de l'utilisateur : " . $e->getMessage());
         return false;
@@ -171,7 +178,7 @@ function getUsersByRole($conn, $role, $search = '') {
     try {
         $searchQuery = $search ? "AND (u.firstname LIKE :search OR u.lastname LIKE :search OR u.mail LIKE :search)" : '';
         $query = "
-            SELECT u.id, u.date_create, u.firstname, u.lastname, u.mail, 
+            SELECT u.id, u.username, u.date_create, u.firstname, u.lastname, u.mail, 
                    e.firstname AS establishment_name, 
                    r.nom AS role_name
             FROM users u
