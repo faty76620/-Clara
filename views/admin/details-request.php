@@ -36,109 +36,107 @@
         exit;
     }
 ?>
-<main class="dashboard">
-<div class="container-title"><h2>Détails</h2></div>
-    <div class="details">
-        <table class="table-details">
-            <tr>
-                <td><strong>Prénom Admin :</strong></td>
-                <td><?= htmlspecialchars($request['firstname_admin']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Nom Admin :</strong></td>
-                <td><?= htmlspecialchars($request['lastname_admin']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Type de Rôle :</strong></td>
-                <td><?= htmlspecialchars($request['type_role']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Email Admin :</strong></td>
-                <td><?= htmlspecialchars($request['mail_admin']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Nom de l'Établissement :</strong></td>
-                <td><?= htmlspecialchars($request['firstname_establishment']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Adresse :</strong></td>
-                <td><?= htmlspecialchars($request['adresse']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Email de l'Établissement :</strong></td>
-                <td><?= htmlspecialchars($request['mail']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Téléphone :</strong></td>
-                <td><?= htmlspecialchars($request['phone']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Site Web :</strong></td>
-                <td><?= htmlspecialchars($request['site']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Description :</strong></td>
-                <td><?= htmlspecialchars($request['description']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>CGU :</strong></td>
-                <td><?= htmlspecialchars($request['cgu']); ?></td>
-            </tr>
-        </table>
-        <div class="cards-requests">  
-        <div class="card">
-            <div class="group-line">
-                <p><strong>Prénom Admin :</strong></p>
-                <p><?= htmlspecialchars($request['firstname_admin']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Nom Admin :</strong></p>
-                <p><?= htmlspecialchars($request['lastname_admin']); ?></>
-            </div>
-            <div class="group-line">
-                <p><strong>Type de Rôle :</strong></p>
-                <p><?= htmlspecialchars($request['type_role']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Email Admin :</strong></td>
-                <p><?= htmlspecialchars($request['mail_admin']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Nom de l'Établissement :</strong></p>
-                <p><?= htmlspecialchars($request['firstname_establishment']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Adresse :</strong></p>
-                <p><?= htmlspecialchars($request['firstname_establishment']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Email de l'Établissement :</strong></p>
-                <p><?= htmlspecialchars($request['mail']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Téléphone :</strong></p>
-                <p><?= htmlspecialchars($request['phone']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Site Web :</strong></p>
-                <p><?= htmlspecialchars($request['site']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>Description :</strong></p>
-                <p><?= htmlspecialchars($request['description']); ?></p>
-            </div>
-            <div class="group-line">
-                <p><strong>CGU :</strong></p>
-                <p><?= htmlspecialchars($request['cgu']); ?></p>
-            </div>
+     <main class="dashboard">
+        <div class="container-title"><h2>Détails</h2></div>
+        <div class="details-request">
+            <table class="details">
+                <tr>
+                    <td><strong>id :</strong></td>
+                    <td><?= htmlspecialchars($request['id']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Nom de domaine :</strong></td>
+                    <td><?= htmlspecialchars($request['firstname_establishment']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Adresse :</strong></td>
+                    <td><?= htmlspecialchars($request['adresse']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Telephone:</strong></td>
+                    <td><?= htmlspecialchars($request['phone']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Email :</strong></td>
+                    <td><?= htmlspecialchars($request['mail']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Siret :</strong></td>
+                    <td><?= htmlspecialchars($request['siret']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Type d'etablissement :</strong></td>
+                    <td><?= htmlspecialchars($request['type_role']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Email Etablissement :</strong></td>
+                    <td><?= htmlspecialchars($request['mail']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Site web :</strong></td>
+                    <td><?= htmlspecialchars($request['site']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Type de Rôle :</strong></td>
+                    <td><?= htmlspecialchars($request['type_role']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Description :</strong></td>
+                    <td><?= htmlspecialchars_decode($request['description']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Prénom Admin :</strong></td>
+                    <td><?= htmlspecialchars($request['firstname_admin']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Nom Admin :</strong></td>
+                    <td><?= htmlspecialchars($request['lastname_admin']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Email Admin :</strong></td>
+                    <td><?= htmlspecialchars($request['mail_admin']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>CGU :</strong></td>
+                    <td><?= htmlspecialchars($request['cgu']); ?></td>
+                </tr>
+            </table>
+            <div class="cards-container">
+                <div class="card-session">
+                    <h3><?= htmlspecialchars($request['firstname_establishment']); ?></h3><br>
+                    <p><strong>ID :</strong></p>
+                    <p><?= htmlspecialchars($request['id']); ?></p>
+                    <p><strong>Adresse :</strong></td>
+                    <p><?= htmlspecialchars($request['adresse']); ?></p>
+                    <p><strong>Téléphone :</strong></p>
+                    <p><?= htmlspecialchars($request['phone']); ?></p>
+                    <p><strong>Email :</strong></p>
+                    <p><?= htmlspecialchars($request['mail']); ?></p>
+                    <p><strong>Siret :</strong></p>
+                    <p><?= htmlspecialchars($request['siret']); ?></p>
+                    <p><strong>Site :</strong></p>
+                    <p><?= htmlspecialchars($request['site']); ?></p>
+                    <p><strong>Type role :</strong></p>
+                    <p><?= htmlspecialchars($request['type_role']); ?></p>
+                    <p><strong>Description :</strong></p>
+                    <p><?= htmlspecialchars($request['description']); ?></p>
+                    <p><strong>Prenom Responsable :</strong></p>
+                    <p><?= htmlspecialchars($request['firstname_admin']); ?></p>
+                    <p><strong>Nom Responsable :</strong></p>
+                    <p><?= htmlspecialchars($request['lastname_admin']); ?></p>
+                    <p><strong>Email Responsable :</strong></p>
+                    <p><?= htmlspecialchars($request['mail_admin']); ?></p>
+                    <p><strong>cgu :</strong></p>
+                    <p><?= htmlspecialchars($request['cgu']); ?></p>
+                </div>
+                <div class="btn-container">
+                    <button>
+                        <a href="establishment.php" class="btn-back">Retour</a>
+                    </button>
+                </div>
+            </div> 
         </div>
-        </div>
-        <div class="btn-container">
-            <button><a href="requests.php" class="btn-back">Retour</a></button>
-        </div> 
-    </div>
-</div>
-</main>
+    </main>
  
 </body>
 </html>

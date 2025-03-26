@@ -1,37 +1,33 @@
 <?php
+// Inclure les fichiers nécessaires
+include __DIR__ . '/../../templates/session_start.php';
 require_once '../../models/database.php';
 require_once '../../models/user.php';
+require_once '../../models/establishment.php';
 
+// Connexion à la base de données
 $conn = getConnexion();
 
-// Vérifier si un ID est passé en URL
-if (!isset($_GET['id']) || empty($_GET['id'])) {
-    die("ID invalide !");
+// Vérifier si un ID est passé
+if (!isset($_GET['id']) || empty($_GET['id']) || !is_numeric($_GET['id'])) {
+    $_SESSION['error'] = "ID utilisateur invalide !";
+    header("Location: user.php");
+    exit();
 }
 
 $id = intval($_GET['id']);
-$user =  getUserById($conn, $id);
+$user = getUserById($conn, $id);
 
 if (!$user) {
-    die("Utilisateur non trouvé !");
+    $_SESSION['error'] = "Utilisateur non trouvé !";
+    header("Location: user.php");
+    exit();
 }
 
-// Traitement du formulaire
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $mail = $_POST['mail'];
-    $establishment_id = $_POST['estasblishment_id'];
-    $role_id = $_POST['role_id'];
-    if ( updateUser($conn, $id, $firstname, $lastname, $mail, $establishment_id, $role_id)) {
-        header("Location: users.php?success=1");
-        exit();
-    } else {
-        echo "Erreur lors de la mise à jour.";
-    }
-}
+// Récupérer les établissements et les rôles pour les options de sélection
+$establishments = getAllEstablishments($conn);
+$roles = getAllRoles($conn);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,14 +41,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script defer src="/clara/assets/js.js"></script>
-    <title>Modifier l'utlisateur</title>
+    <title>Modifier l'utilisateur</title>
 </head>   
 <body class="body-background">
-<?php include __DIR__ . '/../../templates/header_admin.php';?>
+<?php include __DIR__ . '/../../templates/header_admin.php'; ?>
     <main class="dashboard">
         <div class="container-title"><h2>Modifier l'utilisateur</h2></div>
         <div class="card">
-            <form method="POST">
+            <form method="POST" action="../../controllers/edit-user.php" class="form-session">
+                <!-- ID caché pour référence -->
+                <input type="hidden" name="id" value="<?= $user['id'] ?>">
+
                 <div class="group-form">
                     <label>Nom :</label>
                     <input type="text" name="firstname" value="<?= htmlspecialchars($user['firstname']) ?>" required>
@@ -67,18 +66,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
                 <div class="group-form">
                     <label>Etablissement :</label>
-                    <input type="text" value="<?= htmlspecialchars($user['establishment_name']) ?>" required>
+                    <select name="establishment_id" required>
+                        <?php foreach ($establishments as $establishment): ?>
+                            <option value="<?= $establishment['id'] ?>" 
+                                <?= $establishment['id'] == $user['establishment_id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($establishment['firstname']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="group-form">
                     <label>Rôle :</label>
-                    <input type="text" value="<?= htmlspecialchars($user['role_name']) ?>" reaquired>
+                    <select name="role_id" required>
+                        <?php foreach ($roles as $role): ?>
+                            <option value="<?= $role['id'] ?>" 
+                                <?= $role['id'] == $user['role_id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($role['nom']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
-            
-                <button type="submit">Mettre à jour</button>
+                <div class="btn-container">
+                    <button type="submit">Mettre à jour</button>
+                </div>
             </form>
-        </div>
-        <div class="btn-container">
-            <button><a href="users.php">Retour</a></button>
         </div>
     </main>
 </body>

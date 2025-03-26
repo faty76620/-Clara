@@ -162,12 +162,27 @@ function deleteToken($token, $pdo) {
     }
 }
 
+// METTRE A JOUR UN UTILISATEUR
 function updateUser($conn, $id, $firstname, $lastname, $mail, $establishment_id, $role_id) {
     try {
-        $stmt = $conn->prepare("UPDATE users SET firstname = ?, lastname = ?, mail = ?, establishment_id = ?, role_id = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE users 
+            SET firstname = ?, lastname = ?, mail = ?, establishment_id = ?, role_id = ? 
+            WHERE id = ?");
         return $stmt->execute([$firstname, $lastname, $mail, $establishment_id, $role_id, $id]);
-    } catch (PDOException $e) {
-        error_log("Erreur mise à jour de l'utilisateur : " . $e->getMessage());
+    } catch (Exception $e) {
+        error_log("Erreur mise à jour utilisateur : " . $e->getMessage());
+        return false;
+    }
+}
+
+// RECUPERER TOUT LES ROLE
+function getAllRoles($conn) {
+    try {
+        $stmt = $conn->prepare("SELECT * FROM roles");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        error_log("Erreur lors de la récupération des rôles : " . $e->getMessage());
         return false;
     }
 }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,77 +37,74 @@
         exit;
     }
 ?>
-<main class="dashboard">
-<div class="container-title"><h2>Détails</h2></div>
-    <div class="details">
-        <table class="table-details">
-            <tr>
-                <td><strong>id :</strong></td>
-                <td><?= htmlspecialchars($establishment['id']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Nom domaine :</strong></td>
-                <td><?= htmlspecialchars($establishment['firstname']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Telephone:</strong></td>
-                <td><?= htmlspecialchars($establishment['phone']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Adresse :</strong></td>
-                <td><?= htmlspecialchars($establishment['adresse']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Email :</strong></td>
-                <td><?= htmlspecialchars($establishment['mail']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Siret :</strong></td>
-                <td><?= htmlspecialchars($establishment['siret']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Type d'etablissement :</strong></td>
-                <td><?= htmlspecialchars($establishment['type_role']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Site web :</strong></td>
-                <td><?= htmlspecialchars($establishment['site']); ?></td>
-            </tr>
-            <tr>
-                <td><strong>Description :</strong></td>
-                <td><?= htmlspecialchars_decode($establishment['description']); ?></td>
-            </tr>
-        </table>
-        <div class="details-list">
-            <p><strong>Nom de domaine :</strong></p>
-            <p><?= htmlspecialchars($establishment['firstname']); ?></p>
-            <p><strong>ID :</strong></p>
-            <p><?= htmlspecialchars($establishment['id']); ?></p>
-            <p><strong>Téléphone :</strong></p>
-            <p><?= htmlspecialchars($establishment['phone']); ?></p>
-            <p><strong>Adresse :</strong></td>
-            <p><?= htmlspecialchars($establishment['Adresse']); ?></p>
-            <p><strong>Email :</strong></p>
-            <p><?= htmlspecialchars($establishment['mail']); ?></p>
-            <p><strong>Siret :</strong></p>
-            <p><?= htmlspecialchars($establishment['siret']); ?></p>
-            <p><strong>Siret :</strong></p>
-            <p><?= htmlspecialchars($establishment['type_role']); ?></p>
-            <p><strong>Site Web :</strong></p>
-            <p><?= htmlspecialchars($establishment['site']); ?></p>
-            <p><strong>Description :</strong></p>
-            <p><?= htmlspecialchars_decode($establishment['description']); ?></p>
-
+    <main class="dashboard">
+        <div class="container-title"><h2>Détails</h2></div>
+        <div class="details">
+            <table class="table-details">
+                <tr>
+                    <td><strong>id :</strong></td>
+                    <td><?= htmlspecialchars($establishment['id']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Nom domaine :</strong></td>
+                    <td><?= htmlspecialchars($establishment['firstname']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Telephone:</strong></td>
+                    <td><?= htmlspecialchars($establishment['phone']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Adresse :</strong></td>
+                    <td><?= htmlspecialchars($establishment['adresse']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Email :</strong></td>
+                    <td><?= htmlspecialchars($establishment['mail']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Siret :</strong></td>
+                    <td><?= htmlspecialchars($establishment['siret']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Type d'etablissement :</strong></td>
+                    <td><?= htmlspecialchars($establishment['type_role']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Site web :</strong></td>
+                    <td><?= htmlspecialchars($establishment['site']); ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Description :</strong></td>
+                    <td><?= htmlspecialchars_decode($establishment['description']); ?></td>
+                </tr>
+            </table>
+            <div class="cards-container">
+                <div class="card-session">
+                    <h3><?= htmlspecialchars($establishment['firstname']); ?></h3><br>
+                    <p><strong>ID :</strong></p>
+                    <p><?= htmlspecialchars($establishment['id']); ?></p>
+                    <p><strong>Téléphone :</strong></p>
+                    <p><?= htmlspecialchars($establishment['phone']); ?></p>
+                    <p><strong>Adresse :</strong></td>
+                    <p><?= htmlspecialchars($establishment['adresse']); ?></p>
+                    <p><strong>Email :</strong></p>
+                    <p><?= htmlspecialchars($establishment['mail']); ?></p>
+                    <p><strong>Siret :</strong></p>
+                    <p><?= htmlspecialchars($establishment['siret']); ?></p>
+                    <p><strong>Siret :</strong></p>
+                    <p><?= htmlspecialchars($establishment['type_role']); ?></p>
+                    <p><strong>Site Web :</strong></p>
+                    <p><?= htmlspecialchars($establishment['site']); ?></p>
+                    <p><strong>Description :</strong></p>
+                    <p><?= htmlspecialchars_decode($establishment['description']); ?></p>
+                </div>
+            </div> 
         </div>
         <div class="btn-container">
-        <button>
-            <a href="/clara/views/admin/establishment.php" class="btn-back">Retour</a>
-        </button>
+            <button>
+                <a href="/clara/views/admin/establishment.php" class="btn-back">Retour</a>
+            </button>
         </div>
-      
-    </div>
-</div>
-</main>
- 
+    </main>
 </body>
 </html>

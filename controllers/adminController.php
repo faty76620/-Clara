@@ -34,17 +34,16 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['action'], $_GET['id']))
         if ($action === 'approve') {
             $conn->beginTransaction();
 
-            // Vérifier si l'établissement existe déjà (cas où il a été refusé avant)
             $establishment_id = checkExistingEstablishment($conn, $request);
-            
+
             if (!$establishment_id) {
                 // Créer l'établissement s'il n'existe pas
                 $establishment_id = createEstablishment($conn, $request);
-            } else {
-                // Mettre à jour l'établissement existant
-                updateEstablishmentStatus($conn, $establishment_id, 'en attente');
-            }
-
+            } 
+            
+            // Mettre à jour l'établissement (dans les deux cas : s'il a été créé ou existait déjà)
+            updateEstablishmentStatus($conn, $establishment_id, 'accepté'); 
+            
             // Vérifier si le manager existe déjà pour cet établissement
             if (!checkManagerExists($conn, $establishment_id)) {
                 // Créer l'utilisateur manager

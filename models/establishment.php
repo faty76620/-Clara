@@ -46,7 +46,9 @@ function getEstablishmentsFromRole($conn) {
 // METTRE A JOUR UN ETABLISSEMENT
 function updateEstablishment($conn, $id, $firstname, $phone, $adresse, $mail, $description) {
     try {
-        $stmt = $conn->prepare("UPDATE establishments SET firstname = ?, phone = ?, adresse = ?, mail = ?, description = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE establishments 
+            SET firstname = ?, phone = ?, adresse = ?, mail = ?, description = ?, date_modify = NOW() 
+            WHERE id = ?");
         return $stmt->execute([$firstname, $phone, $adresse, $mail, $description, $id]);
     } catch (Exception $e) {
         error_log("Erreur mise à jour établissement : " . $e->getMessage());
@@ -54,27 +56,26 @@ function updateEstablishment($conn, $id, $firstname, $phone, $adresse, $mail, $d
     }
 }
 
+
 //FONCTION POUR SUPPRIMER UN ETABLISSEMENT EN UTILISANT SONT ID
 function deleteEstablishment($conn, $id) {
-    try {
-        $stmt = $conn->prepare("DELETE FROM establishments WHERE id = ?");
-        $stmt->execute([$id]);
-        return true;
-    } catch (Exception $e) {
-        error_log("Erreur lors de la suppression : " . $e->getMessage());
-        return false;
-    }
+    $stmt = $conn->prepare("DELETE FROM establishments WHERE id = ?");
+    $stmt->bindValue(1, $id, PDO::PARAM_INT);  
+    $stmt->execute();
+
+    return $stmt->execute();
 }
 
 // METTRE À JOUR LE STATUT DE L'ÉTABLISSEMENT 
-function updateEstablishmentStatus($conn, $id, $status) {
+function updateEstablishmentStatus($conn, $establishment_id, $status) {
     try {
-        $stmt = $conn->prepare("UPDATE establishments SET status = ? WHERE id = ?");
-        $stmt->execute([$status, $id]);
-        return true;
-    } catch (Exception $e) {
-        error_log("Erreur lors de la mise à jour du statut de l'établissement : " . $e->getMessage());
-        return false;
+        $sql = "UPDATE establishments SET status = :status WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':id', $establishment_id);
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        die("Erreur lors de la mise à jour du statut : " . $e->getMessage());
     }
 }
 
@@ -131,8 +132,5 @@ function checkExistingEstablishment($conn, $request) {
     $stmt->execute();
     return $stmt->fetchColumn(); // Retourne l'ID de l'établissement s'il existe
 }
-
-// 
-
 
 ?>

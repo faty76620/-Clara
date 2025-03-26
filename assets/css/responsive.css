@@ -159,19 +159,23 @@
     }
 }
 
-/***RESPONSIVE PAGES ADMIN ***/
-@media screen and (min-width:900px) {
-    .cards-requests {
-     display: none;
+ /*  EXPLICATION FONCTIONNALITES */
+ @media screen and (min-width: 768px) {
+    .features-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
     }
+
 }
 
-@media screen and (max-width:900px) {
-      .table-request {
-      display: none;
-     }
-} 
+/***RESPONSIVE PAGES ADMIN ***/
 
+@media (max-width: 768px) { 
+    .cards-session {
+        width: 100%;
+    }
+}
 @media (max-width: 768px) {
   
     .tab-button {
@@ -192,31 +196,33 @@
     }
 }
 
-@media screen and (min-width: 480px) {
-    .cards-requests {
-        padding: 20px;
-    }
-}
-
- /* FONCTIONNALITES */
-@media screen and (min-width: 768px) {
-    .features-container {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-}
-
-/* DASHBOARD ADMIN */
 @media screen and (max-width:900px) {
    .details table {
-    display: none;
+        display: none;
    } 
 
-   .details-list {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+   .cards-session {
+        display: block;
    }
+
+   .details-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+   }
+
+}
+
+@media screen and (max-width:1024px) {
+    .table-request {
+        display: none;
+    }
+
+    .table-details {
+        display: none;
+    }
+
+    .cards-container {
+        display: flex;
+    }
 }

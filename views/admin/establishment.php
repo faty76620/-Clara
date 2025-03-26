@@ -1,7 +1,7 @@
 <?php
 require_once '../../models/database.php';
 require_once '../../models/establishment.php';
-include __DIR__ . '/../../templates/header_admin.php';
+include __DIR__ . '/../../templates/session_start.php'; 
 
 $conn = getConnexion();
 
@@ -10,7 +10,9 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $pendingEstablishments = getPendingEstablishments($conn, $search);
 $approvedEstablishments = getApprovedEstablishments($conn, $search);
 $rejectedEstablishments = getRejectedEstablishments($conn, $search);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,218 +29,227 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
     <title>Gestion des établissements</title>
 </head>   
 <body class="body-background">
+    <?php include __DIR__ . '/../../templates/header_admin.php'; ?>
+    <?php
+        if (isset($_SESSION['success'])) {
+            echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+            unset($_SESSION['success']); 
+         }
+
+        if (isset($_SESSION['error'])) {
+            echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+            unset($_SESSION['error']); 
+        }
+    ?>
     <main class="dashboard"> 
     <div class="container-title"><h2>Demandes d'inscription</h2></div>
-        <!-- FORMULAIRE DE RECHERCHE -->
-        <form method="GET">
-            <div class="dashboard-search">
-                <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
-                <button type="submit">Rechercher</button>
-                <!-- Bouton pour réinitialiser la recherche -->
-                <div class="reset"><a href="establishment.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
-            </div>
-        </form>
-         <!-- ONGLET POUR BASCULER SUR LES STATUS -->
-        <div class="tabs">
-            <button id="tab-pending" class="tab-button active" onclick="showTab('pending')"><i class="fas fa-clock"></i><span class="tab-text">Etablissements en attente</span></button>
-            <button id="tab-approved" class="tab-button" onclick="showTab('approved')"><i class="fas fa-check-circle"></i><span class="tab-text">Etablissements acceptées</span></button>
-            <button id="tab-rejected" class="tab-button" onclick="showTab('rejected')"> <i class="fas fa-times-circle"></i><span class="tab-text">Etablissements refusées</span></button>
+
+    <!-- FORMULAIRE DE RECHERCHE -->
+    <form method="GET">
+        <div class="dashboard-search">
+            <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
+            <button type="submit">Rechercher</button>
+            <div class="reset"><a href="establishment.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
         </div>
-         <!-- SECTION DES DEMANDES EN ATTENTE -->
-        <div id="pending" class="tab-content active">
-            <table class="table-request">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Date</th>
-                        <th>Nom</th>
-                        <th>Téléphone</th>
-                        <th>Adresse</th>
-                        <th>Email</th>
-                        <th>En savoir plus</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($pendingEstablishments)) : ?>
-                        <?php foreach ($pendingEstablishments as $establishment) : ?>
-                            <tr>
-                                <td><?= htmlspecialchars($establishment['id']) ?></td>
-                                <td><?= htmlspecialchars($establishment['created_at']) ?></td>
-                                <td><?= htmlspecialchars($establishment['firstname']) ?></td>
-                                <td><?= htmlspecialchars($establishment['phone']) ?></td>
-                                <td><?= htmlspecialchars($establishment['adresse']) ?></td>
-                                <td><?= htmlspecialchars($establishment['mail']) ?></td>
-                                <td>
-                                    <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
-                                </td>
-                                <td class="action">
-                                    <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                                    <a href="delete-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <tr>
-                            <td colspan="6">Aucun établissement en attente.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-            <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-requests">
+    </form>
+
+    <!-- ONGLET POUR FILTRER LES STATUTS -->
+    <div class="tabs">
+        <button id="tab-pending" class="tab-button active" onclick="showTab('pending')"><i class="fas fa-clock"></i> <span class="tab-text">En attente</span></button>
+        <button id="tab-approved" class="tab-button" onclick="showTab('approved')"><i class="fas fa-check-circle"></i> <span class="tab-text">Acceptées</span></button>
+        <button id="tab-rejected" class="tab-button" onclick="showTab('rejected')"><i class="fas fa-times-circle"></i> <span class="tab-text">Refusées</span></button>
+    </div>
+
+    <!-- TABLEAU DES DEMANDES EN ATTENTE -->
+    <div id="pending" class="tab-content active">
+        <table class="table-request">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Adresse</th>
+                    <th>Email</th>
+                    <th>Détails</th>
+                </tr>
+            </thead>
+            <tbody>
                 <?php if (!empty($pendingEstablishments)) : ?>
+                    <?php foreach ($pendingEstablishments as $establishment) : ?>
+                        <tr>
+                            <td><?= htmlspecialchars($establishment['id']) ?></td>
+                            <td><?= htmlspecialchars($establishment['created_at']) ?></td>
+                            <td><?= htmlspecialchars($establishment['firstname']) ?></td>
+                            <td><?= htmlspecialchars($establishment['phone']) ?></td>
+                            <td><?= htmlspecialchars($establishment['adresse']) ?></td>
+                            <td><?= htmlspecialchars($establishment['mail']) ?></td>
+                            <td>
+                                <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="btn-card detail-plus">Détails</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <tr>
+                        <td colspan="7">Aucun établissement en attente.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <!-- VERSION CARTE -->
+        <div class="cards-container">
+            <?php if (!empty($pendingEstablishments)) : ?>
                 <?php foreach ($pendingEstablishments as $establishment) : ?>
-                <div class="card">
-                    <h3><?= htmlspecialchars($establishment['firstname']); ?></h3>
-                    <p>Date :<?= htmlspecialchars($establishment['created_at']); ?></p>
-                    <p>ID :<?= htmlspecialchars($establishment['id']); ?></p>
-                    <p>Telephone :<?= htmlspecialchars($establishment['phone']); ?></p>
-                    <p>Adresse :<?= htmlspecialchars($establishment['adresse']); ?></p>
-                    <p>Email :<?= htmlspecialchars($establishment['mail']); ?></p>
-                    <div>
-                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="detail">En savoir plus</a>
+                    <div class="card-session">
+                        <h3><?= htmlspecialchars($establishment['firstname']) ?></h3>
+                        <p><strong>ID :</strong> <?= htmlspecialchars($establishment['id']) ?></p>
+                        <p><strong>Date :</strong> <?= htmlspecialchars($establishment['created_at']) ?></p>
+                        <p><strong>Téléphone :</strong> <?= htmlspecialchars($establishment['phone']) ?></p>
+                        <p><strong>Adresse :</strong> <?= htmlspecialchars($establishment['adresse']) ?></p>
+                        <p><strong>Email :</strong> <?= htmlspecialchars($establishment['mail']) ?></p>
+                        <div class="card-actions">
+                            <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="btn-card detail-plus">Détails</a>
+                        </div>
                     </div>
-                    <div class="action">
-                        <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                        <a href="delete-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard delete" 
-                        onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
-                    </div>
-                </div>
                 <?php endforeach; ?>
-                <?php else : ?>
-                <p>Aucune etablissement en attente.</p>
-                <?php endif; ?>
-            </div>
+            <?php else : ?>
+                <p>Aucun établissement en attente.</p>
+            <?php endif; ?>
         </div>
-        <!-- SECTION DES ETABLISSEMENT APPROUVE -->
-        <div id="approved" class="tab-content">
-            <table class="table-request">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Date</th>
-                        <th>Nom</th>
-                        <th>Téléphone</th>
-                        <th>Adresse</th>
-                        <th>Email</th>
-                        <th>En savoir plus</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($approvedEstablishments)) : ?>
-                        <?php foreach ($approvedEstablishments as $establishment) : ?>
-                            <tr>
-                                <td><?= htmlspecialchars($establishment['id']) ?></td>
-                                <td><?= htmlspecialchars($establishment['created_at']) ?></td>
-                                <td><?= htmlspecialchars($establishment['firstname']) ?></td>
-                                <td><?= htmlspecialchars($establishment['phone']) ?></td>
-                                <td><?= htmlspecialchars($establishment['adresse']) ?></td>
-                                <td><?= htmlspecialchars($establishment['mail']) ?></td>
-                                <td>
-                                    <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <tr>
-                            <td colspan="6">Aucun établissement accepté.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-            <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-requests">
+    </div>
+
+    <!-- TABLEAU DES ETABLISSEMENTS ACCEPTÉS -->
+    <div id="approved" class="tab-content">
+        <table class="table-request">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Creer le</th>
+                    <th>Modifier</th>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Adresse</th>
+                    <th>Email</th>
+                    <th>Détails</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
                 <?php if (!empty($approvedEstablishments)) : ?>
-                <?php foreach ($approvedEstablishments as $establishment) : ?>
-                <div class="card">
-                    <h3><?= htmlspecialchars($establishment['firstname']); ?></h3>
-                    <p>ID :<?= htmlspecialchars($establishment['id']); ?></p>
-                    <p>Date :<?= htmlspecialchars($establishment['created_at']); ?></p>
-                    <p>Telephone :<?= htmlspecialchars($establishment['phone']); ?></p>
-                    <p>Adresse:<?= htmlspecialchars($establishment['adresse']); ?></p>
-                    <p>Email :<?= htmlspecialchars($establishment['mail']); ?></p>
-                    <div>
-                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="detail">En savoir plus</a>
-                    </div>
-                    <div class="action">
-                        <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                        <a href="delete-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard delete" 
-                        onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-                <?php else : ?>
-                    <p>Aucune etablissement en attente.</p>
-                <?php endif; ?>
-            </div>
-        </div>
-        <!-- SECTIONS DES ESTABLISSEMENT REJETER -->
-        <div id="rejected" class="tab-content">
-            <table class="table-request">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Date</th>
-                        <th>Nom</th>
-                        <th>Téléphone</th>
-                        <th>Adresse</th>
-                        <th>Email</th>
-                        <th>En savoir plus</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($rejectedEstablishments)) : ?>
-                        <?php foreach ($rejectedEstablishments as $establishment) : ?>
-                            <tr>
-                                <td><?= htmlspecialchars($establishment['id']) ?></td>
-                                <td><?= htmlspecialchars($establishment['created_at']) ?></td>
-                                <td><?= htmlspecialchars($establishment['firstname']) ?></td>
-                                <td><?= htmlspecialchars($establishment['phone']) ?></td>
-                                <td><?= htmlspecialchars($establishment['adresse']) ?></td>
-                                <td><?= htmlspecialchars($establishment['mail']) ?></td>
-                                <td>
-                                    <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>">En savoir plus</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
+                    <?php foreach ($approvedEstablishments as $establishment) : ?>
                         <tr>
-                            <td colspan="6">Aucun établissement refusé.</td>
+                            <td><?= htmlspecialchars($establishment['id']) ?></td>
+                            <td><?= htmlspecialchars($establishment['created_at']) ?></td>
+                            <td><?= htmlspecialchars($establishment['date_modify']?? '') ?></td>
+                            <td><?= htmlspecialchars($establishment['firstname']) ?></td>
+                            <td><?= htmlspecialchars($establishment['phone']) ?></td>
+                            <td><?= htmlspecialchars($establishment['adresse']) ?></td>
+                            <td><?= htmlspecialchars($establishment['mail']) ?></td>
+                            <td>
+                                <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="btn-card detail-plus">Détails</a>
+                            </td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/admin/edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-card edit">Modifier</a>
+                                    <a href="../../controllers/delete-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
+                                <div>
+                            </td>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-              <!-- AFFICHAGE TABLETTE ET MOBILE -->
-              <div class="cards-requests">
-                <?php if (!empty($rejectedEstablishments)) : ?>
-                <?php foreach ($rejectedEstablishments as $establishment) : ?>
-                <div class="card">
-                    <h3><?= htmlspecialchars($establishment['firstname']); ?></h3>
-                    <p>ID : <?= htmlspecialchars($establishment['id']); ?></p>
-                    <p>Date : <?= htmlspecialchars($establishment['created_at']); ?></p>
-                    <p>Telephone : <?= htmlspecialchars($establishment['phone']); ?></p>
-                    <p>Adresse : <?= htmlspecialchars($establishment['adresse']); ?></p>
-                    <p>Email : <?= htmlspecialchars($establishment['mail']); ?></p>
-                    <div>
-                        <a href="details-estblishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="detail">En savoir plus</a>
-                    </div>
-                    <div class="action">
-                        <a href="edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                        <a href="delete-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-dashboard delete" 
-                        onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">Supprimer</a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
                 <?php else : ?>
-                    <p>Aucune etablissement en attente.</p>
+                    <tr>
+                        <td colspan="8">Aucun établissement accepté.</td>
+                    </tr>
                 <?php endif; ?>
-            </div>
+            </tbody>
+        </table>
+
+         <!-- VERSION CARTE -->
+         <div class="cards-container">
+            <?php if (!empty($approvedEstablishments)) : ?>
+                <?php foreach ($approvedEstablishments as $establishment) : ?>
+                    <div class="card-session">
+                        <h3><?= htmlspecialchars($establishment['firstname']) ?></h3>
+                        <p><strong>ID :</strong> <?= htmlspecialchars($establishment['id']) ?></p>
+                        <p><strong>Date :</strong> <?= htmlspecialchars($establishment['created_at']) ?></p>
+                        <p><strong>Téléphone :</strong> <?= htmlspecialchars($establishment['phone']) ?></p>
+                        <p><strong>Adresse :</strong> <?= htmlspecialchars($establishment['adresse']) ?></p>
+                        <p><strong>Email :</strong> <?= htmlspecialchars($establishment['mail']) ?></p>
+                        <div class="card-actions">
+                            <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="btn-card detail-plus">Détails</a>
+                            <a href="../../views/admin/edit-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                            <a href="../../controllers/delete-establishment.php?id=<?= htmlspecialchars($establishment['id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer cet établissement ?');"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p>Aucun établissement en attente.</p>
+            <?php endif; ?>
         </div>
-    </main>
+    </div>
+    
+    <!-- TABLEAU DES ÉTABLISSEMENTS REFUSÉS -->
+    <div id="rejected" class="tab-content">
+        <table class="table-request">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Adresse</th>
+                    <th>Email</th>
+                    <th>Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($rejectedEstablishments)) : ?>
+                    <?php foreach ($rejectedEstablishments as $establishment) : ?>
+                        <tr>
+                            <td><?= htmlspecialchars($establishment['id']) ?></td>
+                            <td><?= htmlspecialchars($establishment['created_at']) ?></td>
+                            <td><?= htmlspecialchars($establishment['firstname']) ?></td>
+                            <td><?= htmlspecialchars($establishment['phone']) ?></td>
+                            <td><?= htmlspecialchars($establishment['adresse']) ?></td>
+                            <td><?= htmlspecialchars($establishment['mail']) ?></td>
+                            <td>
+                                <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="btn-card detail-plus">Détails</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <tr>
+                        <td colspan="7">Aucun établissement refusé.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+         <!-- VERSION CARTE -->
+         <div class="cards-container">
+            <?php if (!empty($rejectedEstablishments)) : ?>
+                <?php foreach ($rejectedEstablishments as $establishment) : ?>
+                    <div class="card-session">
+                        <h3><?= htmlspecialchars($establishment['firstname']) ?></h3>
+                        <p><strong>ID :</strong> <?= htmlspecialchars($establishment['id']) ?></p>
+                        <p><strong>Date :</strong> <?= htmlspecialchars($establishment['created_at']) ?></p>
+                        <p><strong>Téléphone :</strong> <?= htmlspecialchars($establishment['phone']) ?></p>
+                        <p><strong>Adresse :</strong> <?= htmlspecialchars($establishment['adresse']) ?></p>
+                        <p><strong>Email :</strong> <?= htmlspecialchars($establishment['mail']) ?></p>
+                        <div class="card-actions">
+                            <a href="details-establishment.php?id=<?= htmlspecialchars($establishment['id']); ?>" class="btn-card details">Détails</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p>Aucun établissement en attente.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</main>
 </body>
 </html>
+
 
 

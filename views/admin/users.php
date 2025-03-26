@@ -1,7 +1,7 @@
 <?php
 require_once '../../models/database.php';
 require_once '../../models/user.php';
-include __DIR__ . '/../../templates/header_admin.php';
+include __DIR__ . '/../../templates/session_start.php'; 
 
 $conn = getConnexion();
 
@@ -13,7 +13,6 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +28,18 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
 </head>
 
 <body class="body-background">
+        <?php include __DIR__ . '/../../templates/header_admin.php'; ?>
+        <?php
+            if (isset($_SESSION['success'])) {
+                echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+                unset($_SESSION['success']); 
+            }
+
+            if (isset($_SESSION['error'])) {
+                 echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+                unset($_SESSION['error']); 
+            }
+        ?>
     <main class="dashboard">
         <div class="container-title">
             <h2>Gestion des utilisateurs</h2>
@@ -64,6 +75,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Etablissement</th>
                         <th>Actions</th>
                     </tr>
@@ -77,37 +89,36 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
                                 <td><?= htmlspecialchars($user['firstname']) ?></td>
                                 <td><?= htmlspecialchars($user['lastname']) ?></td>
                                 <td><?= htmlspecialchars($user['mail']) ?></td>
-                                <td><?= htmlspecialchars($user['establishment_name']) ?></td>
+                                <td><?= htmlspecialchars($user['role_name']) ?></td>
+                                <td><?= htmlspecialchars($user['establishment_name'] ?: 'Aucun établissement') ?></td>
+
                                 <td class="action">
-                                    <a href="edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                                    <a href="delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer ce responsable ?');">Supprimer</a>
+                                    <a href="../../views/admin/edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard edit">Modifier</a>
+                                    <a href="../../controllers/delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer ce responsable ?');">Supprimer</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="7">Aucun responsable trouvé.</td>
+                            <td colspan="8">Aucun responsable trouvé.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
             <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-requests">
+            <div class="cards-container">
                 <?php if (!empty($responsables)) : ?>
                     <?php foreach ($responsables as $user) : ?>
-                        <div class="card">
-                        <h3><?= htmlspecialchars($user['establishment_name']) ?></h3>
+                        <div class="card-session">
+                            <h3><?= htmlspecialchars($user['lastname']); ?>&nbsp;&nbsp;<?= htmlspecialchars($user['firstname']); ?></h3>
+                            <p>Etablissement : <?= htmlspecialchars($user['establishment_name']) ?></p>
                             <p>ID : <?= htmlspecialchars($user['id']);?></p>
                             <p>Date inscription : <?= htmlspecialchars($user['date_create']) ?></p>
-                            <p> Nom : <?= htmlspecialchars($user['lastname']); ?></p>
-                            <p>Prenom : <?= htmlspecialchars($user['firstname']); ?></p>
+                            <p>Role : <?= htmlspecialchars($user['role_name']) ?></p>
                             <p>Email : <?= htmlspecialchars($user['mail']); ?></p>
-                            <div>
-                                <a href="details-user.php?id=<?= htmlspecialchars($user['id']); ?>" class="detail">En savoir plus</a>
-                            </div>
-                            <div class="action">
-                                <a href="edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                                <a href="delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer ce responsable ?');">Supprimer</a>
+                            <div class="card-actions">
+                                <a href="../../views/admin/edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                <a href="../../controllers/delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce responsable ?');"><i class="fas fa-trash-alt"></i></a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -127,6 +138,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Etablissement</th>
                         <th>Actions</th>
                     </tr>
@@ -135,41 +147,40 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
                     <?php if (!empty($utilisateurs)) : ?>
                         <?php foreach ($utilisateurs as $user) : ?>
                             <tr>
-                                <td><?= htmlspecialchars($user['id']) ?></td>
+                            <td><?= htmlspecialchars($user['id']) ?></td>
                                 <td><?= htmlspecialchars($user['date_create']) ?></td>
-                                <td><?= htmlspecialchars($user['firstname_user']) ?></td>
-                                <td><?= htmlspecialchars($user['mail_user']) ?></td>
-                                <td><?= htmlspecialchars($user['establishment_name']) ?></td>
+                                <td><?= htmlspecialchars($user['firstname']) ?></td>
+                                <td><?= htmlspecialchars($user['lastname']) ?></td>
+                                <td><?= htmlspecialchars($user['mail']) ?></td>
+                                <td><?= htmlspecialchars($user['role_name']) ?></td>
+                                <td><?= htmlspecialchars($user['establishment_name'] ?: 'Aucun établissement') ?></td>
                                 <td class="action">
-                                    <a href="edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                                    <a href="delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
+                                    <a href="../../views/admin/edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard edit">Modifier</a>
+                                    <a href="../../controllers/delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="7">Aucun utilisateur trouvé.</td>
+                            <td colspan="8">Aucun utilisateur trouvé.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
             <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-requests">
+            <div class="cards-container">
                 <?php if (!empty($utilisateurs)) : ?>
                     <?php foreach ($utilisateurs as $user) : ?>
-                        <div class="card">
-                        <h3><?= htmlspecialchars($user['establishment_name']) ?></h3>
-                            <p>ID :<?= htmlspecialchars($user['id']); ?></p>
-                            <p>Date inscription : <?= isset($user['date_create']) ? htmlspecialchars($user['date_create']) : 'Date non définie' ?></p>
-                            <p> Nom : <?= htmlspecialchars($user['lastname']); ?></p>
-                            <p>Prenom : <?= htmlspecialchars($user['firstname']); ?></p>
+                        <div class="card-session">
+                        <h3><?= htmlspecialchars($user['lastname']); ?>&nbsp;&nbsp;<?= htmlspecialchars($user['firstname']); ?></h3>
+                            <p>Etablissement : <?= htmlspecialchars($user['establishment_name']) ?></p>
+                            <p>ID : <?= htmlspecialchars($user['id']);?></p>
+                            <p>Date inscription : <?= htmlspecialchars($user['date_create']) ?></p>
+                            <p>Role : <?= htmlspecialchars($user['role_name']) ?></p>
                             <p>Email : <?= htmlspecialchars($user['mail']); ?></p>
-                            <div>
-                                <a href="details-user.php?id=<?= htmlspecialchars($user['id']); ?>" class="detail">En savoir plus</a>
-                            </div>
-                            <div class="action">
-                                <a href="edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard edit">Modifier</a>
-                                <a href="delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-dashboard delete" onclick="return confirm('Voulez-vous vraiment supprimer ce responsable ?');">Supprimer</a>
+                            <div class="card-actions">
+                                <a href="../../views/admin/edit-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                <a href="../../controllers/delete-user.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce responsable ?');"><i class="fas fa-trash-alt"></i></a>
                             </div>
                         </div>
                     <?php endforeach; ?>

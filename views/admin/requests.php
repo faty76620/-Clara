@@ -1,3 +1,21 @@
+<?php
+session_start();
+?>
+
+<?php if (isset($_SESSION['success'])) : ?>
+    <div class="alert success">
+        <?= $_SESSION['success']; ?>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])) : ?>
+    <div class="alert error">
+        <?= $_SESSION['error']; ?>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +30,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script defer src="/clara/assets/js.js"></script>
     <title>Demandes inscription</title>
-</head>   
+</head>
 <body class="body-background">
     <?php 
     include __DIR__ . '/../../templates/header_admin.php';
@@ -20,18 +38,18 @@
     require_once '../../models/send_mail.php';
     require_once '../../models/request.php';
     
-    // RECUPERER LES RECHERCHE
+    // Récupérer la recherche
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     
     $conn = getConnexion();
     
-    // RECUPERER LES DEMANDES SELON LEUR STATUTS
+    // Récupérer les demandes selon leur statut
     $pendingRequests = getPendingRequests($conn, $search); 
     $approvedRequests = getApprovedRequests($conn, $search); 
     $rejectedRequests = getRejectedRequests($conn, $search); 
     ?>
     <main class="dashboard">
-        <!--MESSAGE ALERTE-->
+        <!-- Message alerte -->
         <div id="alert-info" class="alert-info">
             <i class="fas fa-info-circle"></i>
             <p>En tant qu'administrateur, vous pouvez <strong>"valider"</strong> ou <strong>"refuser"</strong> les demandes d'inscription.
@@ -41,218 +59,219 @@
             </p>
             <div id="close-alert"><i class="fa-solid fa-square-xmark"></i></div>
         </div>
+
         <div class="container-title"><h2>Demandes d'inscription</h2></div>
-        <!-- FORMULAIRE DE RECHERCHE -->
+        
+        <!-- Formulaire de recherche -->
         <form method="GET">
             <div class="dashboard-search">
                 <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
                 <button type="submit">Rechercher</button>
-                <!-- Bouton pour réinitialiser la recherche -->
                 <div class="reset"><a href="requests.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
             </div>
         </form>
-        <!-- ONGLET POUR BASCULER SUR AUTRE TYPE DE DEMANDES -->
+
+        <!-- Onglets pour changer de statut -->
         <div class="tabs">
-            <button id="tab-pending" class="tab-button active" onclick="showTab('pending')"><i class="fas fa-clock"></i><span class="tab-text">Etablissements en attente</span></button>
-            <button id="tab-approved" class="tab-button" onclick="showTab('approved')"><i class="fas fa-check-circle"></i><span class="tab-text">Etablissements acceptées</span></button>
-            <button id="tab-rejected" class="tab-button" onclick="showTab('rejected')"> <i class="fas fa-times-circle"></i><span class="tab-text">Etablissements refusées</span></button>
+            <button id="tab-pending" class="tab-button active" onclick="showTab('pending')"><i class="fas fa-clock"></i> <span class="tab-text">En attente</span></button>
+            <button id="tab-approved" class="tab-button" onclick="showTab('approved')"><i class="fas fa-check-circle"></i> <span class="tab-text">Acceptées</span></button>
+            <button id="tab-rejected" class="tab-button" onclick="showTab('rejected')"><i class="fas fa-times-circle"></i> <span class="tab-text">Refusées</span></button>
         </div>
-        <!-- SECTION DES DEMANDES EN ATTENTE -->
+
+        <!-- TABLEAU DES DEMANDES EN ATTENTE -->
         <div id="pending" class="tab-content active">
             <table class="table-request">
                 <thead>
                     <tr>
-                        <th>Nom de l'entreprise</th>
-                        <th>Email</th>
+                        <th>ID</th>
                         <th>Date</th>
-                        <th>Type</th>
-                        <th>Statut</th>
-                        <th>En savoir plus</th>
+                        <th>Nom</th>
+                        <th>Téléphone</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>Détails</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($pendingRequests)) : ?>
-                    <?php foreach ($pendingRequests as $request) : ?>
-                    <tr>
-                        <td><?= htmlspecialchars($request['firstname_establishment']); ?></td>
-                        <td><?= htmlspecialchars($request['mail_admin']); ?></td>
-                        <td><?= htmlspecialchars($request['created_at']); ?></td>
-                        <td><?= htmlspecialchars($request['type_role']); ?></td>
-                        <td><?= htmlspecialchars($request['status']); ?></td>
-                        <td>
-                            <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
-                        </td>
-                        <td>
-                            <div class="action">
-                                <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
-                                <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
+                        <?php foreach ($pendingRequests as $request) : ?>
+                            <tr>
+                                <td><?= htmlspecialchars($request['id']) ?></td>
+                                <td><?= htmlspecialchars($request['created_at']) ?></td>
+                                <td><?= htmlspecialchars($request['firstname_establishment']) ?></td>
+                                <td><?= htmlspecialchars($request['phone']) ?></td>
+                                <td><?= htmlspecialchars($request['adresse']) ?></td>
+                                <td><?= htmlspecialchars($request['mail']) ?></td>
+                                <td>
+                                    <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="btn-card">Détails</a>
+                                </td>
+                                <td>
+                                    <div class="action">
+                                        <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class=" btn-dashboard btn-success">Approuver</a>
+                                        <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     <?php else : ?>
-                    <tr>
-                        <td colspan="7">Aucune demande en attente.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="8">Aucune demande en attente.</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
-            <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-requests">
+
+            <!-- VERSION CARTE -->
+            <div class="cards-container">
                 <?php if (!empty($pendingRequests)) : ?>
-                <?php foreach ($pendingRequests as $request) : ?>
-                <div class="card">
-                    <h3><?= htmlspecialchars($request['firstname_establishment']); ?></h3>
-                    <p><?= htmlspecialchars($request['mail_admin']); ?></p>
-                    <p><?= htmlspecialchars($request['created_at']); ?></p>
-                    <p><?= htmlspecialchars($request['type_role']); ?></p>
-                    <p><?= htmlspecialchars($request['status']); ?></p>
-                    <div>
-                        <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
-                    </div>
-                    <div class="action">
-                        <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
-                        <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
+                    <?php foreach ($pendingRequests as $request) : ?>
+                        <div class="card-session">
+                            <h3><?= htmlspecialchars($request['firstname_establishment']) ?></h3>
+                            <p><strong>ID :</strong> <?= htmlspecialchars($request['id']) ?></p>
+                            <p><strong>Date :</strong> <?= htmlspecialchars($request['created_at']) ?></p>
+                            <p><strong>Téléphone :</strong> <?= htmlspecialchars($request['phone']) ?></p>
+                            <p><strong>Adresse :</strong> <?= htmlspecialchars($request['adresse']) ?></p>
+                            <p><strong>Email :</strong> <?= htmlspecialchars($request['mail']) ?></p>
+                            <br>
+                            <div class="card-actions">
+                                <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="btn-card details">Détails</a>
+                                <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success"><i class="fas fa-check-circle" style="color: white;"></i></a>
+                                        <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject"><i class="fas fa-times-circle" style="color: white;"></i></a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 <?php else : ?>
-                <p>Aucune demande en attente.</p>
+                    <p>Aucune demande en attente.</p>
                 <?php endif; ?>
             </div>
         </div>
-        <!-- SECTION DES DEMANDE EN ATTENTES-->
+
+        <!-- DEMANDE APPROUVEE -->
         <div id="approved" class="tab-content">
             <table class="table-request">
                 <thead>
                     <tr>
-                        <th>Nom de l'entreprise</th>
-                        <th>Email</th>
+                        <th>ID</th>
                         <th>Date</th>
-                        <th>Type</th>
-                        <th>Statut</th>
-                        <th class="details">En savoir plus</th>
-                        <th>Actions</th>
+                        <th>Nom</th>
+                        <th>Téléphone</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>Détails</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($approvedRequests)) : ?>
-                    <?php foreach ($approvedRequests as $request) : ?>
-                    <tr>
-                        <td><?= htmlspecialchars($request['firstname_establishment']); ?></td>
-                        <td><?= htmlspecialchars($request['mail_admin']); ?></td>
-                        <td><?= htmlspecialchars($request['created_at']); ?></td>
-                        <td><?= htmlspecialchars($request['type_role']); ?></td>
-                        <td><?= htmlspecialchars($request['status']); ?></td>
-                        <td>
-                            <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
-                        </td>
-                        <td>
-                            <div class="action">
-                                <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
-                                <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
+                        <?php foreach ($approvedRequests as $request) : ?>
+                            <tr>
+                                <td><?= htmlspecialchars($request['id']) ?></td>
+                                <td><?= htmlspecialchars($request['created_at']) ?></td>
+                                <td><?= htmlspecialchars($request['firstname_establishment']) ?></td>
+                                <td><?= htmlspecialchars($request['phone']) ?></td>
+                                <td><?= htmlspecialchars($request['adresse']) ?></td>
+                                <td><?= htmlspecialchars($request['mail']) ?></td>
+                                <td>
+                                    <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="btn-card detail-plus">Détails</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     <?php else : ?>
-                    <tr>
-                        <td colspan="6">Aucune demande acceptée.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="7">Aucune demande acceptée.</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
-            <!-- AFFICHAGE TABLETTE ET MOBILE -->
-            <div class="cards-requests">
+
+            <!-- VERSION CARTE -->
+            <div class="cards-container">
                 <?php if (!empty($approvedRequests)) : ?>
-                <?php foreach ($approvedRequests as $request) : ?>
-                <div class="card">
-                    <h3><?= htmlspecialchars($request['firstname_establishment']); ?></h3>
-                    <p><?= htmlspecialchars($request['mail_admin']); ?></p>
-                    <p><?= htmlspecialchars($request['created_at']); ?></p>
-                    <p><?= htmlspecialchars($request['type_role']); ?></p>
-                    <p><?= htmlspecialchars($request['status']); ?></p>
-                    <div>
-                        <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="detail">En savoir plus</a>
-                    </div>
-                    <div class="action">
-                        <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
-                        <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
-                    </div>
-                </div>
-            </div>
-                <?php endforeach; ?>
-                <?php else : ?>
-                <p>Aucune demande acceptée.</p>
-                <?php endif; ?>
-            </div>
-        </div>
-        <!-- SECTION DES DEMANDES REFUSER -->
-        <div id="rejected" class="tab-content">
-        <table class="table-request">
-            <thead>
-                <tr>
-                    <th>Nom de l'entreprise</th>
-                    <th>Email</th>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Statut</th>
-                    <th class="details">En savoir plus</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($rejectedRequests)) : ?>
-                <?php foreach ($rejectedRequests as $request) : ?>
-                <tr>
-                    <td><?= htmlspecialchars($request['firstname_establishment']); ?></td>
-                    <td><?= htmlspecialchars($request['mail_admin']); ?></td>
-                    <td><?= htmlspecialchars($request['created_at']); ?></td>
-                    <td><?= htmlspecialchars($request['type_role']); ?></td>
-                    <td><?= htmlspecialchars($request['status']); ?></td>
-                    <td>
-                        <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>">En savoir plus</a>
-                    </td>
-                    <td>
-                        <div class="action">
-                            <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
-                            <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
+                    <?php foreach ($approvedRequests as $request) : ?>
+                        <div class="card-session">
+                            <h3><?= htmlspecialchars($request['firstname_establishment']) ?></h3>
+                            <p><strong>ID :</strong> <?= htmlspecialchars($request['id']) ?></p>
+                            <p><strong>Date :</strong> <?= htmlspecialchars($request['created_at']) ?></p>
+                            <p><strong>Téléphone :</strong> <?= htmlspecialchars($request['phone']) ?></p>
+                            <p><strong>Adresse :</strong> <?= htmlspecialchars($request['adresse']) ?></p>
+                            <p><strong>Email :</strong> <?= htmlspecialchars($request['mail']) ?></p>
+                            <br>
+                            <div class="card-actions">
+                                <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="btn-card detail-plus">Détails</a>
+                            </div>
                         </div>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
                 <?php else : ?>
-                <tr>
-                    <td colspan="6">Aucune demande refusée.</td>
-                </tr>
+                    <p>Aucune demande acceptée.</p>
                 <?php endif; ?>
-            </tbody>
-        </table>
-        <!-- AFFICHES DES DEMANDES REFUSÉES EN CARTE -->
-        <div class="cards-requests">
-            <?php if (!empty($rejectedRequests)) : ?>
-            <?php foreach ($rejectedRequests as $request) : ?>
-            <div class="card">
-                <h3><?= htmlspecialchars($request['firstname_establishment']); ?></h3>
-                <p><?= htmlspecialchars($request['mail_admin']); ?></p>
-                <p><?= htmlspecialchars($request['created_at']); ?></p>
-                <p><?= htmlspecialchars($request['type_role']); ?></p>
-                <p><?= htmlspecialchars($request['status']); ?></p>
-                <div>
-                    <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="detail">En savoir plus</a>
-                </div>
-                </div>
-                <div class="action">
-                    <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success">Approuver</a>
-                    <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject">Rejeter</a>
-                </div>
             </div>
-            <?php endforeach; ?>
-            <?php else : ?>
-            <p>Aucune demande refusée.</p>
-            <?php endif; ?>
         </div>
-    </div>
-</main>
+
+        <!-- DEMANDE REJETER -->
+        <div id="rejected" class="tab-content">
+            <table class="table-request">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Nom</th>
+                        <th>Téléphone</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>Détails</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($rejectedRequests)) : ?>
+                        <?php foreach ($rejectedRequests as $request) : ?>
+                            <tr>
+                                <td><?= htmlspecialchars($request['id']) ?></td>
+                                <td><?= htmlspecialchars($request['created_at']) ?></td>
+                                <td><?= htmlspecialchars($request['firstname_establishment']) ?></td>
+                                <td><?= htmlspecialchars($request['phone']) ?></td>
+                                <td><?= htmlspecialchars($request['adresse']) ?></td>
+                                <td><?= htmlspecialchars($request['mail']) ?></td>
+                                <td>
+                                    <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="btn-card detail-plus">Détails</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="7">Aucune demande rejetée.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+            <!-- VERSION CARTE -->
+            <div class="cards-container">
+                <?php if (!empty($rejectedRequests)) : ?>
+                    <?php foreach ($rejectedRequests as $request) : ?>
+                        <div class="card-session">
+                            <h3><?= htmlspecialchars($request['firstname_establishment']) ?></h3>
+                            <p><strong>ID :</strong> <?= htmlspecialchars($request['id']) ?></p>
+                            <p><strong>Date :</strong> <?= htmlspecialchars($request['created_at']) ?></p>
+                            <p><strong>Téléphone :</strong> <?= htmlspecialchars($request['phone']) ?></p>
+                            <p><strong>Adresse :</strong> <?= htmlspecialchars($request['adresse']) ?></p>
+                            <p><strong>Email :</strong> <?= htmlspecialchars($request['mail']) ?></p>
+                            <br>
+                            <div class="card-actions">
+                                <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="btn-card detail-plus">Détails</a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <p>Aucune demande rejetée.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </main>
+
+    <script src="/clara/assets/js.js"></script>
 </body>
 </html>
+
+
+
+
