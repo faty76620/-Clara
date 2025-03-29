@@ -1,7 +1,11 @@
 <?php
+
 // TRAITEMENT DES DONNEES A L'ENVOI
-require_once '../models/database.php'; 
-require_once '../models/request.php'; 
+require_once __DIR__ . '/../config.php';        
+require_once MODEL_DIR . '/database.php';        
+require_once MODEL_DIR . '/request.php';  
+require_once MODEL_DIR . '/logs.php';          
+
 
 // VERIFIE SI FORMULAIRE EST SOUMIT
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

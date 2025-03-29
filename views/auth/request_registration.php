@@ -15,7 +15,8 @@
 </head>
     <body>
         <?php 
-        include __DIR__ . '/../../templates/header.php'; ?>
+         require_once __DIR__ . '/../../config.php'; 
+         require_once TEMPLATE_DIR . '/session_start.php';   ?>
         <main class="main">
             <h2>Demande d'incription</h2>
             <div  class="flex-register">

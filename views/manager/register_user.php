@@ -34,9 +34,9 @@ if (isset($_SESSION['error'])) {
 ?>
     <?php include __DIR__ . '/../../templates/header_manager.php'; ?>
     <main class="dashboard">
-        <h2>Inscription utilisateur</h2>
-        <div class="register-sessions">
-            <form action="/clara/controllers/userControllers.php" method="POST">
+        <div class="container-title"><h2>Inscription utilisateur</h2></div>
+        <div class="card">
+            <form action="/clara/controllers/userControllers.php" method="POST" class="form-session">
                 <div class="group-form">
                     <label for="lastname_user">Nom</label>
                     <input type="text" name="lastname_user" id="lastname_user" required><br>

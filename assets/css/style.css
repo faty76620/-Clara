@@ -40,11 +40,8 @@ ul li {
 /*** APPLIQUABLE PLUSIEURS FOIS ***/
 
 .card {
-    background-color: #f0f0f0;
     border: 1px solid #ddd;
-    padding: 20px;
     border-radius: 10px;
-    margin: 50px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
@@ -509,10 +506,6 @@ button:hover {
     margin-bottom: 20px;
 }
 
-.out-session {
-    margin-top: 50px;
-}
-
 .sidebar a:hover {
     background-color: #129cb1;
     border-radius: 8px;
@@ -812,6 +805,31 @@ button:hover {
 .cards-session {
     display: none;
 }
+
+/***FORMULAIRE PATIENT***/
+
+fieldset {
+    padding: 50px;
+    background-color: #f9f9f9;
+}
+
+.days-of-week {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 15px; 
+}
+
+.days-of-week label {
+    display: flex;
+    align-items: center; 
+    font-size: 16px;
+}
+
+.days-of-week input[type="checkbox"] {
+    margin-right: 5px; 
+}
+
+
 
 /*****************************************************PAGE CLARA**********************************************************/
 #clara {

@@ -55,24 +55,6 @@
             <div class="caregiver-container">
                 <div class="card">
                     <div class="card-content">
-                        <a href="/clara/views/home/job_4.php"><img src="/clara/assets/images/medecin.jpg" alt="Médecin"></a>
-                        <h3>Médecin</h3>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <a href="/clara/views/home/job_6.php"><img src="/clara/assets/images/kine.jpg" alt="Kinésithérapeute"></a>
-                        <h3>Kinésithérapeute</h3>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <a href="/clara/views/home/job_5.php"><img src="/clara/assets/images/ergo.jpg" alt="Ergothérapeute"></a>
-                        <h3>Ergothérapeute</h3>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
                         <a href="/clara/views/home/job_1.php"><img src="/clara/assets/images/infirmier.jpg" alt="Infirmier"></a>
                         <h3>Infirmiér(e)</h3>
                     </div>

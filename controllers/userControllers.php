@@ -1,9 +1,12 @@
 <?php
-include __DIR__ . '/../../templates/session_start.php'; 
-require_once '../models/database.php';
-require_once '../models/user.php'; 
-require_once '../models/establishment.php'; 
-require_once '../models/send_mail.php'; 
+
+require_once __DIR__ . '/../config.php';        
+require_once MODEL_DIR . '/database.php';        
+require_once MODEL_DIR . '/user.php';  
+require_once MODEL_DIR . '/establishment.php';
+require_once MODEL_DIR . '/logs.php';    
+require_once MODEL_DIR . '/send_mail.php';       
+require_once TEMPLATE_DIR . '/session_start.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") { 
     //  VERIFICATION DES CHAMPS
@@ -16,11 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         empty($_POST['establishment_id'])
     ) {
         $_SESSION['error'] = "Veuillez remplir tous les champs obligatoires.";
+        addLog('Erreur', $_SESSION['username'], "Tentative d'inscription échouée - Champs manquants");
         header("Location: /clara/views/manager/register_user.php");
         exit();
     }
 
-    // SECURISATION DES DONNES
+    // SECURISATION DES DONNÉES
     $firstname_user = htmlspecialchars(trim($_POST['firstname_user']));
     $lastname_user = htmlspecialchars(trim($_POST['lastname_user']));
     $mail_user = htmlspecialchars(trim($_POST['mail_user']));
@@ -37,13 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($username_exists) {
         $username .= rand(1, 100); // Si identifiant existe, ajouter un nombre aléatoire
     }
+    addLog('Info', $_SESSION['username'], "Génération identifiant unique : $username");
 
     // MOT DE PASSE TEMPORAIRE
     $password_plain = bin2hex(random_bytes(4)); 
     $password_hashed = password_hash($password_plain, PASSWORD_BCRYPT);
     
-
-    // INSERSION DANS BASE DE DONNES
+    // INSERTION DANS BASE DE DONNÉES
     $user_created = createUser($conn, [
         'username' => $username,
         'firstname_user' => $firstname_user,
@@ -54,8 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         'role_user' => $role_user
     ]);
 
-    // VERIFIER SI UTILISATERUR CREER
+    // VERIFIER SI UTILISATEUR CRÉÉ
     if ($user_created) {
+        addLog('Succès', $_SESSION['username'], "Utilisateur créé : $username ($mail_user)");
+
         $subject = "Votre inscription a été validée";
         $message = "
             Bonjour $firstname_user $lastname_user,
@@ -71,11 +77,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // ENVOI EMAIL
         if (sendEmail($mail_user, $subject, $message)) {
             $_SESSION['success'] = "Utilisateur inscrit avec succès. Un email a été envoyé à $mail_user avec ses informations de connexion.";
+            addLog('Email envoyé', $_SESSION['username'], "Email d'inscription envoyé à $mail_user");
         } else {
             $_SESSION['error'] = "L'utilisateur a été créé, mais l'envoi de l'email a échoué.";
+            addLog('Erreur envoi email', $_SESSION['username'], "Échec d'envoi du mail à $mail_user");
         }
     } else {
         $_SESSION['error'] = "Erreur lors de l'inscription de l'utilisateur.";
+        addLog('Erreur', $_SESSION['username'], "Échec de création utilisateur : $username ($mail_user)");
     }
 
     header("Location: /clara/views/manager/register_user.php"); 
@@ -86,6 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 if (isset($_GET['action']) && $_GET['action'] == 'list') {
     $conn = getConnexion();
     $users = getUsersByRole($conn, 'user'); // Récupère les utilisateurs
+    addLog('Info', $_SESSION['username'], "Consultation de la liste des utilisateurs");
     require_once '../../views/manager/users_list.php';
 }
 
@@ -94,8 +104,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     $conn = getConnexion();
     if (deleteUser($conn, $_GET['id'])) {
         $_SESSION['success'] = "Utilisateur supprimé avec succès.";
+        addLog('Suppression', $_SESSION['username'], "Utilisateur ID " . $_GET['id'] . " supprimé");
     } else {
         $_SESSION['error'] = "Erreur lors de la suppression de l'utilisateur.";
+        addLog('Erreur', $_SESSION['username'], "Échec suppression utilisateur ID " . $_GET['id']);
     }
     header("Location: /clara/views/manager/users_list.php");
     exit();

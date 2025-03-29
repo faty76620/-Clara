@@ -1,7 +1,3 @@
-<?php
-require_once __DIR__ . '/../../templates/session_start.php';
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +16,9 @@ require_once __DIR__ . '/../../templates/session_start.php';
 
 <body class="body-background">
 <?php
+require_once __DIR__ . '/../../config.php'; 
+require_once TEMPLATE_DIR . '/session_start.php';  
+
 if (isset($_GET['expired'])) {
     echo '<p style="color: red; font-weight: bold;">Votre session a expiré. Veuillez vous reconnecter.</p>';  
 }

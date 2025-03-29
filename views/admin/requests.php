@@ -1,5 +1,11 @@
 <?php
-session_start();
+
+require_once __DIR__ . '/../../config.php';
+require_once TEMPLATE_DIR . '/session_start.php';
+require_once MODEL_DIR . '/database.php';
+require_once MODEL_DIR . '/send_mail.php';
+require_once MODEL_DIR . '/request.php';
+
 ?>
 
 <?php if (isset($_SESSION['success'])) : ?>
@@ -33,11 +39,9 @@ session_start();
 </head>
 <body class="body-background">
     <?php 
-    include __DIR__ . '/../../templates/header_admin.php';
-    require_once '../../models/database.php';
-    require_once '../../models/send_mail.php';
-    require_once '../../models/request.php';
     
+    include TEMPLATE_DIR . '/header_admin.php'; 
+
     // Récupérer la recherche
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     

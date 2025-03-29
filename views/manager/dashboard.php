@@ -1,5 +1,6 @@
 <?php
-include __DIR__ . '/../../templates/session_start.php'; 
+require_once __DIR__ . '/../../config.php'; 
+require_once TEMPLATE_DIR . '/session_start.php'; 
 
 // Vérifiez que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
@@ -37,7 +38,7 @@ $lastname = isset($_SESSION['lastname']) && !empty($_SESSION['lastname']) ? $_SE
     <script defer src="/clara/assets/js.js"></script>
     <title>Tableau de bord</title>
 </head>
-<body>
+<body class="background">
     <?php 
         include __DIR__ . '/../../templates/header_manager.php'; 
     ?>

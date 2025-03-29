@@ -1,7 +1,9 @@
 <?php
-require_once '../../models/database.php';
-require_once '../../models/user.php';
-include __DIR__ . '/../../templates/session_start.php'; 
+
+require_once __DIR__ . '/../../config.php';
+require_once TEMPLATE_DIR . '/session_start.php';
+require_once MODEL_DIR . '/database.php';
+require_once MODEL_DIR . '/user.php';
 
 $conn = getConnexion();
 
@@ -28,7 +30,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
 </head>
 
 <body class="body-background">
-        <?php include __DIR__ . '/../../templates/header_admin.php'; ?>
+        <?php   include TEMPLATE_DIR . '/header_admin.php'; ?>
         <?php
             if (isset($_SESSION['success'])) {
                 echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';

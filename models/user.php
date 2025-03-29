@@ -227,6 +227,22 @@ function deleteUser($pdo, $userId) {
         return false;
     }
 }
+
+
+// FONCTION POUR RECUPERER UN NOM PRENOM
+function getUserNameById($conn, $user_id) {
+    $sql = "SELECT firstname, lastname FROM users WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        return $user['firstname'] . " " . $user['lastname'];
+    } else {
+        return "Utilisateur inconnu";
+    }
+}
 ?>
 
 

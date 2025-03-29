@@ -1,8 +1,12 @@
 <?php
-require_once __DIR__ . '/../templates/session_start.php';
-require_once __DIR__ . '/../models/database.php';
-require_once __DIR__ . '/../models/user.php';
-require_once __DIR__ . '/../models/send_mail.php';
+
+require_once __DIR__ . '/../config.php';        
+require_once MODEL_DIR . '/database.php';        
+require_once MODEL_DIR . '/user.php';  
+require_once MODEL_DIR . '/logs.php';    
+require_once MODEL_DIR . '/send_mail.php';       
+require_once TEMPLATE_DIR . '/session_start.php'; 
+
 
 // Vérification de connexion
 if (!isset($_SESSION['user_id'])) {
@@ -28,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Vérification de l'ancien mot de passe
     if (!$user || !password_verify($old_password, $user['password'])) {
         $_SESSION['error'] = "L'ancien mot de passe est incorrect.";
+        addLog('Échec changement de mot de passe oublié', $username, 'Ancien mot de passe incorrect');
         header("Location: /clara/views/auth/change_password.php");
         exit();
     }
@@ -35,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Vérification si les nouveaux mots de passe correspondent
     if ($new_password !== $confirm_password) {
         $_SESSION['error'] = "Les nouveaux mots de passe ne correspondent pas.";
+        addLog('Échec changement de mot de passe oublié', $username, 'Mots de passe ne correspondent pas');
         header("Location: /clara/views/auth/change_password.php");
         exit();
     }
@@ -42,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Vérification des critères du nouveau mot de passe
     if (strlen($new_password) < 8 || !preg_match('/[A-Z]/', $new_password) || !preg_match('/[0-9]/', $new_password)) {
         $_SESSION['error'] = "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.";
+        addLog('Échec changement de mot de passe oublié', $username, 'Mot de passe non conforme');
         header("Location: /clara/views/auth/change_password.php");
         exit();
     }
@@ -67,7 +74,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
     
         // Envoi de l'email
-        sendEmail($to, $subject, $message, $headers);
+        if (sendEmail($to, $subject, $message, $headers)) {
+            addLog('Email confirmation envoyé', $username, 'Email de confirmation de changement de mot de passe envoyé');
+        } else {
+            addLog('Erreur envoi email', $username, 'Échec d\'envoi de l\'email de confirmation');
+        }
+
+        // Ajouter un log pour le succès du changement de mot de passe
+        addLog('Changement de mot de passe oublié réussi', $username, 'Utilisateur a changé son mot de passe');
 
         // Message de succès et déconnexion de la session
         $_SESSION['success'] = "Mot de passe mis à jour avec succès.";
@@ -78,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     } else {
         $_SESSION['error'] = "Une erreur est survenue lors de la mise à jour du mot de passe.";
+        addLog('Échec changement de mot de passe oublié', $username, 'Erreur lors de la mise à jour en base');
         header("Location: /clara/views/auth/change_password.php");
         exit();
     }
