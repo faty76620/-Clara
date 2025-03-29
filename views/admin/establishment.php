@@ -64,7 +64,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
 
     <!-- TABLEAU DES DEMANDES EN ATTENTE -->
     <div id="pending" class="tab-content active">
-        <table class="table-request">
+        <table class="table-responsive">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -123,7 +123,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
 
     <!-- TABLEAU DES ETABLISSEMENTS ACCEPTÉS -->
     <div id="approved" class="tab-content">
-        <table class="table-request">
+        <table class="table-responsive">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -193,7 +193,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
     
     <!-- TABLEAU DES ÉTABLISSEMENTS REFUSÉS -->
     <div id="rejected" class="tab-content">
-        <table class="table-request">
+        <table class="table-responsive">
             <thead>
                 <tr>
                     <th>ID</th>

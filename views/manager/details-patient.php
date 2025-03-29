@@ -9,12 +9,6 @@ require_once MODEL_DIR . '/transmission.php';
 
 $conn = getConnexion();
 
-// Vérification de l'ID du patient
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    header("Location: manager_patients.php");
-    exit();
-}
-
 $patient_id = $_GET['id'];
 $patient = getPatientById($conn, $patient_id); 
 $care = getCareByPatient($conn, $patient_id); 

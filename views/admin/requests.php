@@ -84,7 +84,7 @@ require_once MODEL_DIR . '/request.php';
 
         <!-- TABLEAU DES DEMANDES EN ATTENTE -->
         <div id="pending" class="tab-content active">
-            <table class="table-request">
+            <table class="table-responsive">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -153,7 +153,7 @@ require_once MODEL_DIR . '/request.php';
 
         <!-- DEMANDE APPROUVEE -->
         <div id="approved" class="tab-content">
-            <table class="table-request">
+            <table class="table-responsive">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -213,7 +213,7 @@ require_once MODEL_DIR . '/request.php';
 
         <!-- DEMANDE REJETER -->
         <div id="rejected" class="tab-content">
-            <table class="table-request">
+            <table class="table-responsive">
                 <thead>
                     <tr>
                         <th>ID</th>

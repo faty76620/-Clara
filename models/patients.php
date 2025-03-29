@@ -72,17 +72,16 @@ function deletePatient($conn, $patient_id) {
     }
 }
 
-
 function getPatients($conn, $search = '') {
     try {
         $query = "SELECT * FROM patients";
         if (!empty($search)) {
             $query .= " WHERE firstname LIKE :search 
                         OR lastname LIKE :search 
-                        OR id LIKE :search 
+                        OR patient_id LIKE :search 
                         OR date_of_birth LIKE :search";
         }
-        $query .= " ORDER BY id DESC";
+        $query .= " ORDER BY patient_id DESC"; 
 
         $stmt = $conn->prepare($query);
         if (!empty($search)) {
@@ -96,7 +95,6 @@ function getPatients($conn, $search = '') {
         return false;
     }
 }
-
 
 function getPatientDetails($conn, $patientId) {
     $sql = "SELECT * FROM patients WHERE id = ?";

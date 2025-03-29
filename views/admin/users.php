@@ -69,7 +69,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
 
         <!-- SECTION RESPONSABLES -->
         <div id="responsables" class="tab-content active">
-            <table class="table-request">
+            <table class="table-responsive">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -132,7 +132,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
 
         <!-- SECTION UTILISATEURS -->
         <div id="utilisateurs" class="tab-content">
-            <table class="table-request">
+            <table class="table-responsive">
                 <thead>
                     <tr>
                         <th>ID</th>

@@ -39,9 +39,8 @@ $lastname = isset($_SESSION['lastname']) && !empty($_SESSION['lastname']) ? $_SE
     <title>Tableau de bord</title>
 </head>
 <body class="background">
-    <?php 
-        include __DIR__ . '/../../templates/header_manager.php'; 
-    ?>
+        <?php include TEMPLATE_DIR . '/header_manager.php'; ?>
+    
     <main class="dashboard">
         <h2>Bonjour, <?php echo htmlspecialchars($lastname); ?> !</h2>
     </main>

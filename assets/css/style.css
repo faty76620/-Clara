@@ -521,7 +521,7 @@ button:hover {
     margin-left: 20px;
 }
 
-.dashboard .table-request { 
+.dashboard .table-responsive { 
     margin-top: 20px; 
     width: 100%;
     margin-bottom: 50px;

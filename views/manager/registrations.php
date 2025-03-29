@@ -41,7 +41,7 @@ require_once MODEL_DIR . '/establishment.php';
 <body class="body-background">
     <?php 
     
-    include TEMPLATE_DIR . '/header_admin.php'; 
+    include TEMPLATE_DIR . '/header_manager.php'; 
 
     // Récupérer la recherche
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';

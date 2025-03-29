@@ -116,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Message d'erreur
         $_SESSION['error'] = "Une erreur est survenue. Veuillez réessayer.";
-        header("Location: ../views/register_patient.php");
+        header("Location: ../views/registration.php");
         exit();
     }
 } else {
