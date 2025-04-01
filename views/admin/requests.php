@@ -141,7 +141,7 @@ require_once MODEL_DIR . '/request.php';
                             <div class="card-actions">
                                 <a href="details-request.php?id=<?= htmlspecialchars($request['id']); ?>" class="btn-card details">Détails</a>
                                 <a href="/clara/controllers/adminController.php?action=approve&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-success"><i class="fas fa-check-circle" style="color: white;"></i></a>
-                                        <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject"><i class="fas fa-times-circle" style="color: white;"></i></a>
+                                <a href="/clara/controllers/adminController.php?action=reject&id=<?= htmlspecialchars($request['id']); ?>" class="btn-dashboard btn-reject"><i class="fas fa-times-circle" style="color: white;"></i></a>
                             </div>
                         </div>
                     <?php endforeach; ?>

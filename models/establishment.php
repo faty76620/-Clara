@@ -5,7 +5,6 @@ require_once 'database.php';
 function createEstablishment($conn, $request) {
     $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, mail, created_at, date_modify) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NULL)");
-
     $stmt->execute([
         htmlspecialchars($request['firstname_establishment']), 
         htmlspecialchars($request['adresse']), 
@@ -16,7 +15,6 @@ function createEstablishment($conn, $request) {
         htmlspecialchars($request['description']), 
         htmlspecialchars($request['mail'])
     ]);
-
     return $conn->lastInsertId(); // Retourne l'ID du nouvel établissement 
 }
 
@@ -55,7 +53,6 @@ function updateEstablishment($conn, $id, $firstname, $phone, $adresse, $mail, $d
         return false;
     }
 }
-
 
 //FONCTION POUR SUPPRIMER UN ETABLISSEMENT EN UTILISANT SONT ID
 function deleteEstablishment($conn, $id) {

@@ -31,113 +31,110 @@ $patients = getPatients($conn, $search);
     <?php include TEMPLATE_DIR . '/header_manager.php'; ?>
     
     <main class="dashboard">
-        <div class="container-title"><h2>Liste des Patients</h2></div>
+        <div class="container-title"><h2>Informations</h2></div>
 
-        <!-- FORMULAIRE DE RECHERCHE -->
-        <form method="GET">
-            <div class="dashboard-search">
-                <input type="text" name="search" placeholder="Rechercher un patient..." value="<?= htmlspecialchars($search); ?>">
-                <button type="submit">Rechercher</button>
-                <div class="reset"><a href="folders_patients.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
+            <!-- FORMULAIRE DE RECHERCHE -->
+            <form method="GET">
+                <div class="dashboard-search">
+                    <input type="text" name="search" placeholder="Rechercher un patient..." value="<?= htmlspecialchars($search); ?>">
+                    <button type="submit">Rechercher</button>
+                    <div class="reset"><a href="folders_patients.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
+                </div>
+            </form>
+
+            <!-- ONGLET POUR FILTRER LES LISTES -->
+            <div class="tabs">
+                <button id="tab-patient" class="tab-button active" onclick="showTab('patient')">
+                    <i class="fas fa-user-injured"></i> <span class="tab-text">Patients</span>
+                </button>
+                <button id="tab-caregiver" class="tab-button" onclick="showTab('caregiver')">
+                    <i class="fas fa-user-md"></i> <span class="tab-text">Soignants</span>
+                </button>    
             </div>
-        </form>
 
-         <!-- ONGLET POUR FILTRER LES LISTES -->
-         <div class="tabs">
-            <button id="tab-patient" class="tab-button active" onclick="showTab('patient')">
-                <i class="fas fa-user-injured"></i> <span class="tab-text">Patients</span>
-            </button>
-            <button id="tab-caregiver" class="tab-button" onclick="showTab('caregivers')">
-                <i class="fas fa-user-md"></i> <span class="tab-text">Soignants</span>
-            </button>
-            
-        </div>
+            <!-- TABLEAU DES PATIENTS -->
+            <section class="tab-content active" id="patient">
+                <table class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date admission</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Date de naissance</th>
+                            <th>Genre</th>
+                            <th>Détails</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($patients)) : ?>
+                            <?php foreach ($patients as $patient) : ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($patient['patient_id']) ?></td>
+                                    <td><?= htmlspecialchars($patient['created_at']) ?></td>
+                                    <td><?= htmlspecialchars($patient['lastname']) ?></td>
+                                    <td><?= htmlspecialchars($patient['firstname']) ?> </td>
+                                    <td><?= htmlspecialchars($patient['date_of_birth']) ?> </td>
+                                    <td><?= htmlspecialchars($patient['gender']) ?></td>
+                                    <td>
+                                        <a href="details-patient.php?id=<?= htmlspecialchars($patient['patient_id']); ?>" class="btn-card detail-plus">Détails</a>
+                                    </td>
+                                    <td>
+                                        <div class="action">
+                                            <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                            <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                        </div>
 
-        <!-- TABLEAU DES PATIENTS -->
-        <div class="patients">
-            <table class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Date admission</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Date de naissance</th>
-                        <th>Genre</th>
-                        <th>Détails</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="8">Aucun patient trouvé.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+
+                <!-- VERSION CARTE -->
+                <div class="cards-container">
                     <?php if (!empty($patients)) : ?>
                         <?php foreach ($patients as $patient) : ?>
-                            <tr>
-                                <td><?= htmlspecialchars($patient['patient_id']) ?></td>
-                                <td><?= htmlspecialchars($patient['created_at']) ?></td>
-                                <td><?= htmlspecialchars($patient['lastname']) ?></td>
-                                <td><?= htmlspecialchars($patient['firstname']) ?> </td>
-                                <td><?= htmlspecialchars($patient['date_of_birth']) ?> </td>
-                                <td><?= htmlspecialchars($patient['gender']) ?></td>
-                                <td>
+                            <div class="card-session">
+                                <h3><?= htmlspecialchars($patient['lastname']) ?>&nbsp;&nbsp;<?= htmlspecialchars($patient['firstname']); ?></h3>
+                                <p><strong>ID :</strong> <?= htmlspecialchars($patient['patient_id']) ?></p>
+                                <p><strong>Date inscription :</strong> <?= htmlspecialchars($patient['created_at']) ?></p>
+                                <p><strong>Date de naissance :</strong> <?= htmlspecialchars($patient['date_of_birth']) ?></p>
+                                <p><strong>Genre :</strong> <?= htmlspecialchars($patient['gender']) ?></p>
+                                <div class="card-actions">
                                     <a href="details-patient.php?id=<?= htmlspecialchars($patient['patient_id']); ?>" class="btn-card detail-plus">Détails</a>
-                                </td>
-                                <td>
-                                <div class="action">
-                                    <a href="<?= VIEW_DIR . '/manager/edit-patient.php?id=' . htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit">Modifier</a>
-                                    <a href="<?= CONTROLLER_DIR . '/manager/delete-patient.php?id=' . htmlspecialchars($patient['patient_id'])?>" 
-                                        class="btn-card delete" 
-                                        onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');">
-                                        Supprimer
-                                    </a>
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
                                 </div>
-
-                                </td>
-                            </tr>
+                            </div>
                         <?php endforeach; ?>
-                    <?php else : ?>
-                        <tr>
-                            <td colspan="8">Aucun patient trouvé.</td>
-                        </tr>
+                            <?php else : ?>
+                            <p>Aucun patient.</p>
                     <?php endif; ?>
-                </tbody>
-            </table>
+                </div>
+            </section>
 
-            <!-- VERSION CARTE -->
-            <div class="cards-container">
-                <?php if (!empty($patients)) : ?>
-                <?php foreach ($patients as $patient) : ?>
-                    <div class="card-session">
-                        <h3><?= htmlspecialchars($patient['lastname']) ?>&nbsp;&nbsp;<?= htmlspecialchars($user['firstname']); ?></h3> ?></h3>
-                        <p><strong>ID :</strong> <?= htmlspecialchars($patient['patient_id']) ?></p>
-                        <p><strong>Date inscription :</strong> <?= htmlspecialchars($patient['created_at']) ?></p>
-                        <p><strong>Date de naissance :</strong> <?= htmlspecialchars($patient['date_of_birth']) ?></p>
-                        <p><strong>Genre :</strong> <?= htmlspecialchars($patient['gender']) ?></p>
-                        <div class="card-actions">
-                            <a href="details_patient.php?id=<?= htmlspecialchars($patient['patient_id']); ?>" class="btn-card detail-plus">Détails</a>
-                            <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
-                            <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <p>Aucun établissement en attente.</p>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <div class="caregivers">
-        <table class="table-responsive">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Date admission</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Etablissement</th>
-                </tr>
-            </thead>
-               
-    </div>
+            <section class="tab-content" id="caregiver">
+                <table class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date admission</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Etablissement</th>
+                            <th>Détails</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                </table>         
+            </section>
     </main>
 </body>
 </html>

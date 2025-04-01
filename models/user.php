@@ -20,7 +20,6 @@ function createAdmin($conn, $data) {
     }
 }
 
-
 // CRÉER UN UTILISATEUR (soignant)
 function createUser($conn, $data) {
     try {
@@ -88,7 +87,7 @@ function getUserByUsername($conn, $username) {
 }
 
 
-// RECUPERER L'UTILISATEUR PAR SON ID
+// RECUPERER L'UTILISATEUR PAR SON ID ( JOINTURE POUR RECUPERER NOMS DES ETABLISSEMENTS ET ROLES POUR AFFICHAGE)
 function getUserById($conn, $id) {
     try {
         $stmt = $conn->prepare("

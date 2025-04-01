@@ -197,9 +197,6 @@
 }
 
 @media screen and (max-width:900px) {
-   .details table {
-        display: none;
-   } 
 
    .cards-session {
         display: block;
@@ -211,18 +208,16 @@
         justify-content: flex-start;
    }
 
-}
-
-@media screen and (max-width:1024px) {
-    .table-responsive {
+        .table-responsive {
         display: none;
     }
-
-    .table-details {
-        display: none;
-    }
-
     .cards-container {
         display: flex;
     }
+
+}
+
+@media screen and (max-width:1024px) {
+
+    
 }

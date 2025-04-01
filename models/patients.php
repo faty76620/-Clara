@@ -1,6 +1,6 @@
 <?php
 
-// AJOUTER UN PATIENT
+// CREER UN PATIENT
 function createPatient($conn, $data) {
     try {
         // Sécuriser les données
@@ -8,12 +8,12 @@ function createPatient($conn, $data) {
             $data[$key] = htmlspecialchars(trim($value));
         }
 
-        // Préparer la requête d'insertion
-        $stmt = $conn->prepare("INSERT INTO patients (firstname, lastname, email, phone, address, date_of_birth, gender, medical_history, psychological_history, social_history, personal_notes) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        // Requête préparée
+        $stmt = $conn->prepare("INSERT INTO patients 
+            (firstname, lastname, email, phone, address, date_of_birth, gender, medical_history, psychological_history, social_history, personal_notes) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        // Exécuter la requête avec les données sécurisées
-        return $stmt->execute([
+        $stmt->execute([
             $data['firstname'], 
             $data['lastname'], 
             $data['email'], 
@@ -26,23 +26,31 @@ function createPatient($conn, $data) {
             $data['social_history'], 
             $data['personal_notes']
         ]);
+
+        // Vérifier si l'insertion a réussi
+        $lastId = $conn->lastInsertId();
+        if ($lastId) {
+            return $lastId;
+        } else {
+            throw new Exception("Erreur lors de l'insertion du patient.");
+        }
+    } catch (PDOException $e) {
+        error_log("Erreur SQL : " . $e->getMessage());
+        return false;
     } catch (Exception $e) {
-        error_log("Erreur lors de l'insertion du patient : " . $e->getMessage());
+        error_log("Erreur : " . $e->getMessage());
         return false;
     }
 }
 
-
 // METTRE A JOUR INFORMATIONS DES PATIENTS
-function updatePatient($conn, $patient_id, $firstname, $lastname, $email, $phone, $address, $date_of_birth, $gender, $medical_history, $psychological_history, $social_history, $personal_notes) {
+function updatePatient($conn, $id, $lastname, $firstname, $dob, $gender, $address, $email, $phone) {
     try {
-        $sql = "UPDATE patients SET firstname = :firstname, lastname = :lastname, email = :email, phone = :phone, address = :address,
-                date_of_birth = :date_of_birth, gender = :gender, medical_history = :medical_history, psychological_history = :psychological_history,
-                social_history = :social_history, personal_notes = :personal_notes WHERE patient_id = :patient_id";
+        $sql = "UPDATE patients SET lastname = :lastname, firstname = :firstname, date_of_birth = :dob, gender = :gender, address = :address, email = :email, phone = :phone WHERE patient_id = :id";
         $stmt = $conn->prepare($sql);
-        return $stmt->execute(compact('patient_id', 'firstname', 'lastname', 'email', 'phone', 'address', 'date_of_birth', 'gender', 'medical_history', 'psychological_history', 'social_history', 'personal_notes'));
+        return $stmt->execute(compact('lastname', 'firstname', 'dob', 'gender', 'address', 'email', 'phone', 'id'));
     } catch (PDOException $e) {
-        error_log("Erreur modification patient: " . $e->getMessage());
+        error_log("Erreur update patient: " . $e->getMessage());
         return false;
     }
 }
@@ -72,6 +80,7 @@ function deletePatient($conn, $patient_id) {
     }
 }
 
+// RECUPER LES INFORMATIONS DU PATIENT (RECHERCHE PAS NOM, PRENOM, DATE DE NAISSANCE)
 function getPatients($conn, $search = '') {
     try {
         $query = "SELECT * FROM patients";
@@ -95,16 +104,5 @@ function getPatients($conn, $search = '') {
         return false;
     }
 }
-
-function getPatientDetails($conn, $patientId) {
-    $sql = "SELECT * FROM patients WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $patientId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    return $result->fetch_assoc();
-}
-
 ?>
 

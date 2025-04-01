@@ -40,4 +40,29 @@ function getCareByPatient($conn, $patient_id) {
     }
 }
 
+// METTRE À JOUR LES SOINS
+function updateCare($conn, $id, $care_type, $care_description) {
+    try {
+        $sql = "UPDATE care SET care_type = :care_type, care_description = :care_description WHERE care_id = :id";
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute(compact('care_type', 'care_description', 'id'));
+    } catch (PDOException $e) {
+        error_log("Erreur update care: " . $e->getMessage());
+        return false;
+    }
+}
+
+function getCareById($conn, $care_id) {
+    try {
+        $sql = "SELECT * FROM care WHERE id = :care_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['care_id' => $care_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur récupération soin: " . $e->getMessage());
+        return false;
+    }
+}
+
+
 ?>

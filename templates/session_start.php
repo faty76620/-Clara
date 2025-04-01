@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_regenerate_id(true); // Renouvelle l'ID de session pour éviter les attaques de fixation
 }
 
-// Durée d'expiration en secondes (ex: 30 minutes)
+// Durée d'expiration en secondes 
 $session_duration = 60 * 60; 
 
 // Vérifier si l'utilisateur est connecté

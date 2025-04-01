@@ -1,19 +1,12 @@
-
 <?php
-// AJOUTER UNE TRANSMISSION
-// INSERTION DANS LA TABLE TRANSMISSIONS
+// CREER LA TRANSMISSION
 function createTransmission($conn, $data) {
     try {
-        // Sécuriser les données
         foreach ($data as $key => $value) {
             $data[$key] = htmlspecialchars(trim($value));
         }
-
-        // Préparer la requête d'insertion
         $stmt = $conn->prepare("INSERT INTO transmissions (patient_id, transmitted_by, transmission_date, transmission_description) 
                                 VALUES (?, ?, ?, ?)");
-
-        // Exécuter la requête avec les données sécurisées
         return $stmt->execute([
             $data['patient_id'],
             $data['transmitted_by'],
@@ -26,38 +19,47 @@ function createTransmission($conn, $data) {
     }
 }
 
-// FONCTION POUR RECUPERER TOUTES LES TRANSMISSION
-function getTransmissionsByPatient($conn, $patient_id) {
-    $sql = "
-        SELECT t.transmission_id, t.transmitted_by, t.transmission_date, t.transmission_description
-        FROM transmissions t
-        JOIN patients p ON t.patient_id = p.patient_id
-        WHERE p.patient_id = ?
-        ORDER BY t.transmission_date DESC";  
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([$patient_id]);
-    
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
-// Fonction pour récupérer les transmissions avec les informations de l'utilisateur ayant effectué la transmission
-function getTransmissionsWithUserInfo($conn) {
+// FONCTION POUR RECUPERER TOUTES LES TRANSMISSIONS (JOINTURE AVEC USERS POUR RECUPERER L'UTILISATEUR QUI A CREER LA TRANSMISSION)
+function getTransmissionsByPatientWithUser($conn, $patient_id) {
     try {
-        // Requête SQL pour récupérer les informations des transmissions avec le nom et prénom de l'utilisateur
-        $sql = "SELECT t.transmission_id, t.patient_id, u.firstname, u.lastname, t.transmission_date, t.transmission_description
-                FROM transmissions t
-                JOIN users u ON t.transmitted_by = u.id";
-
-        // Exécution de la requête
+        $sql = "
+            SELECT t.transmission_id, t.transmitted_by, t.transmission_date, t.transmission_description, 
+                   u.firstname AS user_firstname, u.lastname AS user_lastname
+            FROM transmissions t
+            JOIN users u ON t.transmitted_by = u.id
+            WHERE t.patient_id = ?
+            ORDER BY t.transmission_date DESC"; // Trier par date décroissante
+        
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
+        $stmt->execute([$patient_id]);
 
-        // Retourner les résultats sous forme de tableau associatif
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-        // En cas d'erreur, retourner un message d'erreur ou gérer l'exception
         error_log("Erreur lors de la récupération des transmissions : " . $e->getMessage());
+        return false;
+    }
+}
+
+// METTRE À JOUR LES TRANSMISSIONS 
+function updateTransmission($conn, $id, $description) {
+    try {
+        $sql = "UPDATE transmissions SET transmission_description = :description WHERE transmission_id = :id";
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute(compact('description', 'id'));
+    } catch (PDOException $e) {
+        error_log("Erreur update transmission: " . $e->getMessage());
+        return false;
+    }
+}
+
+function getTransmissionById($conn, $transmission_id) {
+    try {
+        $sql = "SELECT * FROM transmissions WHERE transmission_id = :transmission_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['transmission_id' => $transmission_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur récupération transmission: " . $e->getMessage());
         return false;
     }
 }

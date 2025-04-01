@@ -64,7 +64,7 @@ require_once MODEL_DIR . '/establishment.php';
         </div>
 
         <!-- FORMULAIRE PATIENTS -->
-        <div id="form-patient" class="tab-content active">
+        <section id="form-patient" class="tab-content active">
 
             <form action="../../controllers/process_data.php" method="POST" class="form-session">
             <!-- Section Informations Personnelles -->
@@ -110,8 +110,33 @@ require_once MODEL_DIR . '/establishment.php';
             <!-- Section Soins -->
             <fieldset>
                 <legend>Soins</legend>
-                <label>Type de soin :</label>
-                <input type="text" name="care_type">
+                <label for="care_type">Type de soin :</label>
+                <select name="care_type" id="care_type">
+                    <option value="">-- Sélectionnez un besoin --</option>
+                    <?php
+                        $needs = [
+                            "respirer" => "Respirer",
+                            "boire_et_manger" => "Boire et manger",
+                            "éliminer" => "Éliminer",
+                            "se_mouvoir" => "Se mouvoir et maintenir une bonne posture",
+                            "dormir" => "Dormir et se reposer",
+                            "s_habiller" => "Se vêtir et se dévêtir",
+                            "maintenir_température" => "Maintenir la température du corps",
+                            "être_propre" => "Être propre et protéger ses téguments",
+                            "éviter_dangers" => "Éviter les dangers",
+                            "communiquer" => "Communiquer avec ses semblables",
+                            "agir_selon_valeurs" => "Agir selon ses croyances et valeurs",
+                            "s_occuper" => "S’occuper en vue de se réaliser",
+                            "se_recreer" => "Se récréer",
+                            "apprendre" => "Apprendre"
+                        ];
+
+                        foreach ($needs as $key => $label) {
+                        $selected = (isset($c['care_type']) && $c['care_type'] == $key) ? 'selected' : '';
+                        echo "<option value=\"$key\" $selected>$label</option>";
+                        }
+                    ?>
+                </select>
 
                 <label>Description :</label>
                 <textarea name="care_description"></textarea>
@@ -167,12 +192,12 @@ require_once MODEL_DIR . '/establishment.php';
                     <button type="submit">Enregistrer</button>
                 </div>
             </form>
-        </div>
+        </section>
         <!-- FORMULAIRE SOIGNANT -->
-        <div id="form-caregiver" class="tab-content">
+        <section id="form-caregiver" class="tab-content">
             <form action="../../controllers/userControllers.php" method="POST" class="form-session">
                 <fieldset>
-                    <legend>Informations soignants</legend>
+                    <legend>Informations Personnelles</legend>
                     <div class="group-form">
                         <label for="lastname_user">Nom</label>
                         <input type="text" name="lastname_user" id="lastname_user" required><br>
@@ -204,10 +229,32 @@ require_once MODEL_DIR . '/establishment.php';
                             ?>
                         </select>
                     </div>
-                    <button type="submit" name="submit">Enregistrer</button>
                 </fieldset>
+                <fieldset>
+                    <legend>Informations professionnelles</legend>
+                    <div class="group-form">
+                        <label for="lastname_user">Spécialités :</label>
+                        <input type="text" name="specialite" id="specialite" required><br>
+                    </div>
+                    <div class="group-form">
+                        <label for="diplome">Diplômes :</label>
+                        <input type="text" name="diplome" id="diplome" required><br>
+                    </div>
+                    <input type="hidden" name="role" value="3">
+                    <div class="group-form">
+                        <label for="experience">Expériences (années) :</label>
+                        <input type="number" name="experience" id="experience" required><br>
+                    </div>
+                    <div class="group-form">
+                        <label for="competences">Compétences :</label>
+                        <textarea type="competences" name="competences" id="competences" required></textarea><br>
+                    </div>
+                </fieldset>
+                <div class="btn-container">
+                    <button type="submit" name="submit">Enregistrer</button>
+                </div>
             </form>
-        </div>
+        </section>
     </main>
 
 </body>

@@ -1,6 +1,4 @@
 <?php
-
-// AJOUTER UNE CONSTANTE VITALE
 // INSERTION DANS LA TABLE VITAL_SIGNS
 function createVitalSigns($conn, $data) {
     try {
@@ -28,7 +26,6 @@ function createVitalSigns($conn, $data) {
     }
 }
 
-
 // RECUPERER LES CONSTANTES VITALES
 function getVitalSignsByPatient($conn, $patient_id) {
     try {
@@ -41,4 +38,29 @@ function getVitalSignsByPatient($conn, $patient_id) {
         return false;
     }
 }
+
+// METTRE À JOUR LES CONSTANTES VITALES
+function updateVitalSigns($conn, $id, $temperature, $heart_rate, $respiratory_rate) {
+    try {
+        $sql = "UPDATE vital_signs SET temperature = :temperature, heart_rate = :heart_rate, respiratory_rate = :respiratory_rate WHERE vital_sign_id = :id";
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute(compact('temperature', 'heart_rate', 'respiratory_rate', 'id'));
+    } catch (PDOException $e) {
+        error_log("Erreur update vital signs: " . $e->getMessage());
+        return false;
+    }
+}
+
+function getVitalSignsById($conn, $vital_sign_id) {
+    try {
+        $sql = "SELECT * FROM vital_signs WHERE id = :vital_sign_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['vital_sign_id' => $vital_sign_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur récupération des constantes vitales: " . $e->getMessage());
+        return false;
+    }
+}
+
 ?>
