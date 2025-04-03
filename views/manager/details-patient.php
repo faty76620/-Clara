@@ -169,10 +169,10 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                         </div>
                     <?php endforeach; ?>
                 </div>
-            </div>
+            </section>
 
             <!-- Section Constantes Vitales -->
-            <div class="tab-content" id="constantes">
+            <section class="tab-content" id="constantes">
                 <h3>Constantes Vitales</h3>
                 <table class="table-responsive">
                     <thead>
@@ -235,14 +235,13 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                 <div class="cards-container">
                     <?php foreach ($transmissions as $transmission): ?>
                     <div class="card-session">
-                        <p><strong>Auteur :</strong> <?= htmlspecialchars($transmission['user_name']); ?></p>
-                        <p><strong>Message :</strong> <?= htmlspecialchars($transmission['message']); ?></p>
                         <p><strong>Date :</strong> <?= htmlspecialchars($transmission['created_at']); ?></p>
+                        <p><strong>Description :</strong> <?= htmlspecialchars($transmission['transmission_description']); ?></p>
+                        <p><strong>Transmit par :</strong><?= htmlspecialchars($trans['user_firstname']) . " " . htmlspecialchars($trans['user_lastname']); ?> </p>
                     </div>
                     <?php endforeach; ?>
                 </div>
-            </div>
-        </section>
+            </section>
 
         <div class="btn-container">
             <button>

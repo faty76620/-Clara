@@ -63,4 +63,16 @@ function getVitalSignsById($conn, $vital_sign_id) {
     }
 }
 
+function deleteVitalSign($conn, $vital_sign_id) {
+    try {
+        $stmt = $conn->prepare("DELETE FROM vital_signs WHERE id = ?");
+  
+        return $stmt->execute([$vital_sign_id]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression de la constante vitale : " . $e->getMessage());
+        return false;
+    }
+}
+
+
 ?>

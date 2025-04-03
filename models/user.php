@@ -1,18 +1,19 @@
 <?php
-// CRÉER UN ADMIN (manager)
+// CRÉER UN MANAGER
 function createAdmin($conn, $data) {
     try {
-        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NULL)");
+        $stmt = $conn->prepare("INSERT INTO users 
+            (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
+            VALUES (:username, :firstname, :lastname, :mail, :password, :establishment_id, :role_id, 1, NOW(), NULL)");
 
         return $stmt->execute([
-            $data['username'],
-            $data['firstname_admin'], 
-            $data['lastname_admin'], 
-            $data['mail_admin'], 
-            $data['password'], 
-            $data['establishment_id'], 
-            2
+            ':username' => $data['username'],
+            ':firstname' => $data['firstname_admin'],
+            ':lastname' => $data['lastname_admin'],
+            ':mail' => $data['mail_admin'],
+            ':password' => $data['password'],
+            ':establishment_id' => $data['establishment_id'],
+            ':role_id' => 2 // Le rôle de l'administrateur est fixe à 2
         ]);
     } catch (PDOException $e) {
         error_log("Erreur lors de la création de l'admin : " . $e->getMessage());
@@ -20,26 +21,28 @@ function createAdmin($conn, $data) {
     }
 }
 
-// CRÉER UN UTILISATEUR (soignant)
+// CREER UN UTILISATEUR SOIGNANT
 function createUser($conn, $data) {
     try {
-        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NULL)");
-
+        $stmt = $conn->prepare("INSERT INTO users 
+            (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
+            VALUES (:username, :firstname, :lastname, :mail, :password, :establishment_id, :role_id, 1, NOW(), NULL)");
+        
         return $stmt->execute([
-            $data['username'],
-            $data['firstname_user'], 
-            $data['lastname_user'], 
-            $data['mail_user'], 
-            $data['password'], 
-            $data['establishment_id'], 
-            3 // Le rôle d'un utilisateur
+            ':username' => $data['username'],
+            ':firstname' => $data['firstname_user'],
+            ':lastname' => $data['lastname_user'],
+            ':mail' => $data['mail_user'],
+            ':password' => $data['password'],
+            ':establishment_id' => $data['establishment_id'],
+            ':role_id' => 3 // Le rôle de l'utilisateur est fixe à 3 pour un soignant
         ]);
     } catch (PDOException $e) {
         error_log("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
         return false;
     }
 }
+
 
 // VERIFIER SI UN MANAGER EXISTE DEJA POUR ETABLISSEMENT
 function checkManagerExists($conn, $establishment_id) {
@@ -215,19 +218,6 @@ function getUsersByRole($conn, $role, $search = '') {
     }
 }
 
-
-// SUPPRIMER UN UTILISATEUR
-function deleteUser($pdo, $userId) {
-    try {
-        $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
-        return $stmt->execute([$userId]);
-    } catch (PDOException $e) {
-        error_log("Erreur lors de la suppression de l'utilisateur : " . $e->getMessage());
-        return false;
-    }
-}
-
-
 // FONCTION POUR RECUPERER UN NOM PRENOM
 function getUserNameById($conn, $user_id) {
     $sql = "SELECT firstname, lastname FROM users WHERE user_id = ?";
@@ -242,6 +232,19 @@ function getUserNameById($conn, $user_id) {
         return "Utilisateur inconnu";
     }
 }
+
+
+// SUPPRIMER UN UTILISATEUR
+function deleteUser($pdo, $userId) {
+    try {
+        $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+        return $stmt->execute([$userId]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression de l'utilisateur : " . $e->getMessage());
+        return false;
+    }
+}
+
 ?>
 
 

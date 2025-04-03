@@ -1,4 +1,5 @@
 <?php
+// INSERTION DANS LA TABLE TRANSMISSIONS
 // CREER LA TRANSMISSION
 function createTransmission($conn, $data) {
     try {
@@ -63,5 +64,19 @@ function getTransmissionById($conn, $transmission_id) {
         return false;
     }
 }
+
+function deleteTransmission($conn, $transmission_id) {
+    try {
+        // Préparer la requête de suppression
+        $stmt = $conn->prepare("DELETE FROM transmissions WHERE id = ?");
+        
+        // Exécuter la requête
+        return $stmt->execute([$transmission_id]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression de la transmission : " . $e->getMessage());
+        return false;
+    }
+}
+
 
 ?>

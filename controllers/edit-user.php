@@ -38,12 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     // Redirection après la mise à jour
-    header("Location: " . ROOT_DIR . "/views/admin/users.php");
+    header("Location: clara/views/admin/users.php");
     exit();
 } else {
     $_SESSION['error'] = "Aucune donnée soumise.";
     addLog('Erreur', $_SESSION['username'], "Accès non autorisé à la mise à jour utilisateur.");
-    header("Location: " . ROOT_DIR . "/views/admin/users.php");
+    header("Location: clara/views/admin/users.php");
     exit();
 }
 ?>

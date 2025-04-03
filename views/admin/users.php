@@ -50,7 +50,7 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
         <!-- FORMULAIRE DE RECHERCHE -->
         <form method="GET">
             <div class="dashboard-search">
-                <input type="text" name="search" placeholder="Rechercher un utilisateur..." value="<?= htmlspecialchars($search); ?>">
+                <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
                 <button type="submit">Rechercher</button>
                 <!-- Bouton pour réinitialiser la recherche -->
                 <div class="reset"><a href="users.php" class="btn-reset"><i class="fas fa-redo"></i></a></div>

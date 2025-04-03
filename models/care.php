@@ -1,6 +1,5 @@
 <?php
-
-// AJOUTER UN SOIN
+//AJOUTER UN SOINS
 function createCareSession($conn, $data) {
     try {
         // Sécuriser les données
@@ -25,7 +24,6 @@ function createCareSession($conn, $data) {
         return false;
     }
 }
-
 
 // RECUPERER LES SOINS
 function getCareByPatient($conn, $patient_id) {
@@ -60,6 +58,19 @@ function getCareById($conn, $care_id) {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         error_log("Erreur récupération soin: " . $e->getMessage());
+        return false;
+    }
+}
+
+function deleteCare($conn, $care_id) {
+    try {
+        // Préparer la requête de suppression
+        $stmt = $conn->prepare("DELETE FROM care_types WHERE id = ?");
+        
+        // Exécuter la requête
+        return $stmt->execute([$care_id]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression du type de soin : " . $e->getMessage());
         return false;
     }
 }

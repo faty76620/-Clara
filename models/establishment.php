@@ -1,10 +1,10 @@
 <?php
-require_once 'database.php';
 
 // FONCTION POUR CRÉER UN NOUVEL ÉTABLISSEMENT DANS LA BASE DE DONNÉES
 function createEstablishment($conn, $request) {
     $stmt = $conn->prepare("INSERT INTO establishments (firstname, adresse, type_role, siret, phone, site, description, mail, created_at, date_modify) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NULL)");
+
     $stmt->execute([
         htmlspecialchars($request['firstname_establishment']), 
         htmlspecialchars($request['adresse']), 
@@ -15,22 +15,10 @@ function createEstablishment($conn, $request) {
         htmlspecialchars($request['description']), 
         htmlspecialchars($request['mail'])
     ]);
+
     return $conn->lastInsertId(); // Retourne l'ID du nouvel établissement 
 }
 
-// FONCTION POUR RÉCUPÉRER LES INFORMATIONS D'UN ÉTABLISSEMENT À PARTIR DE SON ID
-function getEstablishmentById($conn, $id) {
-    $stmt = $conn->prepare("SELECT * FROM establishments WHERE id = ?");
-    $stmt->execute([$id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-// FONCTION POUR RÉCUPÉRER TOUS LES ÉTABLISSEMENTS
-function getAllEstablishments($conn) {
-    $stmt = $conn->prepare("SELECT * FROM establishments");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
 
 // FONCTION POUR RECUPERER LES ETABLISSEMENTS ASSOCIES A DES UTILISATEURS AYANT LE role_id 2 (manager)
 function getEstablishmentsFromRole($conn) {
@@ -120,6 +108,27 @@ function getRejectedEstablishments($conn, $search = '') {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+// FONCTION POUR RÉCUPÉRER LES INFORMATIONS D'UN ÉTABLISSEMENT À PARTIR DE SON ID
+function getEstablishmentById($conn, $id) {
+    $stmt = $conn->prepare("SELECT * FROM establishments WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+// FONCTION POUR RÉCUPÉRER TOUS LES ÉTABLISSEMENTS
+function getAllEstablishments($conn) {
+    try {
+        $query = "SELECT id, firstname FROM establishments ORDER BY firstname ASC";
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des établissements : " . $e->getMessage());
+        return [];
+    }
+}
+
 
 // VERIFIE SI UN ETABLISSEMENT EXISTE DEJA AVEC LES MEME INFORMATIONS
 function checkExistingEstablishment($conn, $request) {

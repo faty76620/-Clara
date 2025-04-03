@@ -9,20 +9,6 @@ require_once MODEL_DIR . '/establishment.php';
 
 ?>
 
-<?php if (isset($_SESSION['success'])) : ?>
-    <div class="alert success">
-        <?= $_SESSION['success']; ?>
-    </div>
-    <?php unset($_SESSION['success']); ?>
-<?php endif; ?>
-
-<?php if (isset($_SESSION['error'])) : ?>
-    <div class="alert error">
-        <?= $_SESSION['error']; ?>
-    </div>
-    <?php unset($_SESSION['error']); ?>
-<?php endif; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,14 +26,25 @@ require_once MODEL_DIR . '/establishment.php';
 </head>
 <body class="body-background">
     <?php 
-    
     include TEMPLATE_DIR . '/header_manager.php'; 
 
     // Récupérer la recherche
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-    
     $conn = getConnexion();
-    
+    ?>
+     <?php
+        if (isset($_SESSION['success'])) {
+            echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+            unset($_SESSION['success']); 
+         }
+
+        if (isset($_SESSION['error'])) {
+            echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+            unset($_SESSION['error']); 
+        }
+
+        $establishments = getAllEstablishments($conn);
+
     ?>
     <main class="dashboard">
         <div class="container-title"><h2>Inscription</h2></div>
@@ -195,7 +192,7 @@ require_once MODEL_DIR . '/establishment.php';
         </section>
         <!-- FORMULAIRE SOIGNANT -->
         <section id="form-caregiver" class="tab-content">
-            <form action="../../controllers/userControllers.php" method="POST" class="form-session">
+            <form action="../../controllers/process-caregiver.php" method="POST" class="form-session">
                 <fieldset>
                     <legend>Informations Personnelles</legend>
                     <div class="group-form">
@@ -215,18 +212,15 @@ require_once MODEL_DIR . '/establishment.php';
                         <label for="phone">Numéro de téléphone</label>
                         <input type="text" name="phone" id="phone" required><br>
                     </div>
-                    <input type="hidden" name="role_id" value="3"> <!-- Champ caché pour le role_id -->
+                    <input type="hidden" name="role_id" value="3"> 
                     <div class="group-form">
-                        <label for="establishment_id">Choisir un établissement</label>
-                        <select name="establishment_id" id="establishment_id" required>
-                            <?php
-                            $establishments = getEstablishmentsFromRole($conn);
-                            foreach ($establishments as $establishment) {
-                            $establishmentId = htmlspecialchars($establishment['establishment_id']);
-                            $establishmentLabel = htmlspecialchars($establishment['establishment_id']); 
-                            echo "<option value='{$establishmentId}'>Etablissement #{$establishmentLabel}</option>";
-                            }
-                            ?>
+                        <select id="establishment" name="establishment_id" required>
+                            <option value="">-- Sélectionner un établissement --</option>
+                                <?php foreach ($establishments as $establishment): ?>
+                            <option value="<?= htmlspecialchars($establishment['id']) ?>">
+                                <?= htmlspecialchars($establishment['firstname']) ?>
+                            </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </fieldset>

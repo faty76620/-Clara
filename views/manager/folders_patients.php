@@ -2,15 +2,16 @@
 require_once __DIR__ . '/../../config.php';
 require_once TEMPLATE_DIR . '/session_start.php';
 require_once MODEL_DIR . '/database.php';
-require_once MODEL_DIR . '/patientS.php';
+require_once MODEL_DIR . '/patients.php';
+require_once MODEL_DIR . '/caregiver.php';
+require_once MODEL_DIR . '/establishment.php';
 require_once MODEL_DIR . '/logs.php';
 
 $conn = getConnexion();
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-
 $patients = getPatients($conn, $search);
-
+$caregivers = getCaregivers($conn, $search);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +30,17 @@ $patients = getPatients($conn, $search);
 </head>
 <body>
     <?php include TEMPLATE_DIR . '/header_manager.php'; ?>
+    <?php
+        if (isset($_SESSION['success'])) {
+            echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
+            unset($_SESSION['success']); 
+         }
+
+        if (isset($_SESSION['error'])) {
+            echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
+            unset($_SESSION['error']); 
+        }
+    ?>
     
     <main class="dashboard">
         <div class="container-title"><h2>Informations</h2></div>
@@ -36,11 +48,12 @@ $patients = getPatients($conn, $search);
             <!-- FORMULAIRE DE RECHERCHE -->
             <form method="GET">
                 <div class="dashboard-search">
-                    <input type="text" name="search" placeholder="Rechercher un patient..." value="<?= htmlspecialchars($search); ?>">
+                    <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
                     <button type="submit">Rechercher</button>
                     <div class="reset"><a href="folders_patients.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
                 </div>
             </form>
+        
 
             <!-- ONGLET POUR FILTRER LES LISTES -->
             <div class="tabs">
@@ -119,22 +132,69 @@ $patients = getPatients($conn, $search);
                     <?php endif; ?>
                 </div>
             </section>
+            <!-- TABLEAU DES SOIGNANTS -->
+           
+        <!-- TABLEAU DES SOIGNANTS -->
+        <section class="tab-content" id="caregiver">
+            <table class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>date inscription</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Etablissement</th>
+                        <th>Détails</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($caregivers)) : ?>
+                        <?php foreach ($caregivers as $caregiver) : ?>
+                            <tr>
+                                <td><?= htmlspecialchars($caregiver['user_id']) ?></td>
+                                <td><?= htmlspecialchars($caregiver['updated_at']) ?></td>
+                                <td><?= htmlspecialchars($caregiver['lastname']) ?></td>
+                                <td><?= htmlspecialchars($caregiver['firstname']) ?></td>
+                                <td><?= htmlspecialchars($caregiver['establishment_name']) ?></td>
 
-            <section class="tab-content" id="caregiver">
-                <table class="table-responsive">
-                    <thead>
+                                <td>
+                                    <a href="details-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']) ?>" class="btn-card details">Détails</a>
+                                </td>
+                                <td>
+                                    <div class="action">
+                                        <a href="edit-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Date admission</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Etablissement</th>
-                            <th>Détails</th>
-                            <th>Actions</th>
+                            <td colspan="6">Aucun soignant trouvé.</td>
                         </tr>
-                    </thead>
-                </table>         
-            </section>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+             <!-- VERSION CARTE POUR LES SOIGNANTS -->
+            <div class="cards-container">
+                <?php if (!empty($caregivers)) : ?>
+                    <?php foreach ($caregivers as $caregiver) : ?>
+                        <div class="card-session">
+                            <h3><?= htmlspecialchars($caregiver['lastname']) ?>&nbsp;&nbsp;<?= htmlspecialchars($caregiver['firstname']); ?></h3>
+                            <p><strong>ID :</strong> <?= htmlspecialchars($caregiver['user_id']) ?></p>
+                            <p><strong>Date inscription :</strong> <?= htmlspecialchars($caregiver['updated_at']) ?></p>
+                            <p><strong>Etablissement :</strong> <?= htmlspecialchars($caregiver['establishment_name']) ?></p>
+                            <div class="card-actions">
+                                <a href="details-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']); ?>" class="btn-card detail-plus">Détails</a>
+                                <a href="edit-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                <p>Aucun soignant.</p>
+                <?php endif; ?>
+            </div>
+        </section>
     </main>
 </body>
 </html>

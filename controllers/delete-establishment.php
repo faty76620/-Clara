@@ -13,9 +13,7 @@ if (!isset($_GET['id']) || empty($_GET['id']) || !is_numeric($_GET['id'])) {
     exit();
 }
 
-$id = intval($_GET['id']);  // Convertir l'ID en entier
-
-// Assurez que l'id est positif
+$id = intval($_GET['id']); 
 if ($id <= 0) {
     $_SESSION['error'] = "ID invalide !";
     header("Location: ../views/admin/establishment.php");

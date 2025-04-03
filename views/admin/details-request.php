@@ -69,6 +69,7 @@ if (!$request) {
                         <th>Attribut</th>
                         <th>Valeur</th>
                     </tr>
+                </thead>
                 <tbody>
                     <tr>
                         <td><strong>id :</strong></td>

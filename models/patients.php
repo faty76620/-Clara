@@ -69,13 +69,14 @@ function getPatientById($conn, $patient_id) {
 }
 
 // SUPPRIMER UN PATIENT
-function deletePatient($conn, $patient_id) {
+function deletePatientAndRelatedData($conn, $patient_id) {
     try {
         $sql = "DELETE FROM patients WHERE patient_id = :patient_id";
         $stmt = $conn->prepare($sql);
-        return $stmt->execute(['patient_id' => $patient_id]);
-    } catch (PDOException $e) {
-        error_log("Erreur suppression patient: " . $e->getMessage());
+        $stmt->bindParam(':patient_id', $patient_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return true; 
+    } catch (Exception $e) {
         return false;
     }
 }

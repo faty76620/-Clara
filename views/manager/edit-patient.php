@@ -190,8 +190,17 @@ if (isset($_SESSION['error'])) {
                     <form method="POST" action="../../controllers/edit-folders_patients.php"class="form-session">
                         <input type="hidden" name="type_form" value="transmissions">
                         <input type="hidden" name="patient_id" value="<?= htmlspecialchars($patient_id) ?>">
-
                         <input type="hidden" name="transmission_id" value="<?= htmlspecialchars($trans['transmission_id']) ?>">
+
+
+                        <div class="group-form">
+                            <label>Transmit par :</label>
+                            <input name="transmitted_by"<?= htmlspecialchars($trans['user_firstname']) . " " . htmlspecialchars($trans['user_lastname']); ?>required>
+                        </div> 
+                        <div class="group-form">
+                            <label>Date :</label>
+                            <input name="transmission_date"<?= htmlspecialchars($trans['transmission_date']) ?>required>
+                        </div>
                         <div class="group-form">
                             <label>Description :</label>
                             <textarea name="Transmission_description"><?= htmlspecialchars($trans['transmission_description']) ?></textarea>
