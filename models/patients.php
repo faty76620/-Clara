@@ -105,5 +105,22 @@ function getPatients($conn, $search = '') {
         return false;
     }
 }
+
+function getPatientsByEstablishment($conn, $establishment_id) {
+    try {
+        $stmt = $conn->prepare("
+            SELECT * FROM patients
+            WHERE establishment_id = :establishment_id
+            ORDER BY patient_id DESC
+        ");
+        $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des patients : " . $e->getMessage());
+        return false;
+    }
+}
+
 ?>
 

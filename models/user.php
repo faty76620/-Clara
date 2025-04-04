@@ -111,6 +111,24 @@ function getUserById($conn, $id) {
     }
 }
 
+function getCaregiversByEstablishment($conn, $establishment_id) {
+    try {
+        $stmt = $conn->prepare("
+            SELECT u.id, u.firstname, u.lastname
+            FROM users u
+            JOIN roles r ON u.role_id = r.id
+            WHERE r.nom = 'soignant' AND u.establishment_id = :establishment_id
+        ");
+        $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des soignants : " . $e->getMessage());
+        return false;
+    }
+}
+
+
 // METTRE A JOUR LE MOT DE PASSE
 function updateUserPassword($conn, $user_id, $hashed_password) {
     try {
@@ -190,7 +208,6 @@ function getAllRoles($conn) {
 }
 
 // AFFICHER LES UTILISATEURS SELON LE RÔLE 
-
 function getUsersByRole($conn, $role, $search = '') {
     try {
         $searchQuery = $search ? "AND (u.firstname LIKE :search OR u.lastname LIKE :search OR u.mail LIKE :search)" : '';
