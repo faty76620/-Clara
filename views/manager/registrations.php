@@ -1,12 +1,11 @@
 <?php
-
 require_once __DIR__ . '/../../config.php';
 require_once TEMPLATE_DIR . '/session_start.php';
 require_once MODEL_DIR . '/database.php';
 require_once MODEL_DIR . '/patients.php';
+require_once MODEL_DIR . '/caregiver.php';
 require_once MODEL_DIR . '/user.php';
 require_once MODEL_DIR . '/establishment.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -27,8 +26,6 @@ require_once MODEL_DIR . '/establishment.php';
 <body class="body-background">
     <?php 
     include TEMPLATE_DIR . '/header_manager.php'; 
-
-    // Récupérer la recherche
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     $conn = getConnexion();
     ?>
@@ -42,9 +39,6 @@ require_once MODEL_DIR . '/establishment.php';
             echo '<div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">' . $_SESSION['error'] . '</div>';
             unset($_SESSION['error']); 
         }
-
-        $establishments = getAllEstablishments($conn);
-
     ?>
     <main class="dashboard">
         <div class="container-title"><h2>Inscription</h2></div>
@@ -67,6 +61,7 @@ require_once MODEL_DIR . '/establishment.php';
             <!-- Section Informations Personnelles -->
             <fieldset>
                 <legend>Informations Personnelles</legend>
+        
                 <label>Prénom :</label>
                 <input type="text" name="firstname" required>
 
@@ -91,6 +86,17 @@ require_once MODEL_DIR . '/establishment.php';
                     <option value="Femme">Femme</option>
                 </select>
 
+                <label for="establishment_id">Choisir un établissement</label>
+                <select name="establishment_id" id="establishment_id" required>
+                <?php
+                    $establishments = getEstablishmentsFromRole($conn);
+                    foreach ($establishments as $establishment) {
+                    $establishmentId = htmlspecialchars($establishment['establishment_id']);
+                    $establishmentLabel = htmlspecialchars($establishment['establishment_id']);
+                    echo "<option value='{$establishmentId}'>Etablissement #{$establishmentLabel}</option>";
+                    }
+                ?>
+                </select>
                 <label>Historique Médical :</label>
                 <textarea name="medical_history"></textarea>
 
@@ -107,38 +113,33 @@ require_once MODEL_DIR . '/establishment.php';
             <!-- Section Soins -->
             <fieldset>
                 <legend>Soins</legend>
-                <label for="care_type">Type de soin :</label>
-                <select name="care_type" id="care_type">
-                    <option value="">-- Sélectionnez un besoin --</option>
-                    <?php
-                        $needs = [
-                            "respirer" => "Respirer",
-                            "boire_et_manger" => "Boire et manger",
-                            "éliminer" => "Éliminer",
-                            "se_mouvoir" => "Se mouvoir et maintenir une bonne posture",
-                            "dormir" => "Dormir et se reposer",
-                            "s_habiller" => "Se vêtir et se dévêtir",
-                            "maintenir_température" => "Maintenir la température du corps",
-                            "être_propre" => "Être propre et protéger ses téguments",
-                            "éviter_dangers" => "Éviter les dangers",
-                            "communiquer" => "Communiquer avec ses semblables",
-                            "agir_selon_valeurs" => "Agir selon ses croyances et valeurs",
-                            "s_occuper" => "S’occuper en vue de se réaliser",
-                            "se_recreer" => "Se récréer",
-                            "apprendre" => "Apprendre"
-                        ];
 
-                        foreach ($needs as $key => $label) {
-                        $selected = (isset($c['care_type']) && $c['care_type'] == $key) ? 'selected' : '';
-                        echo "<option value=\"$key\" $selected>$label</option>";
-                        }
-                    ?>
+                <label for="categorie">Catégories de soin :</label><br>
+                    <select name="categorie[]" id="categorie" multiple required>
+                    <option value="hygiene">Hygiène et confort</option>
+                    <option value="mobilisation">Mobilisation</option>
+                    <option value="nutrition">Nutrition et hydratation</option>
+                    <option value="respiration">Soins respiratoires</option>
+                    <option value="elimination">Élimination</option>
+                    <option value="surveillance">Surveillance médicale</option>
+                    <option value="relationnel">Soins relationnels</option>
+                    <option value="prevention">Prévention</option>
                 </select>
+                <label for="care_type" placeholder="Ex: Toilette au lit" required>Type de soin :</label>
+                <input type="text" name="care_type" id="care_type">
 
                 <label>Description :</label>
-                <textarea name="care_description"></textarea>
+                <textarea name="care_description"></textarea><br>
 
-                <label>Jours de soins attribués :</label>
+                <label for="frequence">Fréquence :</label><br>
+                <select name="frequence" id="frequence">
+                    <option value="">-- Choisir une fréquence --</option>
+                    <option value="tous">Tous les jours</option>
+                    <option value="lundi_vendredi">Du lundi au vendredi</option>
+                    <option value="weekend">Week-end</option>
+                </select><br><br>
+
+                <label>Jours d'intervention :</label>
                 <div class="days-of-week">
                     <label><input type="checkbox" name="days[]" value="lundi"> Lundi</label>
                     <label><input type="checkbox" name="days[]" value="mardi"> Mardi</label>
@@ -178,6 +179,34 @@ require_once MODEL_DIR . '/establishment.php';
                     <label>Date :</label>
                     <input type="datetime-local" name="transmission_date">
 
+                    <label for="cible">Type de cyble:</label>
+                <select name="cible" id="cible">
+                    <option value="">-- Sélectionnez un besoin --</option>
+                    <?php
+                        $needs = [
+                            "respirer" => "Respirer",
+                            "boire_et_manger" => "Boire et manger",
+                            "éliminer" => "Éliminer",
+                            "se_mouvoir" => "Se mouvoir et maintenir une bonne posture",
+                            "dormir" => "Dormir et se reposer",
+                            "s_habiller" => "Se vêtir et se dévêtir",
+                            "maintenir_température" => "Maintenir la température du corps",
+                            "être_propre" => "Être propre et protéger ses téguments",
+                            "éviter_dangers" => "Éviter les dangers",
+                            "communiquer" => "Communiquer avec ses semblables",
+                            "agir_selon_valeurs" => "Agir selon ses croyances et valeurs",
+                            "s_occuper" => "S’occuper en vue de se réaliser",
+                            "se_recreer" => "Se récréer",
+                            "apprendre" => "Apprendre"
+                        ];
+
+                        foreach ($needs as $key => $label) {
+                            $selected = (isset($c['cible']) && $c['cible'] == $key) ? 'selected' : '';
+                            echo "<option value=\"$key\" $selected>$label</option>";
+                        }
+                    ?>
+                </select>
+
                     <label>Description :</label>
                     <textarea name="transmission_description"></textarea>
 
@@ -212,15 +241,18 @@ require_once MODEL_DIR . '/establishment.php';
                         <label for="phone">Numéro de téléphone</label>
                         <input type="text" name="phone" id="phone" required><br>
                     </div>
-                    <input type="hidden" name="role_id" value="3"> 
+                    <input type="hidden" name="role_id" value="3"> <!-- Champ caché pour le role_id -->
                     <div class="group-form">
-                        <select id="establishment" name="establishment_id" required>
-                            <option value="">-- Sélectionner un établissement --</option>
-                                <?php foreach ($establishments as $establishment): ?>
-                            <option value="<?= htmlspecialchars($establishment['id']) ?>">
-                                <?= htmlspecialchars($establishment['firstname']) ?>
-                            </option>
-                            <?php endforeach; ?>
+                        <label for="establishment_id">Choisir un établissement</label>
+                        <select name="establishment_id" id="establishment_id" required>
+                        <?php
+                            $establishments = getEstablishmentsFromRole($conn);
+                            foreach ($establishments as $establishment) {
+                            $establishmentId = htmlspecialchars($establishment['establishment_id']);
+                            $establishmentLabel = htmlspecialchars($establishment['establishment_id']);
+                            echo "<option value='{$establishmentId}'>Etablissement #{$establishmentLabel}</option>";
+                        }
+                        ?>
                         </select>
                     </div>
                 </fieldset>
@@ -244,6 +276,7 @@ require_once MODEL_DIR . '/establishment.php';
                         <textarea type="competences" name="competences" id="competences" required></textarea><br>
                     </div>
                 </fieldset>
+
                 <div class="btn-container">
                     <button type="submit" name="submit">Enregistrer</button>
                 </div>

@@ -75,20 +75,18 @@ function checkUsernameExists($conn, $username) {
 // RECUPERER L'UTILISATEUR PAR SON IDENTIFIANT 
 function getUserByUsername($conn, $username) {
     try {
-        $stmt = $conn->prepare("SELECT id, username, password, role_id, firstname, lastname, must_change_password FROM users WHERE username = :username LIMIT 1");
+        $stmt = $conn->prepare("SELECT id, username, password, role_id, firstname, lastname, must_change_password, establishment_id FROM users WHERE username = :username LIMIT 1"); // limit 1 au cas ou il peu avoir les pseudo
         $stmt->execute(['username' => $username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($user) {
             return $user;
         } else {
-            // Aucun utilisateur trouvé
             return null;
         }
     } catch (PDOException $e) {
         return "Erreur lors de la récupération de l'utilisateur : " . $e->getMessage();
     }
 }
-
 
 // RECUPERER L'UTILISATEUR PAR SON ID ( JOINTURE POUR RECUPERER NOMS DES ETABLISSEMENTS ET ROLES POUR AFFICHAGE)
 function getUserById($conn, $id) {
@@ -111,23 +109,31 @@ function getUserById($conn, $id) {
     }
 }
 
-function getCaregiversByEstablishment($conn, $establishment_id) {
+// RECUPERER L'UTILISATEUR SOIGNANT SELON SON ETABLISSEMENT QUI DOIT ETRE ASSOCIEE AU MANAGER CONNECETER
+function getCaregiversByEstablishment($conn, $establishment_id, $search = '') {
     try {
-        $stmt = $conn->prepare("
-            SELECT u.id, u.firstname, u.lastname
-            FROM users u
-            JOIN roles r ON u.role_id = r.id
-            WHERE r.nom = 'soignant' AND u.establishment_id = :establishment_id
-        ");
-        $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
+        $query = "SELECT u.id, u.firstname, u.lastname, u.role_id
+                  FROM users u
+                  JOIN roles r ON u.role_id = r.id
+                  WHERE u.establishment_id = :establishment_id AND r.nom = 'soignant'";
+        if (!empty($search)) {
+            $query .= " AND (u.firstname LIKE :search OR u.lastname LIKE :search)";
+        }
+        $query .= " ORDER BY u.lastname ASC";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindValue(':establishment_id', $establishment_id, PDO::PARAM_INT);
+        if (!empty($search)) {
+            $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        }
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         error_log("Erreur lors de la récupération des soignants : " . $e->getMessage());
         return false;
     }
 }
-
 
 // METTRE A JOUR LE MOT DE PASSE
 function updateUserPassword($conn, $user_id, $hashed_password) {
@@ -195,7 +201,7 @@ function updateUser($conn, $id, $firstname, $lastname, $mail, $establishment_id,
     }
 }
 
-// RECUPERER TOUT LES ROLE
+// RECUPERER TOUT LES ROLE POUR ADMIN
 function getAllRoles($conn) {
     try {
         $stmt = $conn->prepare("SELECT * FROM roles");
@@ -207,7 +213,7 @@ function getAllRoles($conn) {
     }
 }
 
-// AFFICHER LES UTILISATEURS SELON LE RÔLE 
+// AFFICHER LES UTILISATEURS SELON LE RÔLE POUR ADMIN
 function getUsersByRole($conn, $role, $search = '') {
     try {
         $searchQuery = $search ? "AND (u.firstname LIKE :search OR u.lastname LIKE :search OR u.mail LIKE :search)" : '';

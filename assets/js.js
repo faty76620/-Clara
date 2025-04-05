@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-//AFFICHAGES DES DEMANDES D'INSCRIPTION
+//AFFICHAGES DES SECTIONS 
 function showTab(tabId) {
     // Masquer toutes les sections
     document.querySelectorAll('.tab-content').forEach(function(section) {
@@ -52,6 +52,7 @@ function showTab(tabId) {
     document.getElementById('tab-rejected').classList.add('active');
   }
 }
+
 
 
 

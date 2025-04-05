@@ -2,22 +2,19 @@
 //AJOUTER UN SOINS
 function createCareSession($conn, $data) {
     try {
-        // Sécuriser les données
         foreach ($data as $key => $value) {
             $data[$key] = htmlspecialchars(trim($value));
         }
-
-        // Préparer la requête d'insertion
-        $stmt = $conn->prepare("INSERT INTO care (patient_id, care_type, care_description, days_of_week, care_hours) 
-                                VALUES (?, ?, ?, ?, ?)");
-
-        // Exécuter la requête avec les données sécurisées
+        $stmt = $conn->prepare("INSERT INTO care (patient_id, care_type, care_description, days_of_week, care_hours, categorie, frequence) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([
             $data['patient_id'], 
             $data['care_type'], 
             $data['care_description'], 
             $data['days_of_week'],
-            $data['care_hours']
+            $data['care_hours'],
+            $data['categorie'],
+            $data['frequence']
         ]);
     } catch (Exception $e) {
         error_log("Erreur lors de l'insertion du soin : " . $e->getMessage());
@@ -39,11 +36,24 @@ function getCareByPatient($conn, $patient_id) {
 }
 
 // METTRE À JOUR LES SOINS
-function updateCare($conn, $id, $care_type, $care_description) {
+function updateCare($conn, $id, $care_type, $care_description, $categorie, $frequence) {
     try {
-        $sql = "UPDATE care SET care_type = :care_type, care_description = :care_description WHERE care_id = :id";
+        $sql = "UPDATE care 
+                SET care_type = :care_type, 
+                    care_description = :care_description, 
+                    categorie = :categorie, 
+                    frequence = :frequence, 
+                    date_modified = NOW() 
+                WHERE care_id = :id";
+        
         $stmt = $conn->prepare($sql);
-        return $stmt->execute(compact('care_type', 'care_description', 'id'));
+        return $stmt->execute([
+            'care_type' => $care_type,
+            'care_description' => $care_description,
+            'categorie' => $categorie,
+            'frequence' => $frequence,
+            'id' => $id
+        ]);
     } catch (PDOException $e) {
         error_log("Erreur update care: " . $e->getMessage());
         return false;

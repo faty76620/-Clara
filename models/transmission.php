@@ -1,18 +1,18 @@
 <?php
 // INSERTION DANS LA TABLE TRANSMISSIONS
-// CREER LA TRANSMISSION
 function createTransmission($conn, $data) {
     try {
         foreach ($data as $key => $value) {
             $data[$key] = htmlspecialchars(trim($value));
         }
-        $stmt = $conn->prepare("INSERT INTO transmissions (patient_id, transmitted_by, transmission_date, transmission_description) 
-                                VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO transmissions (patient_id, transmitted_by, transmission_date, transmission_description, cible) 
+                                VALUES (?, ?, ?, ?, ?)");
         return $stmt->execute([
             $data['patient_id'],
             $data['transmitted_by'],
             $data['transmission_date'],
             $data['transmission_description'],
+            $data['cible'],
         ]);
     } catch (Exception $e) {
         error_log("Erreur lors de l'insertion de la transmission : " . $e->getMessage());
@@ -24,7 +24,7 @@ function createTransmission($conn, $data) {
 function getTransmissionsByPatientWithUser($conn, $patient_id) {
     try {
         $sql = "
-            SELECT t.transmission_id, t.transmitted_by, t.transmission_date, t.transmission_description, 
+            SELECT t.transmission_id, t.transmitted_by, t.transmission_date, t.transmission_description, cible, 
                    u.firstname AS user_firstname, u.lastname AS user_lastname
             FROM transmissions t
             JOIN users u ON t.transmitted_by = u.id
@@ -44,7 +44,10 @@ function getTransmissionsByPatientWithUser($conn, $patient_id) {
 // METTRE À JOUR LES TRANSMISSIONS 
 function updateTransmission($conn, $id, $description) {
     try {
-        $sql = "UPDATE transmissions SET transmission_description = :description WHERE transmission_id = :id";
+        $sql = "UPDATE transmissions 
+                SET transmission_description = :description, 
+                    date_modified = NOW() 
+                WHERE transmission_id = :id";
         $stmt = $conn->prepare($sql);
         return $stmt->execute(compact('description', 'id'));
     } catch (PDOException $e) {

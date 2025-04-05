@@ -43,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $_SESSION['firstname'] = $user['firstname']; 
     $_SESSION['lastname'] = $user['lastname'];    
     $_SESSION['must_change_password'] = $user['must_change_password'];
+    $_SESSION['establishment_id'] = $user['establishment_id'];
 
     // Log de connexion réussie
     addLog('Connexion réussie', $user['id'], "Utilisateur '{$user['username']}' connecté avec succès");

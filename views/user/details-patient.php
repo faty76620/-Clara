@@ -40,7 +40,7 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
     <title>Dossier Patient</title>
 </head>
 <body> 
-    <?php include TEMPLATE_DIR . '/header_manager.php'; ?>
+    <?php include TEMPLATE_DIR . '/header_user.php'; ?>
 
     <main class="dashboard">
         <div class="container-title"><h2>Dossier Patient : <?= htmlspecialchars($patient['firstname']) . " " . htmlspecialchars($patient['lastname']); ?></h2></div>
@@ -148,15 +148,19 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                 <table class="table-responsive">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Dates d'intervention</th>
+                            <th>Catégories</th>
+                            <th>Type de soins</th>
+                            <th>Fréquences de passage</th>
+                            <th>Description </th>
+                            <th>jours d'intervention</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($care as $care_item): ?>
                         <tr>
+                            <td><?= htmlspecialchars($care_item['categorie']); ?></td>
                             <td><?= htmlspecialchars($care_item['care_type']); ?></td>
+                            <td><?= htmlspecialchars($care_item['frequence']); ?></td>
                             <td><?= htmlspecialchars($care_item['care_description']); ?></td>
                             <td><?= htmlspecialchars($care_item['days_of_week']); ?></td>
                         </tr>
@@ -220,17 +224,15 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                 <table class="table-responsive">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Type cyble</th>
-                            <th>Description</th>
                             <th>Transmis par</th>
+                            <th>Date</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($transmissions as $trans): ?>
                         <tr>
                             <td><?= htmlspecialchars($trans['transmission_date']); ?></td>
-                            <td><?= htmlspecialchars($trans['cible']); ?></td>
                             <td><?= htmlspecialchars($trans['transmission_description']); ?></td>
                             <td><?= htmlspecialchars($trans['user_firstname']) . " " . htmlspecialchars($trans['user_lastname']); ?></td>
                         </tr>
@@ -241,10 +243,9 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                 <div class="cards-container">
                     <?php foreach ($transmissions as $transmission): ?>
                     <div class="card-session">
-                    <p><strong>Date :</strong> <?= htmlspecialchars($trans['user_firstname']); ?></p>
+                        <p><strong>Date :</strong> <?= htmlspecialchars($trans['user_firstname']); ?></p>
                         <p><strong>Description :</strong> <?= htmlspecialchars($transmission['transmission_date']); ?></p>
-                        <p><strong>Type cible :</strong> <?= htmlspecialchars($transmission['cible']); ?></p>
-                        <p><strong>Transmit par :</strong><?= htmlspecialchars($transmission['transmission_description']) . " " . htmlspecialchars($trans['user_lastname']); ?> </p>
+                        <p><strong>Transmit par :</strong><?= htmlspecialchars($trans['transmission_description']) . " " . htmlspecialchars($trans['user_lastname']); ?> </p>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -258,4 +259,3 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
     </main>
 </body>
 </html>
-

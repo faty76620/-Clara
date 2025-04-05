@@ -44,7 +44,7 @@ $rejectedEstablishments = getRejectedEstablishments($conn, $search);
         }
     ?>
     <main class="dashboard"> 
-    <div class="container-title"><h2>Demandes d'inscription</h2></div>
+    <div class="container-title"><h2>Gestions des Etablissements</h2></div>
 
     <!-- FORMULAIRE DE RECHERCHE -->
     <form method="GET">

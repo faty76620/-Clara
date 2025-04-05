@@ -19,7 +19,6 @@ function createEstablishment($conn, $request) {
     return $conn->lastInsertId(); // Retourne l'ID du nouvel établissement 
 }
 
-
 // FONCTION POUR RECUPERER LES ETABLISSEMENTS ASSOCIES A DES UTILISATEURS AYANT LE role_id 2 (manager)
 function getEstablishmentsFromRole($conn) {
     // Requête SQL pour récupérer l'ID de l'établissement dans la table users pour les utilisateurs ayant role_id = 2

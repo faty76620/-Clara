@@ -36,7 +36,7 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
     <title>Dossiers patients</title>
 </head>
 <body>
-    <?php include TEMPLATE_DIR . '/header_manager.php'; ?>
+    <?php include TEMPLATE_DIR . '/header_user.php'; ?>
     <?php
         if (isset($_SESSION['success'])) {
             echo '<div style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 10px;">' . $_SESSION['success'] . '</div>';
@@ -60,20 +60,8 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                     <div class="reset"><a href="folders_patients.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
                 </div>
             </form>
-        
-
-            <!-- ONGLET POUR FILTRER LES LISTES -->
-            <div class="tabs">
-                <button id="tab-patient" class="tab-button active" onclick="showTab('patient')">
-                    <i class="fas fa-user-injured"></i> <span class="tab-text">Patients</span>
-                </button>
-                <button id="tab-caregiver" class="tab-button" onclick="showTab('caregiver')">
-                    <i class="fas fa-user-md"></i> <span class="tab-text">Soignants</span>
-                </button>    
-            </div>
-
             <!-- TABLEAU DES PATIENTS -->
-            <section class="tab-content active" id="patient">
+            <section id="patient">
                 <table class="table-responsive">
                     <thead>
                         <tr>
@@ -85,7 +73,6 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                             <th>Genre</th>
                             <th>Etablissement</th>
                             <th>Détails</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,13 +88,6 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                                     <td><?= htmlspecialchars($patient['establishment_name']) ?></td>
                                     <td>
                                         <a href="details-patient.php?id=<?= htmlspecialchars($patient['patient_id']); ?>" class="btn-card detail-plus">Détails</a>
-                                    </td>
-                                    <td>
-                                        <div class="action">
-                                            <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
-                                            <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
-                                        </div>
-
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -131,8 +111,6 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                                 <p><strong>Genre :</strong> <?= htmlspecialchars($patient['gender']) ?></p>
                                 <div class="card-actions">
                                     <a href="details-patient.php?id=<?= htmlspecialchars($patient['patient_id']); ?>" class="btn-card detail-plus">Détails</a>
-                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
-                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -141,67 +119,6 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                     <?php endif; ?>
                 </div>
             </section>
-        <!-- TABLEAU DES SOIGNANTS -->
-        <section class="tab-content" id="caregiver">
-            <table class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>date inscription</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Etablissement</th>
-                        <th>Détails</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($caregivers)) : ?>
-                        <?php foreach ($caregivers as $caregiver) : ?>
-                            <tr>
-                                <td><?= htmlspecialchars($caregiver['user_id']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['updated_at']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['lastname']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['firstname']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['establishment_name']) ?></td>
-
-                                <td>
-                                    <a href="details-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']) ?>" class="btn-card details">Détails</a>
-                                </td>
-                                <td>
-                                    <div class="action">
-                                        <a href="edit-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <tr>
-                            <td colspan="7">Aucun soignant trouvé.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-             <!-- VERSION CARTE POUR LES SOIGNANTS -->
-            <div class="cards-container">
-                <?php if (!empty($caregivers)) : ?>
-                    <?php foreach ($caregivers as $caregiver) : ?>
-                        <div class="card-session">
-                            <h3><?= htmlspecialchars($caregiver['lastname']) ?>&nbsp;&nbsp;<?= htmlspecialchars($caregiver['firstname']); ?></h3>
-                            <p><strong>ID :</strong> <?= htmlspecialchars($caregiver['user_id']) ?></p>
-                            <p><strong>Date inscription :</strong> <?= htmlspecialchars($caregiver['updated_at']) ?></p>
-                            <p><strong>Etablissement :</strong> <?= htmlspecialchars($caregiver['establishment_name']) ?></p>
-                            <div class="card-actions">
-                                <a href="details-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']); ?>" class="btn-card detail-plus">Détails</a>
-                                <a href="edit-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                <p>Aucun soignant.</p>
-                <?php endif; ?>
-            </div>
-        </section>
-    </main>
-</body>
+        </main>
+    </body>
 </html>

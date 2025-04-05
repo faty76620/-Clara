@@ -8,7 +8,8 @@ require_once MODEL_DIR . '/logs.php';
 require_once TEMPLATE_DIR . '/session_start.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") { 
-    // 1. Vérification des champs du formulaire
+
+    // Vérification des champs du formulaire
     if (
         empty($_POST['firstname_user']) || 
         empty($_POST['lastname_user']) || 
@@ -18,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         empty($_POST['establishment_id']) ||
         empty($_POST['specialite']) || 
         empty($_POST['diplome']) || 
-        empty($_POST['experience'])
+        empty($_POST['experience']) 
     ) {
         $_SESSION['error'] = "Veuillez remplir tous les champs obligatoires.";
         addLog('Erreur', $_SESSION['username'], "Tentative d'inscription échouée - Champs manquants");
@@ -26,21 +27,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 
-    // 2. Sécurisation des données
+    // Sécurisation des données
     $firstname_user = htmlspecialchars(trim($_POST['firstname_user']));
     $lastname_user = htmlspecialchars(trim($_POST['lastname_user']));
     $mail_user = htmlspecialchars(trim($_POST['mail_user']));
+    $establishment_id = htmlspecialchars(trim($_POST['establishment_id']));
     $phone = htmlspecialchars(trim($_POST['phone']));
-    $establishment_id = intval($_POST['establishment_id']);
+   
     $specialite = htmlspecialchars(trim($_POST['specialite']));
     $diplome = htmlspecialchars(trim($_POST['diplome']));
     $experience = (int) $_POST['experience'];
     $competences = htmlspecialchars(trim($_POST['competences'])) ?? '';
 
-    // 3. Connexion à la base de données
+    // Connexion à la base de données
     $conn = getConnexion();
 
-    // 4. Création d'un identifiant unique pour l'utilisateur
+    // Création d'un identifiant unique pour l'utilisateur
     $username = strtolower($firstname_user . '.' . $lastname_user);
     $username = preg_replace('/[^a-z0-9.]/', '', $username); // Supprime les caractères spéciaux
     $username_exists = checkUsernameExists($conn, $username);
@@ -49,22 +51,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     addLog('Info', $_SESSION['username'], "Génération identifiant unique : $username");
 
-    // 5. Création du mot de passe temporaire
+    // Création du mot de passe temporaire
     $password_plain = bin2hex(random_bytes(4)); 
     $password_hashed = password_hash($password_plain, PASSWORD_BCRYPT);
 
-    // 6. Insérer l'utilisateur dans la table `users`
+    // Insérer l'utilisateur dans la table `users`
     $user_created = createUser($conn, [
         'username' => $username,
         'firstname_user' => $firstname_user,
         'lastname_user' => $lastname_user,
         'mail_user' => $mail_user,
         'password' => $password_hashed,
-        'establishment_id' => $establishment_id, 
+        'establishment_id' => $establishment_id,
         'role_user' => 3 // rôle pour l'utilisateur soignant
     ]);
 
-    // 7. Vérifier si l'utilisateur a été créé
+    // Vérifier si l'utilisateur a été créé
     if ($user_created) {
         // Récupérer l'ID de l'utilisateur créé
         $user_id = $conn->lastInsertId();
@@ -79,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ];
 
         if (createCaregiver($conn, $data)) {
-            addLog('Succès', $_SESSION['username'], "Utilisateur et soignant créés : $username ($mail_user)");
+            addLog('Succès', $_SESSION['username'], "Utilisateur soignant créés : $username ($mail_user)");
 
             $subject = "Votre inscription a été validée";
             $message = "

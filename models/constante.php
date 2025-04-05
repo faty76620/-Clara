@@ -42,7 +42,12 @@ function getVitalSignsByPatient($conn, $patient_id) {
 // METTRE À JOUR LES CONSTANTES VITALES
 function updateVitalSigns($conn, $id, $temperature, $heart_rate, $respiratory_rate) {
     try {
-        $sql = "UPDATE vital_signs SET temperature = :temperature, heart_rate = :heart_rate, respiratory_rate = :respiratory_rate WHERE vital_sign_id = :id";
+        $sql = "UPDATE vital_signs 
+                SET temperature = :temperature, 
+                    heart_rate = :heart_rate, 
+                    respiratory_rate = :respiratory_rate, 
+                    date_modified = NOW() 
+                WHERE vital_sign_id = :id";
         $stmt = $conn->prepare($sql);
         return $stmt->execute(compact('temperature', 'heart_rate', 'respiratory_rate', 'id'));
     } catch (PDOException $e) {

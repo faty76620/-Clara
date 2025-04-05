@@ -32,26 +32,39 @@ function createCaregiver($conn, $data) {
     }
 }
 
-
-// FONCTION QUI PERMET DE CHERCHER LE SOIGNAT ET RECUPERER SES INFOS
-function getCaregivers($conn, $search = '') {
+// FONCTION QUI PERMET DE CHERCHER LE SOIGNANT ET RECUPERER SES INFOS
+function getCaregivers($conn, $search = '', $establishmentId = null) {
     try {
         $query = "SELECT caregiver.*, users.firstname, users.lastname, e.firstname AS establishment_name
                   FROM caregiver 
                   JOIN users ON caregiver.user_id = users.id 
-                  LEFT JOIN establishments e ON users.establishment_id = e.id";  // Jointure ajoutée pour récupérer le nom de l'établissement
-                  
+                  LEFT JOIN establishments e ON users.establishment_id = e.id";
+
+        // Conditions
+        $conditions = [];
+        if ($establishmentId !== null) {
+            $conditions[] = "users.establishment_id = :establishmentId";
+        }
         if (!empty($search)) {
-            $query .= " WHERE users.firstname LIKE :search 
-                        OR users.lastname LIKE :search 
-                        OR caregiver.specialite LIKE :search 
-                        OR caregiver.diplome LIKE :search
-                        OR e.firstname LIKE :search";  
+            $conditions[] = "(users.firstname LIKE :search 
+                             OR users.lastname LIKE :search 
+                             OR caregiver.specialite LIKE :search 
+                             OR caregiver.diplome LIKE :search 
+                             OR e.firstname LIKE :search)";
+        }
+
+        // Ajouter WHERE si nécessaire
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(" AND ", $conditions);
         }
 
         $query .= " ORDER BY caregiver.id DESC";
         $stmt = $conn->prepare($query);
 
+        // Bind params
+        if ($establishmentId !== null) {
+            $stmt->bindValue(':establishmentId', $establishmentId, PDO::PARAM_INT);
+        }
         if (!empty($search)) {
             $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
         }
@@ -64,7 +77,6 @@ function getCaregivers($conn, $search = '') {
         return false;
     }
 }
-
 
 //FONCTION POUR AFFICHIER DETAILS INFOS RECUPERER PAR ID
 function getCaregiverById($conn, $id) {
@@ -108,7 +120,8 @@ function updateCaregiver($conn, $caregiver_id, $specialite, $diplome, $experienc
                     specialite = :specialite, 
                     diplome = :diplome, 
                     experience = :experience, 
-                    competences = :competences
+                    competences = :competences,
+                    date_modified = NOW()
                   WHERE id = :caregiver_id";
         
         $stmt = $conn->prepare($query);
@@ -150,21 +163,17 @@ function updateCaregiverPerso($conn, $user_id, $firstname, $lastname, $mail, $es
         $stmt->bindParam(':establishment_id', $establishment_id, PDO::PARAM_INT);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
-        // Exécution de la requête
         $stmt->execute();
 
-        // Vérifier si la mise à jour a bien eu lieu
         if ($stmt->rowCount() > 0) {
-            return true;  // Mise à jour réussie
+            return true; 
         } else {
-            return false; // Aucune ligne affectée (probablement aucune modification)
+            return false; 
         }
     } catch (PDOException $e) {
-        // En cas d'erreur de base de données
         error_log("Erreur PDO : " . $e->getMessage());
         return false;
     } catch (Exception $e) {
-        // En cas d'erreur générale
         error_log("Erreur : " . $e->getMessage());
         return false;
     }
@@ -178,9 +187,6 @@ function deleteCaregiver($conn, $user_id) {
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
-
-        // Suppression de l'utilisateur dans la table users (si nécessaire)
-        // Si vous souhaitez également supprimer l'utilisateur lié dans la table users, décommentez la section ci-dessous.
     
         $sqlUser = "DELETE FROM users WHERE id = :user_id";
         $stmtUser = $conn->prepare($sqlUser);
@@ -188,9 +194,8 @@ function deleteCaregiver($conn, $user_id) {
         $stmtUser->execute();
     
 
-        return true; // Retourne true si la suppression a réussi
+        return true; 
     } catch (Exception $e) {
-        // Si une erreur survient, retourne false
         error_log("Erreur lors de la suppression du soignant : " . $e->getMessage());
         return false;
     }
