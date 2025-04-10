@@ -271,8 +271,19 @@ require_once MODEL_DIR . '/request.php';
             </div>
         </div>
     </main>
-
-    <script src="/clara/assets/js.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        <?php if (!empty($search)) : ?>
+            <?php if (!empty($pendingRequests)) : ?>
+                showTab('pending');
+            <?php elseif (!empty($approvedRequests)) : ?>
+                showTab('approved');
+            <?php elseif (!empty($rejectedRequests)) : ?>
+                showTab('rejected');
+            <?php endif; ?>
+        <?php endif; ?>
+    });
+</script>
 </body>
 </html>
 

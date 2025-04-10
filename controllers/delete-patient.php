@@ -22,6 +22,7 @@ if ($patient_id <= 0) {
 $conn = getConnexion();  
 
 if (deletePatientAndRelatedData($conn, $patient_id)) {
+    addLog('Suppression patient', $_SESSION['user_id'] ?? null, "Patient ID $patient_id supprimé.");
     $_SESSION['success'] = "Patient et ses données associées ont été supprimés avec succès.";
    
 } else {

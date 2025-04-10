@@ -48,25 +48,51 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         } 
 
-        if (isset($_POST['care_type'], $_POST['care_description'], $_POST['care_hours'])) {
-            // Sécuriser les entrées et valider les champs
+         // Si aucun nouveau patient créé, on récupère l'ID du patient existant
+         if (!isset($patient_id) && isset($_POST['patient_id'])) {
+            $patient_id = intval($_POST['patient_id']);
+        }
+
+        // Création d'un soin
+        if (isset($_POST['care_type'], $_POST['care_description'], $_POST['care_hours'], $_POST['designed_caregiver'])) {
+    
             $care_type = htmlspecialchars(trim($_POST['care_type']));
             $care_description = htmlspecialchars(trim($_POST['care_description']));
-            $days_of_week = isset($_POST['days']) ? implode(',', $_POST['days']) : '';
-            $care_hours = htmlspecialchars(trim($_POST['care_hours']));  // Assurez-vous que care_hours est défini et propre
-            $categorie = isset($_POST['categorie']) ? implode(',', $_POST['categorie']) : '';
+            $days_of_week = isset($_POST['days']) ? implode(',', $_POST['days']) : '';  
+            $care_hours = htmlspecialchars(trim($_POST['care_hours']));  
+            $categorie = isset($_POST['categorie']) ? implode(',', $_POST['categorie']) : '';  
             $frequence = htmlspecialchars(trim($_POST['frequence']));
-    
-            if (!empty($care_type) && !empty($care_description) && !empty($care_hours) && isset($patient_id)) {
-                createCareSession($conn, [
+            $designed_caregiver = trim($_POST['designed_caregiver']);
+
+            // Debug : log des données envoyées pour création soin
+            error_log("Creating care with data: " . print_r([
+                'patient_id' => $patient_id,
+                'care_type' => $care_type,
+                'care_description' => $care_description,
+                'days_of_week' => $days_of_week,
+                'care_hours' => $care_hours,
+                'categorie' => $categorie,
+                'frequence' => $frequence,
+                'designed_caregiver' => $designed_caregiver
+            ], true));
+
+            if (!empty($care_type) && !empty($care_description) && !empty($care_hours) && !empty($designed_caregiver) && isset($patient_id)) {
+                $success = createCareSession($conn, [
                     'patient_id' => $patient_id,
                     'care_type' => $care_type,
                     'care_description' => $care_description,
                     'days_of_week' => $days_of_week,
                     'care_hours' => $care_hours,
                     'categorie' => $categorie,
-                    'frequence' => $frequence
+                    'frequence' => $frequence,
+                    'designed_caregiver' => $designed_caregiver
                 ]);
+
+                if ($success) {
+                    echo "Le soin a été créé avec succès.";
+                } else {
+                    echo "Erreur lors de la création du soin.";
+                }
             } else {
                 echo "Veuillez remplir tous les champs obligatoires.";
             }
@@ -74,28 +100,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             echo "Les données nécessaires sont manquantes.";
         }
         
-
-        // Traitement des constantes vitales
-        if (isset($_POST['temperature'], $_POST['blood_pressure'], $_POST['heart_rate'])) {
-            $temperature = $_POST['temperature'];
-            $blood_pressure = htmlspecialchars(trim($_POST['blood_pressure']));
-            $heart_rate = $_POST['heart_rate'];
-            $respiratory_rate = $_POST['respiratory_rate'];
-            $recorded_at = $_POST['recorded_at'];
-
-            $transmitted_by = intval($_POST['transmitted_by']); 
-
-            // Insérer dans la table 'vital_signs'
-            createVitalSigns($conn, [
-                'patient_id' => $patient_id,
-                'temperature' => $temperature,
-                'blood_pressure' => $blood_pressure,
-                'heart_rate' => $heart_rate,
-                'respiratory_rate' => $respiratory_rate,
-                'recorded_at' => $recorded_at
-            ]);
-        }
-
         // Traitement des transmissions
         if (isset($_POST['transmission_date'], $_POST['transmission_description'])) {
             $transmission_date = $_POST['transmission_date'];

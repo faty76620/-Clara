@@ -19,7 +19,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $patient_id = intval($_GET['id']);
 
 $patient = getPatientById($conn, $patient_id); 
-$care = getCareByPatient($conn, $patient_id);
+$care =  getCareByPatientWithCaregiver($conn, $patient_id);
 $vital_signs = getVitalSignsByPatient($conn, $patient_id);
 $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
 
@@ -47,10 +47,10 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
         
            <!-- Onglets pour naviguer entre les sections -->
             <div class="tabs">
-                <button class="tab-button active" onclick="showTab('patient')"><i class="fas fa-user-injured"></i><span class="tab-text">Patient</span></button>
-                <button class="tab-button" onclick="showTab('care')"><i class="fas fa-stethoscope"></i></i><span class="tab-text">Soins</span></button>
-                <button class="tab-button" onclick="showTab('constantes')"><i class="fas fa-heartbeat"></i><span class="tab-text">Constantes Vitales</span></button>
-                <button class="tab-button" onclick="showTab('transmissions')"><i class="fas fa-notes-medical"></i><span class="tab-text">Transmissions</span></button>
+                <button id="btn-patient" class="tab-button active" onclick="showTab('patient')"><i class="fas fa-user-injured"></i><span class="tab-text">Patient</span></button>
+                <button id="btn-care" class="tab-button" onclick="showTab('care')"><i class="fas fa-stethoscope"></i></i><span class="tab-text">Soins</span></button>
+                <button id="btn-constantes" class="tab-button" onclick="showTab('constantes')"><i class="fas fa-heartbeat"></i><span class="tab-text">Constantes Vitales</span></button>
+                <button id="btn-transmissions" class="tab-button" onclick="showTab('transmissions')"><i class="fas fa-notes-medical"></i><span class="tab-text">Transmissions</span></button>
             </div>
 
         <!-- Informations personnelles -->
@@ -148,17 +148,26 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                 <table class="table-responsive">
                     <thead>
                         <tr>
-                            <th>Type</th>
+                            <th>Type d'intervention</th>
+                            <th>Catégorie</th>
                             <th>Description</th>
-                            <th>Dates d'intervention</th>
+                            <th>Fréquence</th>
+                            <th>Jours d'interventions</th>
+                            <th>Heure de soins</th>
+                            <th>Soignante désigné</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($care as $care_item): ?>
                         <tr>
                             <td><?= htmlspecialchars($care_item['care_type']); ?></td>
+                            <td><?= htmlspecialchars($care_item['categorie']); ?></td>
                             <td><?= htmlspecialchars($care_item['care_description']); ?></td>
+                            <td><?= htmlspecialchars($care_item['frequence']); ?></td>
                             <td><?= htmlspecialchars($care_item['days_of_week']); ?></td>
+                            <td><?= htmlspecialchars($care_item['care_hours']); ?></td>
+                            <td><?= htmlspecialchars($care_item['caregiver_firstname']) . " " . htmlspecialchars($care_item['caregiver_lastname']); ?></td>
+
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -168,8 +177,12 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                     <?php foreach ($care as $care_item): ?>
                         <div class="card-session">
                             <p><strong>Type :</strong> <?= htmlspecialchars($care_item['care_type']); ?></p>
+                            <p><strong>Catégories :</strong> <?= htmlspecialchars($care_item['categorie']); ?></p>
                             <p><strong>Description :</strong> <?= htmlspecialchars($care_item['care_description']); ?></p>
+                            <p><strong>Fréquence :</strong> <?= htmlspecialchars($care_item['frequence']); ?></p>
                             <p><strong>jours d'interventions :</strong> <?= htmlspecialchars($care_item['days_of_week']); ?></p>
+                            <p><strong>Heure de soins :</strong> <?= htmlspecialchars($care_item['care_hours']); ?></p>
+                            <p><strong>Soignant désigné :</strong><?= htmlspecialchars($care_item['caregiver_firstname']) . " " . htmlspecialchars($care_item['caregiver_lastname']); ?></td>
                         </div>
                     <?php endforeach; ?>
                 </div>

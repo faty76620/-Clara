@@ -33,8 +33,15 @@ $roles = getAllRoles($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier l'utilisateur</title>
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/images/logo-onglet.png">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;800&family=Raleway:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script defer src="<?= BASE_URL ?>/assets/js.js"></script>
+    <title>Modification Soignant</title>
 </head>
 <body class="body-background">
     <?php include TEMPLATE_DIR . '/header_admin.php'; ?>
@@ -102,4 +109,3 @@ $roles = getAllRoles($conn);
     </main>
 </body>
 </html>
-

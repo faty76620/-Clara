@@ -26,7 +26,6 @@ require_once MODEL_DIR . '/establishment.php';
 <body class="body-background">
     <?php 
     include TEMPLATE_DIR . '/header_manager.php'; 
-    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     $conn = getConnexion();
     ?>
      <?php
@@ -43,246 +42,143 @@ require_once MODEL_DIR . '/establishment.php';
     <main class="dashboard">
         <div class="container-title"><h2>Inscription</h2></div>
 
-        <!-- Onglets pour changer de formulaire -->
         <div class="tabs">
-            <button id="tab-form-patient" class="tab-button active" onclick="showTab('form-patient')">
+            <button id="btn-form-patient" class="tab-button" onclick="showTab('form-patient')">
                 <i class="fas fa-user-injured"></i> <span class="tab-text">Patients</span>
             </button>
-            <button id="tab-form-caregiver" class="tab-button" onclick="showTab('form-caregiver')">
+            <button id="btn-form-caregiver" class="tab-button" onclick="showTab('form-caregiver')">
                 <i class="fas fa-user-md"></i> <span class="tab-text">Soignants</span>
             </button>
-            
         </div>
 
-        <!-- FORMULAIRE PATIENTS -->
         <section id="form-patient" class="tab-content active">
-
             <form action="../../controllers/process_data.php" method="POST" class="form-session">
-            <!-- Section Informations Personnelles -->
-            <fieldset>
-                <legend>Informations Personnelles</legend>
-        
-                <label>Prénom :</label>
-                <input type="text" name="firstname" required>
-
-                <label>Nom :</label>
-                <input type="text" name="lastname" required>
-
-                <label>Email :</label>
-                <input type="email" name="email">
-
-                <label>Téléphone :</label>
-                <input type="text" name="phone">
-
-                <label>Adresse :</label>
-                <input type="text" name="address">
-
-                <label>Date de naissance :</label>
-                <input type="date" name="date_of_birth">
-
-                <label>Sexe :</label>
-                <select name="gender">
-                    <option value="Homme">Homme</option>
-                    <option value="Femme">Femme</option>
-                </select>
-
-                <label for="establishment_id">Choisir un établissement</label>
-                <select name="establishment_id" id="establishment_id" required>
-                <?php
-                    $establishments = getEstablishmentsFromRole($conn);
-                    foreach ($establishments as $establishment) {
-                    $establishmentId = htmlspecialchars($establishment['establishment_id']);
-                    $establishmentLabel = htmlspecialchars($establishment['establishment_id']);
-                    echo "<option value='{$establishmentId}'>Etablissement #{$establishmentLabel}</option>";
-                    }
-                ?>
-                </select>
-                <label>Historique Médical :</label>
-                <textarea name="medical_history"></textarea>
-
-                <label>Historique Psychologique :</label>
-                <textarea name="psychological_history"></textarea>
-
-                <label>Historique Social :</label>
-                <textarea name="social_history"></textarea>
-
-                <label>Remarques Personnelles :</label>
-                <textarea name="personal_notes"></textarea>
-            </fieldset>
-
-            <!-- Section Soins -->
-            <fieldset>
-                <legend>Soins</legend>
-
-                <label for="categorie">Catégories de soin :</label><br>
-                    <select name="categorie[]" id="categorie" multiple required>
-                    <option value="hygiene">Hygiène et confort</option>
-                    <option value="mobilisation">Mobilisation</option>
-                    <option value="nutrition">Nutrition et hydratation</option>
-                    <option value="respiration">Soins respiratoires</option>
-                    <option value="elimination">Élimination</option>
-                    <option value="surveillance">Surveillance médicale</option>
-                    <option value="relationnel">Soins relationnels</option>
-                    <option value="prevention">Prévention</option>
-                </select>
-                <label for="care_type" placeholder="Ex: Toilette au lit" required>Type de soin :</label>
-                <input type="text" name="care_type" id="care_type">
-
-                <label>Description :</label>
-                <textarea name="care_description"></textarea><br>
-
-                <label for="frequence">Fréquence :</label><br>
-                <select name="frequence" id="frequence">
-                    <option value="">-- Choisir une fréquence --</option>
-                    <option value="tous">Tous les jours</option>
-                    <option value="lundi_vendredi">Du lundi au vendredi</option>
-                    <option value="weekend">Week-end</option>
-                </select><br><br>
-
-                <label>Jours d'intervention :</label>
-                <div class="days-of-week">
-                    <label><input type="checkbox" name="days[]" value="lundi"> Lundi</label>
-                    <label><input type="checkbox" name="days[]" value="mardi"> Mardi</label>
-                    <label><input type="checkbox" name="days[]" value="mercredi"> Mercredi</label>
-                    <label><input type="checkbox" name="days[]" value="jeudi"> Jeudi</label>
-                    <label><input type="checkbox" name="days[]" value="vendredi"> Vendredi</label>
-                    <label><input type="checkbox" name="days[]" value="samedi"> Samedi</label>
-                    <label><input type="checkbox" name="days[]" value="dimanche"> Dimanche</label>
-                </div>
-
-                <label>Heure du soin :</label>
-                <input type="time" name="care_hours" step="1" required>
-            </fieldset>
-
-            <!-- Section Constantes Vitales -->
-            <fieldset>
-                <legend>Constantes Vitales</legend>
-                <label>Température (°C) :</label>
-                <input type="number" step="0.1" name="temperature">
-
-                <label>Tension :</label>
-                <input type="text" name="blood_pressure">
-
-                <label>Fréquence Cardiaque (bpm) :</label>
-                <input type="number" name="heart_rate">
-
-                <label>Fréquence Respiratoire (rpm) :</label>
-                <input type="number" name="respiratory_rate">
-
-                <label>Date d'enregistrement :</label>
-                <input type="datetime-local" name="recorded_at">
-                </fieldset>
-
-                <!-- Section Transmissions -->
-                <fieldset>
-                    <legend>Transmissions</legend>
-                    <label>Date :</label>
-                    <input type="datetime-local" name="transmission_date">
-
-                    <label for="cible">Type de cyble:</label>
-                <select name="cible" id="cible">
-                    <option value="">-- Sélectionnez un besoin --</option>
-                    <?php
-                        $needs = [
-                            "respirer" => "Respirer",
-                            "boire_et_manger" => "Boire et manger",
-                            "éliminer" => "Éliminer",
-                            "se_mouvoir" => "Se mouvoir et maintenir une bonne posture",
-                            "dormir" => "Dormir et se reposer",
-                            "s_habiller" => "Se vêtir et se dévêtir",
-                            "maintenir_température" => "Maintenir la température du corps",
-                            "être_propre" => "Être propre et protéger ses téguments",
-                            "éviter_dangers" => "Éviter les dangers",
-                            "communiquer" => "Communiquer avec ses semblables",
-                            "agir_selon_valeurs" => "Agir selon ses croyances et valeurs",
-                            "s_occuper" => "S’occuper en vue de se réaliser",
-                            "se_recreer" => "Se récréer",
-                            "apprendre" => "Apprendre"
-                        ];
-
-                        foreach ($needs as $key => $label) {
-                            $selected = (isset($c['cible']) && $c['cible'] == $key) ? 'selected' : '';
-                            echo "<option value=\"$key\" $selected>$label</option>";
-                        }
-                    ?>
-                </select>
-
-                    <label>Description :</label>
-                    <textarea name="transmission_description"></textarea>
-
-                    <input type="hidden" name="transmitted_by" value="<?php echo $_SESSION['user_id']; ?>">
-                </fieldset>
-
-                <br>
-                <div class="btn-container">
-                    <button type="submit">Enregistrer</button>
-                </div>
-            </form>
-        </section>
-        <!-- FORMULAIRE SOIGNANT -->
-        <section id="form-caregiver" class="tab-content">
-            <form action="../../controllers/process-caregiver.php" method="POST" class="form-session">
                 <fieldset>
                     <legend>Informations Personnelles</legend>
                     <div class="group-form">
-                        <label for="lastname_user">Nom</label>
-                        <input type="text" name="lastname_user" id="lastname_user" required><br>
+                        <label>Prénom :</label>
+                        <input type="text" name="firstname" required>
                     </div>
                     <div class="group-form">
-                        <label for="firstname_user">Prénom</label>
-                        <input type="text" name="firstname_user" id="firstname_user" required><br>
-                    </div>
-                    <input type="hidden" name="role" value="3">
-                    <div class="group-form">
-                        <label for="mail_user">Email</label>
-                        <input type="email" name="mail_user" id="mail_user" required><br>
+                        <label>Nom :</label>
+                        <input type="text" name="lastname" required>
                     </div>
                     <div class="group-form">
-                        <label for="phone">Numéro de téléphone</label>
-                        <input type="text" name="phone" id="phone" required><br>
+                        <label>Email :</label>
+                        <input type="email" name="email">
                     </div>
-                    <input type="hidden" name="role_id" value="3"> <!-- Champ caché pour le role_id -->
                     <div class="group-form">
-                        <label for="establishment_id">Choisir un établissement</label>
-                        <select name="establishment_id" id="establishment_id" required>
+                        <label>Téléphone :</label>
+                        <input type="text" name="phone">
+                    </div>
+                    <div class="group-form">
+                        <label>Adresse :</label>
+                        <input type="text" name="address">
+                    </div>
+                    <div class="group-form">
+                        <label>Date de naissance :</label>
+                        <input type="date" name="date_of_birth">
+                    </div>
+                    <div class="group-form">
+                        <label>Sexe :</label>
+                        <select name="gender">
+                            <option value="Homme">Homme</option>
+                            <option value="Femme">Femme</option>
+                        </select>
+                    </div>
+                    <select hidden name="establishment_id" id="establishment_id" required>
                         <?php
-                            $establishments = getEstablishmentsFromRole($conn);
-                            foreach ($establishments as $establishment) {
+                        $establishments = getEstablishmentsFromRole($conn);
+                        foreach ($establishments as $establishment) {
                             $establishmentId = htmlspecialchars($establishment['establishment_id']);
                             $establishmentLabel = htmlspecialchars($establishment['establishment_id']);
                             echo "<option value='{$establishmentId}'>Etablissement #{$establishmentLabel}</option>";
                         }
                         ?>
-                        </select>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Informations professionnelles</legend>
+                    </select>
                     <div class="group-form">
-                        <label for="lastname_user">Spécialités :</label>
-                        <input type="text" name="specialite" id="specialite" required><br>
+                        <label>Historique Médical :</label>
+                        <textarea name="medical_history"></textarea>
                     </div>
                     <div class="group-form">
-                        <label for="diplome">Diplômes :</label>
-                        <input type="text" name="diplome" id="diplome" required><br>
-                    </div>
-                    <input type="hidden" name="role" value="3">
-                    <div class="group-form">
-                        <label for="experience">Expériences (années) :</label>
-                        <input type="number" name="experience" id="experience" required><br>
+                        <label>Historique Psychologique :</label>
+                        <textarea name="psychological_history"></textarea>
                     </div>
                     <div class="group-form">
-                        <label for="competences">Compétences :</label>
-                        <textarea type="competences" name="competences" id="competences" required></textarea><br>
+                        <label>Historique Social :</label>
+                        <textarea name="social_history"></textarea>
+                    </div>
+                    <div class="group-form">
+                        <label>Remarques Personnelles :</label>
+                        <textarea name="personal_notes"></textarea>
                     </div>
                 </fieldset>
 
+                <fieldset>
+                    <legend>Soins</legend>
+                    <div class="group-form">
+                        <label for="care_type">Type de soin :</label>
+                        <input type="text" name="care_type" id="care_type" required>
+                    </div>
+                    <div class="group-form">
+                        <label for="care_description">Description :</label>
+                        <textarea name="care_description" id="care_description" required></textarea>
+                    </div>
+                    <div class="group-form">
+                        <label>Jours d'intervention :</label>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="days[]" value="lundi"> Lundi</label>
+                            <label><input type="checkbox" name="days[]" value="mardi"> Mardi</label>
+                            <label><input type="checkbox" name="days[]" value="mercredi"> Mercredi</label>
+                            <label><input type="checkbox" name="days[]" value="jeudi"> Jeudi</label>
+                            <label><input type="checkbox" name="days[]" value="vendredi"> Vendredi</label>
+                            <label><input type="checkbox" name="days[]" value="samedi"> Samedi</label>
+                            <label><input type="checkbox" name="days[]" value="dimanche"> Dimanche</label>
+                        </div>
+                    </div>
+                    <div class="group-form">
+                        <label for="care_hours">Heure du soin :</label>
+                        <input type="time" name="care_hours" id="care_hours" step="1" required>
+                    </div>
+                    <div class="group-form">
+                        <label>Catégories :</label>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="categorie[]" value="Hygiène"> Hygiène</label>
+                            <label><input type="checkbox" name="categorie[]" value="Nutrition"> Nutrition</label>
+                            <label><input type="checkbox" name="categorie[]" value="Médical"> Médical</label>
+                        </div>
+                    </div>
+                    <div class="group-form">
+                        <label for="frequence">Fréquence :</label>
+                        <input type="text" name="frequence" id="frequence" placeholder="Ex : Quotidien, Hebdomadaire" required>
+                    </div>
+                    <div class="group-form">
+                        <label for="designed_caregiver">Soignant assigné :</label>
+                        <select name="designed_caregiver" id="designed_caregiver" required>
+                            <?php 
+                            $caregivers = getCaregivers($conn, $search, $establishmentId = null);
+                            foreach ($caregivers as $caregiver): ?>
+                                <option value="<?= $caregiver['id'] ?>"><?= $caregiver['firstname'] . ' ' . $caregiver['lastname'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </fieldset>
                 <div class="btn-container">
-                    <button type="submit" name="submit">Enregistrer</button>
+                    <button type="submit">Enregistrer</button>
                 </div>
             </form>
         </section>
     </main>
-
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        <?php if (!empty($search)) : ?>
+            <?php if (!empty($responsables)) : ?>
+                showTab('form-patient');
+            <?php elseif (!empty($utilisateurs)) : ?>
+                showTab('form-soignant');
+            <?php endif; ?>
+        <?php endif; ?>
+    });
+    </script>
 </body>
 </html>

@@ -194,6 +194,35 @@
     .sidebar {
         width: 80px;
     }
+
+    /*PLANING*/
+    .planning-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .planning-grid .header {
+        display: none;
+    }
+
+    .planning-grid .cell {
+        min-height: auto;
+    }
+
+    .grid-week {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/*PLANING*/
+@media (max-width: 1024px) {
+    .planning-grid {
+        grid-template-columns: 100px repeat(7, 1fr);
+        font-size: 12px;
+    }
+    .planning-grid .cell {
+        min-height: 60px;
+    }
 }
 
 @media screen and (max-width:900px) {
@@ -206,9 +235,9 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-   }
+    }
 
-        .table-responsive {
+    .table-responsive {
         display: none;
     }
     .cards-container {

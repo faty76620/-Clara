@@ -25,9 +25,7 @@ $conn = getConnexion();
 // Supprimer l'établissement de la base de données
 if (deleteEstablishment($conn, $id)) {
     $_SESSION['success'] = "Établissement supprimé avec succès.";
-
-    // log pour l'administrateur qui a effectué la suppression
-    addLog($conn, $_SESSION['user_id'], 'Suppression d\'établissement', 'L\'établissement avec l\'ID ' . $id . ' a été supprimé.');
+    addLog('Suppression d\'établissement', $_SESSION['user_id'] ?? null, "Établissement ID $id supprimé.");
 } else {
     $_SESSION['error'] = "Erreur lors de la suppression.";
 }

@@ -1,12 +1,16 @@
 <?php
-//AJOUTER UN SOINS
+// FONCTION POUR CRÉER UN NOUVEAU SOIN
 function createCareSession($conn, $data) {
     try {
         foreach ($data as $key => $value) {
             $data[$key] = htmlspecialchars(trim($value));
         }
-        $stmt = $conn->prepare("INSERT INTO care (patient_id, care_type, care_description, days_of_week, care_hours, categorie, frequence) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+        $stmt = $conn->prepare("INSERT INTO care (
+            patient_id, care_type, care_description, days_of_week, care_hours, 
+            date_modified, categorie, frequence, designed_caregiver
+        ) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
+
         return $stmt->execute([
             $data['patient_id'], 
             $data['care_type'], 
@@ -14,10 +18,24 @@ function createCareSession($conn, $data) {
             $data['days_of_week'],
             $data['care_hours'],
             $data['categorie'],
-            $data['frequence']
+            $data['frequence'],
+            $data['designed_caregiver']
         ]);
     } catch (Exception $e) {
         error_log("Erreur lors de l'insertion du soin : " . $e->getMessage());
+        return false;
+    }
+}
+
+// FONCTION POUR RÉCUPÉRER UN SOIN PAR SON ID
+function getCareById($conn, $care_id) {
+    try {
+        $sql = "SELECT * FROM care WHERE care_id = :care_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['care_id' => $care_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur récupération soin : " . $e->getMessage());
         return false;
     }
 }
@@ -35,11 +53,33 @@ function getCareByPatient($conn, $patient_id) {
     }
 }
 
-// METTRE À JOUR LES SOINS
-function updateCare($conn, $id, $care_type, $care_description, $categorie, $frequence) {
+// FONCTION POUR RÉCUPÉRER LES SOINS D'UN PATIENT AVEC LES INFOS DU SOIGNANT
+function getCareByPatientWithCaregiver($conn, $patient_id) {
+    try {
+        $sql = "
+            SELECT c.care_id, c.care_type, c.care_description, c.days_of_week, c.care_hours, 
+                   c.categorie, c.frequence, c.date_modified,
+                   u.firstname AS caregiver_firstname, u.lastname AS caregiver_lastname
+            FROM care c
+            JOIN users u ON c.designed_caregiver = u.id 
+            WHERE c.patient_id = ?  
+            ORDER BY c.date_modified DESC
+        ";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$patient_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    } catch (Exception $e) {
+        error_log("Erreur récupération soins + soignants : " . $e->getMessage());
+        return false; 
+    }
+}
+
+// FONCTION POUR METTRE À JOUR UN SOIN
+function updateCare($conn, $id, $user_id, $care_type, $care_description, $categorie, $frequence) {
     try {
         $sql = "UPDATE care 
-                SET care_type = :care_type, 
+                SET user_id = :user_id,
+                    care_type = :care_type, 
                     care_description = :care_description, 
                     categorie = :categorie, 
                     frequence = :frequence, 
@@ -48,6 +88,7 @@ function updateCare($conn, $id, $care_type, $care_description, $categorie, $freq
         
         $stmt = $conn->prepare($sql);
         return $stmt->execute([
+            'user_id' => $user_id,
             'care_type' => $care_type,
             'care_description' => $care_description,
             'categorie' => $categorie,
@@ -55,35 +96,36 @@ function updateCare($conn, $id, $care_type, $care_description, $categorie, $freq
             'id' => $id
         ]);
     } catch (PDOException $e) {
-        error_log("Erreur update care: " . $e->getMessage());
+        error_log("Erreur update care : " . $e->getMessage());
         return false;
     }
 }
 
-function getCareById($conn, $care_id) {
+// FONCTION POUR RÉCUPÉRER LES SOINS D'UN PATIENT AVEC INFOS UTILISATEUR
+function getCareByPatientWithUser($conn, $patient_id) {
     try {
-        $sql = "SELECT * FROM care WHERE id = :care_id";
+        $sql = "
+            SELECT 
+                c.care_id, 
+                c.care_type, 
+                c.care_description, 
+                c.days_of_week, 
+                c.care_hours, 
+                c.categorie, 
+                c.date_modified, 
+                u.firstname AS user_firstname, 
+                u.lastname AS user_lastname
+            FROM care c
+            JOIN users u ON c.user_id = u.id
+            WHERE c.patient_id = ?
+            ORDER BY c.date_modified DESC
+        ";
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['care_id' => $care_id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Erreur récupération soin: " . $e->getMessage());
+        $stmt->execute([$patient_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        error_log("Erreur récupération soins + user : " . $e->getMessage());
         return false;
     }
 }
-
-function deleteCare($conn, $care_id) {
-    try {
-        // Préparer la requête de suppression
-        $stmt = $conn->prepare("DELETE FROM care_types WHERE id = ?");
-        
-        // Exécuter la requête
-        return $stmt->execute([$care_id]);
-    } catch (PDOException $e) {
-        error_log("Erreur lors de la suppression du type de soin : " . $e->getMessage());
-        return false;
-    }
-}
-
-
 ?>

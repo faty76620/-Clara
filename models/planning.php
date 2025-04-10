@@ -1,57 +1,59 @@
 <?php
-// RÉCUPÉRATION DES PLANNINGS
-function getSchedules($conn, $view, $date) {
-    // Correction du nom de la table 'patients' au lieu de 'patient'
-    $sql = "SELECT schedule.*, users.firstname AS user_firstname, users.lastname AS user_lastname, 
-                   patients.firstname AS patient_firstname, patients.lastname AS patient_lastname
-            FROM schedule 
-            JOIN users ON schedule.user_id = users.id
-            JOIN patients ON schedule.patient_id = patients.patient_id";
+function getAllPlannings($conn) {
+    $sql = "SELECT * FROM schedules ORDER BY start_datetime";
+    return $conn->query($sql)->fetchAll();
+}
 
-    // Filtrage selon la vue
-    if ($view == 'day') {
-        $sql .= " WHERE DATE(schedule.start_datetime) = :date";
-    } elseif ($view == 'week') {
-        $sql .= " WHERE YEARWEEK(schedule.start_datetime, 1) = YEARWEEK(:date, 1)";
-    } elseif ($view == 'month') {
-        $sql .= " WHERE MONTH(schedule.start_datetime) = MONTH(:date) AND YEAR(schedule.start_datetime) = YEAR(:date)";
+function getPlanningsByUser($conn, $userId) {
+    $sql = "SELECT * FROM schedules WHERE user_id = :user_id ORDER BY start_datetime";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['user_id' => $userId]);
+    return $stmt->fetchAll();
+}
+
+function getPlanningById($conn, $id) {
+    $sql = "SELECT * FROM schedules WHERE id = :id";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetch();
+}
+
+
+// Fonction pour ajouter une planification dans la table schedules
+function addPlanning($conn, $user_id, $patient_id, $care_id, $start_datetime, $end_datetime, $planning_date) {
+    try {
+        // Sécurisation des données
+        $user_id = (int) $user_id;
+        $patient_id = (int) $patient_id;
+        $care_id = (int) $care_id;
+        $start_datetime = htmlspecialchars(trim($start_datetime));
+        $end_datetime = htmlspecialchars(trim($end_datetime));
+        $planning_date = htmlspecialchars(trim($planning_date));
+
+        // Insertion dans la table schedules
+        $stmt = $conn->prepare("INSERT INTO schedules (user_id, patient_id, start_datetime, end_datetime, care_id, planning_date) 
+                                 VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$user_id, $patient_id, $start_datetime, $end_datetime, $care_id, $planning_date]);
+
+        // Retourner true si l'insertion a réussi
+        return true;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de l'ajout de la planification : " . $e->getMessage());
+        return false;
     }
-
-    // Préparation et exécution de la requête
-    $stmt = $conn->prepare($sql);
-    $stmt->execute(['date' => $date]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// AJOUTER UN PLANNING
-function addSchedule($conn, $user_id, $patient_id, $start_datetime, $end_datetime) {
-    $sql = "INSERT INTO schedule (user_id, patient_id, start_datetime, end_datetime)
-            VALUES (:user_id, :patient_id, :start_datetime, :end_datetime)";
+function updatePlanning($conn, $data) {
+    $sql = "UPDATE schedules SET user_id = :user_id, patient_id = :patient_id, start_datetime = :start_datetime, end_datetime = :end_datetime WHERE id = :id";
     $stmt = $conn->prepare($sql);
-    return $stmt->execute([
-        'user_id' => $user_id,
-        'patient_id' => $patient_id,
-        'start_datetime' => $start_datetime,
-        'end_datetime' => $end_datetime
-    ]);
+    return $stmt->execute($data);
 }
 
-// MODIFIER UN PLANNING
-function updateSchedule($conn, $schedule_id, $start_datetime, $end_datetime) {
-    $sql = "UPDATE schedule SET start_datetime = :start_datetime, end_datetime = :end_datetime WHERE id = :schedule_id";
+function deletePlanning($conn, $id) {
+    $sql = "DELETE FROM schedules WHERE id = :id";
     $stmt = $conn->prepare($sql);
-    return $stmt->execute([
-        'schedule_id' => $schedule_id,
-        'start_datetime' => $start_datetime,
-        'end_datetime' => $end_datetime
-    ]);
+    return $stmt->execute(['id' => $id]);
 }
 
-// SUPPRIMER UN PLANNING
-function deleteSchedule($conn, $schedule_id) {
-    $sql = "DELETE FROM schedule WHERE id = :schedule_id";
-    $stmt = $conn->prepare($sql);
-    return $stmt->execute(['schedule_id' => $schedule_id]);
-}
 
 ?>

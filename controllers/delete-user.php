@@ -10,7 +10,7 @@ $conn = getConnexion();
 // Vérifier si un ID est passé et s'il est valide
 if (!isset($_GET['id']) || empty($_GET['id']) || !is_numeric($_GET['id'])) {
     $_SESSION['error'] = "ID invalide !";
-    addLog('Erreur', $_SESSION['user_id'], "Tentative de suppression avec un ID invalide.");
+    addLog('Erreur', $_SESSION['user_id'] ?? null, "Tentative de suppression avec un ID invalide : " . ($_GET['id'] ?? 'non défini'));
     header("Location: ../views/admin/users.php");  
     exit();
 }
@@ -20,19 +20,19 @@ $id = intval($_GET['id']);  // Convertir l'ID en entier
 // Vérifier si l'utilisateur existe avant suppression
 $user = getUserById($conn, $id);
 if (!$user) {
+    addLog('Erreur', $_SESSION['user_id'] ?? null, "Tentative de suppression d'un utilisateur inexistant (ID: $id).");
     $_SESSION['error'] = "Utilisateur introuvable.";
-    addLog('Erreur', $_SESSION['user_id'], "Tentative de suppression d'un utilisateur inexistant (ID: $id).");
     header("Location: ../views/admin/users.php");
     exit();
 }
 
 // Supprimer l'utilisateur
 if (deleteUser($conn, $id)) {
+    addLog('Suppression utilisateur', $_SESSION['user_id'] ?? null, "Utilisateur '{$user['username']}' (ID: $id) supprimé.");
     $_SESSION['success'] = "Utilisateur supprimé avec succès.";
-    addLog('Succès', $_SESSION['user_id'], "Utilisateur '{$user['username']}' (ID: $id) a été supprimé.");
 } else {
     $_SESSION['error'] = "Erreur lors de la suppression de l'utilisateur.";
-    addLog('Erreur', $_SESSION['user_id'], "Échec de suppression de l'utilisateur ID $id.");
+    addLog('Erreur', $_SESSION['user_id'] ?? null, "Échec de suppression de l'utilisateur (ID: $id).");
 }
 
 // Redirection après suppression

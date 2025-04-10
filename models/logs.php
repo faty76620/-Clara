@@ -32,7 +32,7 @@ function getLogsWithUserInfo($conn) {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
         error_log("Erreur lors de la récupération des logs : " . $e->getMessage());
-        return false; // Retourner false si une erreur survient
+        return false; 
     }
 }
 

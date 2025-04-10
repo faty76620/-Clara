@@ -5,6 +5,8 @@ require_once TEMPLATE_DIR . '/session_start.php';
 require_once MODEL_DIR . '/database.php';
 require_once MODEL_DIR . '/caregiver.php';
 require_once MODEL_DIR . '/user.php';
+require_once MODEL_DIR . '/logs.php';
+
 $conn = getConnexion();
 
 // Vérification que le formulaire a bien été soumis via POST
@@ -34,6 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: " . BASE_URL . "/views/manager/folders_patients.php?section=caregiver");
         exit();
     } else {
+
+        addLog(
+            'Modification soignant',
+            $_SESSION['user_id'] = "Soignant ID {$caregiver_id} modifié par l'utilisateur ID {$_SESSION['user_id']}"
+        );
       
         $_SESSION['error'] = "Une erreur est survenue lors de la mise à jour des informations.";
         header("Location: " . BASE_URL . "/views/manager/folders_patients.php?section=caregiver");
@@ -41,6 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 } else {
  
+    addLog(
+        'Erreur modification soignant',
+        $_SESSION['user_id'] ="Échec de la mise à jour du soignant ID {$caregiver_id} par l'utilisateur ID {$_SESSION['user_id']}"
+    );
+
     $_SESSION['error'] = "Aucune donnée reçue. Veuillez soumettre à nouveau le formulaire.";
     header("Location: " . BASE_URL . "/views/manager/folders_patients.php?section=caregiver");
     exit();

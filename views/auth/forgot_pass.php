@@ -13,9 +13,8 @@
     <script defer src="/clara/assets/js.js"></script>
     <title>Mot de passe oublié</title>
 </head>
-<body>
+<body class="body-background">
          <?php
-        
         require_once __DIR__ . '/../../config.php'; 
         require_once TEMPLATE_DIR . '/session_start.php';  
         

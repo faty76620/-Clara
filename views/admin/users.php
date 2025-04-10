@@ -59,11 +59,11 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
 
         <!-- ONGLET POUR BASCULER SUR LES RÔLES -->
         <div class="tabs">
-            <button id="tab-responsables" class="tab-button active" onclick="showTab('responsables')">
+            <button id="tab-responsables" class="tab-button active"onclick="showTab('responsables')">
                 <i class="fas fa-user-tie"></i><span class="tab-text">Responsables</span>
             </button>
             <button id="tab-utilisateurs" class="tab-button" onclick="showTab('utilisateurs')">
-                <i class="fas fa-users"></i><span class="tab-text">Utilisateurs</span>
+                <i class="fas fa-users"></i><span class="tab-text">Soignants</span>
             </button>
         </div>
 
@@ -192,6 +192,17 @@ $utilisateurs = getUsersByRole($conn, 'Utilisateur', $search);  // Récupérer l
             </div>
         </div>
     </main>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        <?php if (!empty($search)) : ?>
+            <?php if (!empty($responsables)) : ?>
+                showTab('responsables');
+            <?php elseif (!empty($utilisateurs)) : ?>
+                showTab('utilisateurs');
+            <?php endif; ?>
+        <?php endif; ?>
+    });
+</script>
 </body>
 
 </html>
