@@ -64,10 +64,10 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
 
             <!-- ONGLET POUR FILTRER LES LISTES -->
             <div class="tabs">
-                <button id="tab-patient" class="tab-button active" onclick="showTab('patient')">
+                <button id="btn-patient" class="tab-button active" onclick="showTab('patient')">
                     <i class="fas fa-user-injured"></i> <span class="tab-text">Patients</span>
                 </button>
-                <button id="tab-caregiver" class="tab-button" onclick="showTab('caregiver')">
+                <button id="btn-caregiver" class="tab-button" onclick="showTab('caregiver')">
                     <i class="fas fa-user-md"></i> <span class="tab-text">Soignants</span>
                 </button>    
             </div>
@@ -203,5 +203,16 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
             </div>
         </section>
     </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        <?php if (!empty($search)) : ?>
+            <?php if (!empty($responsables)) : ?>
+                showTab('patientd');
+            <?php elseif (!empty($utilisateurs)) : ?>
+                showTab('soignants');
+            <?php endif; ?>
+        <?php endif; ?>
+    });
+    </script>
 </body>
 </html>

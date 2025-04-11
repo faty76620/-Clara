@@ -40,10 +40,10 @@ function getCareById($conn, $care_id) {
     }
 }
 
-// RECUPERER LES SOINS
+// RECUPERER LES SOINS DU PATIENT DANS LA PAGE DE MODIFICATION 
 function getCareByPatient($conn, $patient_id) {
     try {
-        $sql = "SELECT * FROM care WHERE patient_id = :patient_id ORDER BY days_of_week DESC";
+        $sql = "SELECT * FROM care WHERE patient_id = :patient_id";
         $stmt = $conn->prepare($sql);
         $stmt->execute(['patient_id' => $patient_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -75,15 +75,18 @@ function getCareByPatientWithCaregiver($conn, $patient_id) {
 }
 
 // FONCTION POUR METTRE À JOUR UN SOIN
-function updateCare($conn, $id, $user_id, $care_type, $care_description, $categorie, $frequence) {
+function updateCare($conn, $id, $user_id, $care_type, $care_description, $categorie, $frequence, $days_of_week, $care_hours, $designed_caregiver) {
     try {
         $sql = "UPDATE care 
                 SET user_id = :user_id,
                     care_type = :care_type, 
                     care_description = :care_description, 
                     categorie = :categorie, 
-                    frequence = :frequence, 
-                    date_modified = NOW() 
+                    frequence = :frequence,
+                    days = :days,
+                    care_hours = :care_hours,
+                    designed_caregiver = :designed_caregiver,
+                    date_modified = NOW()
                 WHERE care_id = :id";
         
         $stmt = $conn->prepare($sql);
@@ -93,6 +96,9 @@ function updateCare($conn, $id, $user_id, $care_type, $care_description, $catego
             'care_description' => $care_description,
             'categorie' => $categorie,
             'frequence' => $frequence,
+            'days' => $days_of_week,
+            'care_hours' => $care_hours,
+            'designed_caregiver' => $designed_caregiver,
             'id' => $id
         ]);
     } catch (PDOException $e) {
@@ -101,7 +107,7 @@ function updateCare($conn, $id, $user_id, $care_type, $care_description, $catego
     }
 }
 
-// FONCTION POUR RÉCUPÉRER LES SOINS D'UN PATIENT AVEC INFOS UTILISATEUR
+// FONCTION POUR RÉCUPÉRER LES SOINS D'UN PATIENT AVEC INFOS DU SOIGNANT
 function getCareByPatientWithUser($conn, $patient_id) {
     try {
         $sql = "

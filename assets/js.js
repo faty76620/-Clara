@@ -30,28 +30,35 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function showTab(tabId) {
-  // Masquer toutes les sections
-  document.querySelectorAll('.tab-content').forEach(section => {
+// Masquer toutes les sections
+document.querySelectorAll('.tab-content').forEach(section => {
       section.classList.remove('active');
       section.style.display = 'none';
-  });
+});
 
-  // Enlever la classe active de tous les boutons
-  document.querySelectorAll('.tab-button').forEach(button => {
+// Enlever la classe active de tous les boutons
+document.querySelectorAll('.tab-button').forEach(button => {
       button.classList.remove('active');
-  });
+});
 
-  // Afficher la bonne section
-  const selectedTab = document.getElementById(tabId);
-  if (selectedTab) {
+// Afficher la bonne section
+const selectedTab = document.getElementById(tabId);
+if (selectedTab) {
       selectedTab.classList.add('active');
       selectedTab.style.display = 'block';
-  }
+}
 
-  // Activer le bouton correspondant
+// Activer le bouton correspondant
   const buttonId = 'btn-' + tabId;
   const activeBtn = document.getElementById(buttonId);
   if (activeBtn) {
       activeBtn.classList.add('active');
   }
+}
+
+// PERMET DE DETAILLER SI OUI OU NON EXEMENS
+function toggleRadiologyDetails() {
+  const radiologieSelect = document.getElementById('radiologie');
+  const details = document.getElementById('radiologie-details');
+  details.style.display = (radiologieSelect.value === 'oui') ? 'block' : 'none';
 }

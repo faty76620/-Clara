@@ -195,6 +195,10 @@
         width: 80px;
     }
 
+    .form-session {
+        padding: 2px;
+    }
+
     /*PLANING*/
     .planning-grid {
         grid-template-columns: 1fr;
@@ -246,7 +250,3 @@
 
 }
 
-@media screen and (max-width:1024px) {
-
-    
-}

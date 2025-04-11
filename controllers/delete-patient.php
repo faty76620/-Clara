@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config.php';        
 require_once MODEL_DIR . '/database.php';        
 require_once MODEL_DIR . '/patients.php'; 
+require_once MODEL_DIR . '/logs.php'; 
 require_once TEMPLATE_DIR . '/session_start.php'; 
 
 // Vérifier si un ID est passé en URL et s'il est valide

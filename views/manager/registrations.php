@@ -43,14 +43,14 @@ require_once MODEL_DIR . '/establishment.php';
         <div class="container-title"><h2>Inscription</h2></div>
 
         <div class="tabs">
-            <button id="btn-form-patient" class="tab-button" onclick="showTab('form-patient')">
+            <button id="btn-form-patient" class="tab-button active" onclick="showTab('form-patient')">
                 <i class="fas fa-user-injured"></i> <span class="tab-text">Patients</span>
             </button>
             <button id="btn-form-caregiver" class="tab-button" onclick="showTab('form-caregiver')">
                 <i class="fas fa-user-md"></i> <span class="tab-text">Soignants</span>
             </button>
         </div>
-
+        <!--section patient -->
         <section id="form-patient" class="tab-content active">
             <form action="../../controllers/process_data.php" method="POST" class="form-session">
                 <fieldset>
@@ -97,6 +97,40 @@ require_once MODEL_DIR . '/establishment.php';
                         ?>
                     </select>
                     <div class="group-form">
+                        <label>Étage / Appartement :</label>
+                        <input type="text" name="etage_appartement" placeholder="Ex : 3e étage, Apt B">
+                    </div>
+                    <div class="group-form">
+                        <label>Code / Clé / Interphone :</label>
+                        <input type="text" name="acces_domicile" placeholder="Code porte, digicode, etc.">
+                    </div>
+                    <div class="group-form">
+                        <label>Présence d’animaux :</label>
+                        <input type="text" name="animaux" placeholder="Ex : Chien, chat...">
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Contact d'Urgence</legend>
+                    <div class="group-form">
+                        <label for="contact_urgence_nom">Nom complet :</label>
+                        <input type="text" name="contact_urgence_nom" id="contact_urgence_nom" placeholder="Nom et prénom">
+                    </div>
+                    <div class="group-form">
+                        <label for="contact_urgence_lien">Lien avec le patient :</label>
+                        <input type="text" name="contact_urgence_lien" id="contact_urgence_lien" placeholder="Ex : Fille, Frère, Voisin, Ami...">
+                    </div>
+                    <div class="group-form">
+                        <label for="contact_urgence_tel">Numéro de téléphone :</label>
+                        <input type="text" name="contact_urgence_tel" id="contact_urgence_tel">
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Informations Medicaux</legend>
+                    <div class="group-form">
+                        <label>Traitement(s) prescrit(s) :</label>
+                        <textarea name="traitements" placeholder="Ex : Antibiotique, Antalgiques, Diurétiques..."></textarea>
+                    </div>
+                    <div class="group-form">
                         <label>Historique Médical :</label>
                         <textarea name="medical_history"></textarea>
                     </div>
@@ -109,16 +143,33 @@ require_once MODEL_DIR . '/establishment.php';
                         <textarea name="social_history"></textarea>
                     </div>
                     <div class="group-form">
+                        <label for="radiologie">Examens radiologiques :</label>
+                        <select name="radiologie" id="radiologie" onchange="toggleRadiologyDetails()">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="non">Non</option>
+                            <option value="oui">Oui</option>
+                        </select>
+                    </div>
+                    <div class="group-form" id="radiologie-details" style="display: none;">
+                        <label for="radiologie_liste">Précisez les examens :</label>
+                        <input type="text" name="radiologie_liste" id="radiologie_liste" placeholder="Ex : IRM, Scanner, Radiographie...">
+                    </div>
+
+                    <div class="group-form">
+                        <label for="medecin_traitant">Médecin traitant :</label>
+                        <input type="text" name="medecin_traitant" id="medecin_traitant" placeholder="Nom Prénom du médecin">
+                    </div>
+                    <div class="group-form">
                         <label>Remarques Personnelles :</label>
                         <textarea name="personal_notes"></textarea>
                     </div>
                 </fieldset>
-
+                <!--section soins -->
                 <fieldset>
                     <legend>Soins</legend>
                     <div class="group-form">
-                        <label for="care_type">Type de soin :</label>
-                        <input type="text" name="care_type" id="care_type" required>
+                        <label>Type de soins :</label>
+                        <input type="text" name="care_type" placeholder="Type de soin" required>
                     </div>
                     <div class="group-form">
                         <label for="care_description">Description :</label>
@@ -163,8 +214,135 @@ require_once MODEL_DIR . '/establishment.php';
                         </select>
                     </div>
                 </fieldset>
+                <!-- Section Constantes Vitales -->
+                <fieldset>
+                    <legend>Constantes Vitales</legend>
+
+                    <div class="group-form">
+                        <label>Température (°C) :</label>
+                        <input type="number" step="0.1" name="temperature">
+                    </div>
+                    <div class="group-form">
+                        <label>Tension :</label>
+                        <input type="text" name="blood_pressure">
+                    </div>
+                    <div class="group-form">
+                        <label>Fréquence Cardiaque (bpm) :</label>
+                        <input type="number" name="heart_rate">
+                    </div>
+                    <div class="group-form">
+                        <label>Fréquence Respiratoire (rpm) :</label>
+                        <input type="number" name="respiratory_rate">
+                    </div>
+                    <div class="group-form">
+                        <label>Date d'enregistrement :</label>
+                        <input type="datetime-local" name="recorded_at">
+                    </div>
+                    <div class="group-form">
+                        <label>Volume urinaire / jour (en mL) :</label>
+                        <input type="number" name="volume_urinaire" placeholder="Ex : 1500 mL">
+                    </div>
+                    <div class="group-form">
+                        <label>Fréquence des selles :</label>
+                        <input type="text" name="frequence_selles" placeholder="Ex : 1x/jour, tous les 3 jours...">
+                    </div>
+                </fieldset>
+                 <!-- Section Transmissions -->
+                 <fieldset>
+                    <legend>Transmissions</legend>
+                    <div class="group-form">
+                        <label>Date :</label>
+                        <input type="datetime-local" name="transmission_date"><br></br>
+                    </div>
+                    <div class="group-form">
+                        <label for="cible">Besoin cyblé:</label>
+                        <select name="cible" id="cible" required multiple>
+                            <option value="">-- Sélectionnez des besoins --</option>
+                            <option value="respirer">Respirer</option>
+                            <option value="boire_et_manger">Boire et manger</option>
+                            <option value="éliminer">Éliminer</option>
+                            <option value="se_mouvoir">Se mouvoir et maintenir une bonne posture</option>
+                            <option value="dormir">Dormir et se reposer</option>
+                            <option value="s_habiller">Se vêtir et se dévêtir</option>
+                            <option value="maintenir_température">Maintenir la température du corps</option>
+                            <option value="être_propre">Être propre et protéger ses téguments</option>
+                            <option value="éviter_dangers">Éviter les dangers</option>
+                            <option value="communiquer">Communiquer avec ses semblables</option>
+                            <option value="agir_selon_valeurs">Agir selon ses croyances et valeurs</option>
+                            <option value="s_occuper">S’occuper en vue de se réaliser</option>
+                            <option value="se_recreer">Se récréer</option>
+                            <option value="apprendre">Apprendre</option>
+                        </select>
+                    </div>
+                    <label>Description :</label>
+                    <textarea name="transmission_description"></textarea>
+
+                    <input type="hidden" name="transmitted_by" value="<?php echo $_SESSION['user_id']; ?>">
+                </fieldset>
                 <div class="btn-container">
                     <button type="submit">Enregistrer</button>
+                </div>
+            </form>
+        </section>
+         <!-- FORMULAIRE SOIGNANT -->
+         <section id="form-caregiver" class="tab-content">
+            <form action="../../controllers/process-caregiver.php" method="POST" class="form-session">
+                <fieldset>
+                    <legend>Informations Personnelles</legend>
+                    <div class="group-form">
+                        <label for="lastname_user">Nom</label>
+                        <input type="text" name="lastname_user" id="lastname_user" required><br>
+                    </div>
+                    <div class="group-form">
+                        <label for="firstname_user">Prénom</label>
+                        <input type="text" name="firstname_user" id="firstname_user" required><br>
+                    </div>
+                    <input type="hidden" name="role" value="3">
+                    <div class="group-form">
+                        <label for="mail_user">Email</label>
+                        <input type="email" name="mail_user" id="mail_user" required><br>
+                    </div>
+                    <div class="group-form">
+                        <label for="phone">Numéro de téléphone</label>
+                        <input type="text" name="phone" id="phone" required><br>
+                    </div>
+                    <input type="hidden" name="role_id" value="3"> <!-- Champ caché pour le role_id -->
+                    <div class="group-form">
+                        <select hiden name="establishment_id" id="establishment_id" required>
+                        <?php
+                            $establishments = getEstablishmentsFromRole($conn);
+                            foreach ($establishments as $establishment) {
+                            $establishmentId = htmlspecialchars($establishment['establishment_id']);
+                            $establishmentLabel = htmlspecialchars($establishment['establishment_id']);
+                            echo "<option value='{$establishmentId}'>Etablissement #{$establishmentLabel}</option>";
+                        }
+                        ?>
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Informations professionnelles</legend>
+                    <div class="group-form">
+                        <label for="lastname_user">Spécialités :</label>
+                        <input type="text" name="specialite" id="specialite" required><br>
+                    </div>
+                    <div class="group-form">
+                        <label for="diplome">Diplômes :</label>
+                        <input type="text" name="diplome" id="diplome" required><br>
+                    </div>
+                    <input type="hidden" name="role" value="3">
+                    <div class="group-form">
+                        <label for="experience">Expériences (années) :</label>
+                        <input type="number" name="experience" id="experience" required><br>
+                    </div>
+                    <div class="group-form">
+                        <label for="competences">Compétences :</label>
+                        <textarea type="competences" name="competences" id="competences" required></textarea><br>
+                    </div>
+                </fieldset>
+
+                <div class="btn-container">
+                    <button type="submit" name="submit">Enregistrer</button>
                 </div>
             </form>
         </section>

@@ -45,16 +45,16 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
     <main class="dashboard">
         <div class="container-title"><h2>Dossier Patient : <?= htmlspecialchars($patient['firstname']) . " " . htmlspecialchars($patient['lastname']); ?></h2></div>
         
-           <!-- Onglets pour naviguer entre les sections -->
-            <div class="tabs">
-                <button id="btn-patient" class="tab-button active" onclick="showTab('patient')"><i class="fas fa-user-injured"></i><span class="tab-text">Patient</span></button>
-                <button id="btn-care" class="tab-button" onclick="showTab('care')"><i class="fas fa-stethoscope"></i></i><span class="tab-text">Soins</span></button>
-                <button id="btn-constantes" class="tab-button" onclick="showTab('constantes')"><i class="fas fa-heartbeat"></i><span class="tab-text">Constantes Vitales</span></button>
-                <button id="btn-transmissions" class="tab-button" onclick="showTab('transmissions')"><i class="fas fa-notes-medical"></i><span class="tab-text">Transmissions</span></button>
-            </div>
+        <!-- Onglets pour naviguer entre les sections -->
+        <div class="tabs">
+            <button id="btn-patient" class="tab-button active" onclick="showTab('patient')"><i class="fas fa-user-injured"></i><span class="tab-text">Patient</span></button>
+            <button id="btn-care" class="tab-button" onclick="showTab('care')"><i class="fas fa-stethoscope"></i><span class="tab-text">Soins</span></button>
+            <button id="btn-constantes" class="tab-button" onclick="showTab('constantes')"><i class="fas fa-heartbeat"></i><span class="tab-text">Constantes Vitales</span></button>
+            <button id="btn-transmissions" class="tab-button" onclick="showTab('transmissions')"><i class="fas fa-notes-medical"></i><span class="tab-text">Transmissions</span></button>
+        </div>
 
         <!-- Informations personnelles -->
-        <div  class="details">
+        <div class="details">
             <section class="tab-content active" id="patient">
                 <h3>Informations personnelles</h3>
                 <table class="table-responsive">
@@ -93,6 +93,31 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                             <td><strong>Adresse :</strong></td>
                             <td><?= htmlspecialchars($patient['address']); ?></td>
                         </tr>
+                        </tr>
+                        <tr>
+                            <td><strong>Etage Appartement :</strong></td>
+                            <td><?= htmlspecialchars($patient['etage_appartement']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Accès domicile :</strong></td>
+                            <td><?= htmlspecialchars($patient['acces_domicile']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Animaux :</strong></td>
+                            <td><?= htmlspecialchars($patient['animaux']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contact urgence (Nom) :</strong></td>
+                            <td><?= htmlspecialchars($patient['contact_urgence_nom']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contact urgence (Lien) :</strong></td>
+                            <td><?= htmlspecialchars($patient['contact_urgence_lien']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contact urgence (Téléphone) :</strong></td>
+                            <td><?= htmlspecialchars($patient['contact_urgence_tel']); ?></td>
+                        </tr>
                         <tr>
                             <td><strong>Date de naissance :</strong></td>
                             <td><?= htmlspecialchars($patient['date_of_birth']); ?></td>
@@ -114,6 +139,18 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                             <td><?= htmlspecialchars($patient['social_history']); ?></td>
                         </tr>
                         <tr>
+                            <td><strong>Radiologie :</strong></td>
+                            <td><?= htmlspecialchars($patient['radiologie']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liste Radiologie :</strong></td>
+                            <td><?= htmlspecialchars($patient['radiologie_liste']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Médecin traitant :</strong></td>
+                            <td><?= htmlspecialchars($patient['medecin_traitant']); ?></td>
+                        </tr>
+                        <tr>
                             <td><strong>Remarques Personnelles :</strong></td>
                             <td><?= htmlspecialchars($patient['personal_notes']); ?></td>
                         </tr>
@@ -123,27 +160,30 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                         </tr>
                     </tbody>
                 </table>
-                 <!-- Cartes info -->
+
+                <!-- Cartes info -->
                 <div class="cards-container">
                     <div class="card-session">
+                        <p><strong>Date d'admission :</strong> <?= htmlspecialchars($patient['created_at']); ?></p>
                         <p><strong>Nom :</strong> <?= htmlspecialchars($patient['lastname']); ?></p>
                         <p><strong>Prénom :</strong> <?= htmlspecialchars($patient['firstname']); ?></p>
                         <p><strong>Email :</strong> <?= htmlspecialchars($patient['email']); ?></p>
-                        <p><strong>Telephone :</strong> <?= htmlspecialchars($patient['phone']); ?></p>
+                        <p><strong>Téléphone :</strong> <?= htmlspecialchars($patient['phone']); ?></p>
                         <p><strong>Adresse :</strong> <?= htmlspecialchars($patient['address']); ?></p>
+                        <p><strong>Etage Appartement :</strong> <?= htmlspecialchars($patient['etage_appartement']); ?></p>
+                        <p><strong>Accès domicile :</strong> <?= htmlspecialchars($patient['acces_domicile']); ?></p>
+                        <p><strong>Animaux :</strong> <?= htmlspecialchars($patient['animaux']); ?></p>
+                        <p><strong>Contact urgence :</strong> <?= htmlspecialchars($patient['contact_urgence_nom']); ?></p>
                         <p><strong>Date de naissance :</strong> <?= htmlspecialchars($patient['date_of_birth']); ?></p>
                         <p><strong>Sexe :</strong> <?= htmlspecialchars($patient['gender']); ?></p>
-                        <p><strong>Historique Medical :</strong> <?= htmlspecialchars($patient['medical_history']); ?></p>
-                        <p><strong>Historique Psychologique :</strong> <?= htmlspecialchars($patient['psychological_history']); ?></p>
-                        <p><strong>Historique Social :</strong> <?= htmlspecialchars($patient['social_history']); ?></p>
-                        <p><strong>Remarques Historique :</strong> <?= htmlspecialchars($patient['personal_notes']); ?></p>
-                        <p><strong>Date admission :</strong> <?= htmlspecialchars($patient['created_at']); ?></p>
+                        <p><strong>Historique Médical :</strong> <?= htmlspecialchars($patient['medical_history']); ?></p>
+                        <p><strong>Radiologie :</strong> <?= htmlspecialchars($patient['radiologie']); ?></p>
+                        <p><strong>Médecin traitant :</strong> <?= htmlspecialchars($patient['medecin_traitant']); ?></p>
                     </div>
                 </div>
             </section>
-
-            <!-- Section Soins -->
-            <section class="tab-content" id="care">
+   <!-- Section Soins -->
+   <section class="tab-content" id="care">
                 <h3>Soins</h3>
                 <table class="table-responsive">
                     <thead>
@@ -194,25 +234,30 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                 <table class="table-responsive">
                     <thead>
                         <tr>
+                            <th>Date</th>
                             <th>Température</th>
                             <th>Tension</th>
                             <th>Fréquence Cardiaque</th>
                             <th>Fréquence Respiratoire</th>
-                            <th>Date</th>
+                            <th>Volume urinaire</th>
+                            <th>Frequence selles</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($vital_signs as $vital): ?>
                         <tr>
+                            <td><?= htmlspecialchars($vital['recorded_at']); ?></td>
                             <td><?= htmlspecialchars($vital['temperature']); ?> °C</td>
                             <td><?= htmlspecialchars($vital['blood_pressure']); ?></td>
                             <td><?= htmlspecialchars($vital['heart_rate']); ?> bpm</td>
                             <td><?= htmlspecialchars($vital['respiratory_rate']); ?> rpm</td>
-                            <td><?= htmlspecialchars($vital['recorded_at']); ?></td>
+                            <td><?= htmlspecialchars($vital['frequence_selles']); ?></td>
+                            <td><?= htmlspecialchars($vital['volume_urinaire']); ?> ml</td>    
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+
                 <!-- Cartes Constantes Vitales -->
                 <div class="cards-container">
                     <?php foreach ($vital_signs as $vital): ?>
@@ -220,15 +265,16 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                             <p><strong>Température :</strong> <?= htmlspecialchars($vital['temperature']); ?>°C</p>
                             <p><strong>Fréquence cardiaque :</strong> <?= htmlspecialchars($vital['heart_rate']); ?> BPM</p>
                             <p><strong>Pouls :</strong> <?= htmlspecialchars($vital['respiratory_rate']); ?> rpm</p>
-                            <p><strong>Tensiion arterielle :</strong> <?= htmlspecialchars($vital['blood_pressure']); ?></p>
-                            <p><strong>Tension :</strong> <?= htmlspecialchars($vital['recorded_at']); ?></p>
+                            <p><strong>Tension artérielle :</strong> <?= htmlspecialchars($vital['blood_pressure']); ?></p>
+                            <p><strong>Volume urinaire :</strong> <?= htmlspecialchars($vital['volume_urinaire']); ?> ml</p>
+                            <p><strong>Frequences selles :</strong> <?= htmlspecialchars($vital['frequence_selles']); ?></p>
+                            <p><strong>Date :</strong> <?= htmlspecialchars($vital['recorded_at']); ?></p>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </section>
-
-            <!-- Section Transmissions -->
-            <section class="tab-content" id="transmissions">
+               <!-- Section Transmissions -->
+               <section class="tab-content" id="transmissions">
                 <h3>Transmissions</h3>
                 <table class="table-responsive">
                     <thead>
@@ -271,4 +317,6 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
     </main>
 </body>
 </html>
+
+
 

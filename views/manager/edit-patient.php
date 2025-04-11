@@ -41,7 +41,7 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
     <title>Modifier dossier patient</title>
 </head>
 
-<body>
+<body class="body-background">
 <?php include TEMPLATE_DIR . '/header_manager.php'; ?>
 
 <?php
@@ -100,6 +100,58 @@ if (isset($_SESSION['error'])) {
                 <div class="group-form">
                     <label>Téléphone :</label>
                     <input type="tel" name="phone" pattern="[0-9]{10}" value="<?= htmlspecialchars($patient['phone'] ?? '') ?>" required>
+                </div>
+                <div class="group-form">
+                    <label>Etage Appartement :</label> 
+                    <input type="text" name="etage_appartement"  value="<?= htmlspecialchars($patient['etage_appartement']) ?? '' ?> "required>
+                </div>  
+                <div class="group-form">
+                    <label>Accès domicile</label>
+                    <input type="text" name="acces_domicile" value="<?= htmlspecialchars($patient['acces_domicile']); '' ?> " requiered>
+                </div>     
+                <div class="group-form">
+                    <label>Animaux :</label>
+                    <input type="text" name="animaux" value="<?= htmlspecialchars($patient['animaux'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Contact urgence - Nom :</label>
+                    <input type="text" name="contact_urgence_nom" value="<?= htmlspecialchars($patient['contact_urgence_nom'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Contact urgence - Lien :</label>
+                    <input type="text" name="contact_urgence_lien" value="<?= htmlspecialchars($patient['contact_urgence_lien'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Contact urgence - Téléphone :</label>
+                    <input type="tel" name="contact_urgence_tel" pattern="[0-9]{10}" value="<?= htmlspecialchars($patient['contact_urgence_tel'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Historique Médical :</label>
+                    <input type="text" name="medical_history" value="<?= htmlspecialchars($patient['medical_history'] ?? '') ?>">
+                </div>      
+                <div class="group-form">
+                    <label>Historique Psychologique :</label>
+                    <input type="text" name="psychological_history" value="<?= htmlspecialchars($patient['psychological_history'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Historique Social :</label>
+                    <input type="text" name="social_history" value="<?= htmlspecialchars($patient['social_history'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Radiologie :</label>
+                    <input type="text" name="radiologie" value="<?= htmlspecialchars($patient['radiologie'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Liste Radiologie :</label>
+                    <input type="text" name="radiologie_liste" value="<?= htmlspecialchars($patient['radiologie_liste'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Médecin traitant :</label>
+                    <input type="text" name="medecin_traitant" value="<?= htmlspecialchars($patient['medecin_traitant'] ?? '') ?>">
+                </div>
+                <div class="group-form">
+                    <label>Notes personnelles :</label>
+                    <textarea name="personal_notes"><?= htmlspecialchars($patient['personal_notes'] ?? '') ?></textarea>
                 </div>
                 <div class="btn-container">
                     <button type="submit">Modifier</button>
@@ -190,6 +242,14 @@ if (isset($_SESSION['error'])) {
                         <label>SAT :</label>
                         <input type="text" name="respiratory_rate" value="<?= htmlspecialchars($vs['respiratory_rate']) ?>" required>
                     </div>
+                    <div class="group-form">
+                        <label>Fréquence des selles :</label>
+                        <input type="text" name="frequence_selles" value="<?= htmlspecialchars($vs['frequence_selles'] ?? '') ?>">
+                    </div>
+                    <div class="group-form">
+                        <label>Volume urinaire (ml) :</label>
+                        <input type="text" name="volume_urinaire" value="<?= htmlspecialchars($vs['volume_urinaire'] ?? '') ?>" min="0">
+                    </div>
                     <div class="btn-container">
                         <button type="submit">Modifier</button>
                     </div>
@@ -214,6 +274,30 @@ if (isset($_SESSION['error'])) {
                     <div class="group-form">
                         <label>Date :</label>
                         <input type="text" name="transmission_date" value="<?= htmlspecialchars($trans['transmission_date']) ?>" readonly>
+                    </div>
+                    <?php
+                    // On transforme la ou les cibles en tableau, même si une seule est enregistrée
+                    $cibles = isset($trans['cible']) ? explode(',', $trans['cible']) : [];
+                    ?>
+
+                    <div class="group-form">
+                        <label for="cible">Besoin ciblé :</label>
+                        <select name="cible[]" id="cible" required multiple>
+                            <option value="respirer" <?= in_array("respirer", $cibles) ? 'selected' : '' ?>>Respirer</option>
+                            <option value="boire_et_manger" <?= in_array("boire_et_manger", $cibles) ? 'selected' : '' ?>>Boire et manger</option>
+                            <option value="éliminer" <?= in_array("éliminer", $cibles) ? 'selected' : '' ?>>Éliminer</option>
+                            <option value="se_mouvoir" <?= in_array("se_mouvoir", $cibles) ? 'selected' : '' ?>>Se mouvoir et maintenir une bonne posture</option>
+                            <option value="dormir" <?= in_array("dormir", $cibles) ? 'selected' : '' ?>>Dormir et se reposer</option>
+                            <option value="s_habiller" <?= in_array("s_habiller", $cibles) ? 'selected' : '' ?>>Se vêtir et se dévêtir</option>
+                            <option value="maintenir_température" <?= in_array("maintenir_température", $cibles) ? 'selected' : '' ?>>Maintenir la température du corps</option>
+                            <option value="être_propre" <?= in_array("être_propre", $cibles) ? 'selected' : '' ?>>Être propre et protéger ses téguments</option>
+                            <option value="éviter_dangers" <?= in_array("éviter_dangers", $cibles) ? 'selected' : '' ?>>Éviter les dangers</option>
+                            <option value="communiquer" <?= in_array("communiquer", $cibles) ? 'selected' : '' ?>>Communiquer avec ses semblables</option>
+                            <option value="agir_selon_valeurs" <?= in_array("agir_selon_valeurs", $cibles) ? 'selected' : '' ?>>Agir selon ses croyances et valeurs</option>
+                            <option value="s_occuper" <?= in_array("s_occuper", $cibles) ? 'selected' : '' ?>>S’occuper en vue de se réaliser</option>
+                            <option value="se_recreer" <?= in_array("se_recreer", $cibles) ? 'selected' : '' ?>>Se récréer</option>
+                            <option value="apprendre" <?= in_array("apprendre", $cibles) ? 'selected' : '' ?>>Apprendre</option>
+                        </select>
                     </div>
                     <div class="group-form">
                         <label>Description :</label>
