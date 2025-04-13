@@ -258,6 +258,104 @@ if (isset($_SESSION['error'])) {
         <?php endforeach; ?>
     </section>
 
+    <!-- Section Soins -->
+    <section class="tab-content" id="care">
+        <?php foreach ($care as $c) : ?>
+            <div class="card">
+                <form method="POST" action="../../controllers/edit-folders_patients.php" class="form-session">
+                    <input type="hidden" name="type_form" value="care">
+                    <input type="hidden" name="patient_id" value="<?= $patient_id ?>">
+                    <input type="hidden" name="care_id" value="<?= $c['care_id'] ?>">
+
+                    <div class="group-form">
+                        <label>Type de soin :</label>
+                        <input type="text" name="care_type" value="<?= htmlspecialchars($c['care_type']) ?>" required>
+                    </div>
+
+                    <div class="group-form">
+                        <label>Description :</label>
+                        <textarea name="care_description"><?= htmlspecialchars($c['care_description']) ?></textarea>
+                    </div>
+
+                    <div class="group-form">
+                        <label>Jours d'intervention :</label>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="days[]" value="lundi"> Lundi</label>
+                            <label><input type="checkbox" name="days[]" value="mardi"> Mardi</label>
+                            <label><input type="checkbox" name="days[]" value="mercredi"> Mercredi</label>
+                            <label><input type="checkbox" name="days[]" value="jeudi"> Jeudi</label>
+                            <label><input type="checkbox" name="days[]" value="vendredi"> Vendredi</label>
+                            <label><input type="checkbox" name="days[]" value="samedi"> Samedi</label>
+                            <label><input type="checkbox" name="days[]" value="dimanche"> Dimanche</label>
+                        </div>
+                    </div>
+
+                    <div class="group-form">
+                        <label>Heure du soin :</label>
+                        <input type="time" name="care_hours" value="<?= htmlspecialchars($c['care_hours']) ?>" required>
+                    </div>
+
+                    <div class="group-form">
+                        <label>Fréquence :</label>
+                        <input type="text" name="frequence" value="<?= htmlspecialchars($c['frequence']) ?>" required>
+                    </div>
+
+                    <div class="group-form">
+                        <label>Soignant assigné :</label>
+                        <select name="designed_caregiver" required>
+                            <?php 
+                            $caregivers = getCaregivers($conn, $search, $establishmentId = null);
+                            foreach ($caregivers as $caregiver): ?>
+                                <option value="<?= $caregiver['id'] ?>"><?= $caregiver['firstname'] . ' ' . $caregiver['lastname'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="submit">Modifier</button>
+                    </div>
+                </form>
+            </div>
+        <?php endforeach; ?>
+    </section>
+
+    <!-- Section Constantes -->
+    <section class="tab-content" id="constantes">
+        <?php foreach ($vital_signs as $vs) : ?>
+            <div class="card">
+                <form method="POST" action="../../controllers/edit-folders_patients.php" class="form-session">
+                    <input type="hidden" name="type_form" value="constantes">
+                    <input type="hidden" name="vital_sign_id" value="<?= $vs['vital_sign_id'] ?>">
+                    <input type="hidden" name="patient_id" value="<?= $patient_id ?>">
+
+                    <div class="group-form">
+                        <label>Température :</label>
+                        <input type="text" name="temperature" value="<?= htmlspecialchars($vs['temperature']) ?>" required>
+                    </div>
+                    <div class="group-form">
+                        <label>Pouls :</label>
+                        <input type="text" name="heart_rate" value="<?= htmlspecialchars($vs['heart_rate']) ?>" required>
+                    </div>
+                    <div class="group-form">
+                        <label>SAT :</label>
+                        <input type="text" name="respiratory_rate" value="<?= htmlspecialchars($vs['respiratory_rate']) ?>" required>
+                    </div>
+                    <div class="group-form">
+                        <label>Fréquence des selles :</label>
+                        <input type="text" name="frequence_selles" value="<?= htmlspecialchars($vs['frequence_selles'] ?? '') ?>">
+                    </div>
+                    <div class="group-form">
+                        <label>Volume urinaire (ml) :</label>
+                        <input type="text" name="volume_urinaire" value="<?= htmlspecialchars($vs['volume_urinaire'] ?? '') ?>" min="0">
+                    </div>
+                    <div class="btn-container">
+                        <button type="submit">Modifier</button>
+                    </div>
+                </form>
+            </div>
+        <?php endforeach; ?>
+    </section>
+
     <!-- Section Transmissions -->
     <section class="tab-content" id="transmissions">
         <?php foreach ($transmissions as $trans) : ?>

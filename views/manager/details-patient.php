@@ -62,101 +62,240 @@ $transmissions = getTransmissionsByPatientWithUser($conn, $patient_id);
                         <tr>
                             <th>Attribut</th>
                             <th>Valeur</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong>Etablissement :</strong></td>
                             <td><?= htmlspecialchars($patient['establishment_name']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>ID :</strong></td>
                             <td><?= htmlspecialchars($patient['patient_id']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Nom :</strong></td>
                             <td><?= htmlspecialchars($patient['firstname']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Prénom :</strong></td>
                             <td><?= htmlspecialchars($patient['lastname']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Email :</strong></td>
                             <td><?= htmlspecialchars($patient['email']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Téléphone :</strong></td>
                             <td><?= htmlspecialchars($patient['phone']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Adresse :</strong></td>
                             <td><?= htmlspecialchars($patient['address']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         </tr>
                         <tr>
                             <td><strong>Etage Appartement :</strong></td>
                             <td><?= htmlspecialchars($patient['etage_appartement']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Accès domicile :</strong></td>
                             <td><?= htmlspecialchars($patient['acces_domicile']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Animaux :</strong></td>
                             <td><?= htmlspecialchars($patient['animaux']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Contact urgence (Nom) :</strong></td>
                             <td><?= htmlspecialchars($patient['contact_urgence_nom']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Contact urgence (Lien) :</strong></td>
                             <td><?= htmlspecialchars($patient['contact_urgence_lien']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Contact urgence (Téléphone) :</strong></td>
                             <td><?= htmlspecialchars($patient['contact_urgence_tel']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Date de naissance :</strong></td>
                             <td><?= htmlspecialchars($patient['date_of_birth']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Sexe :</strong></td>
                             <td><?= htmlspecialchars($patient['gender']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Historique Médical :</strong></td>
                             <td><?= htmlspecialchars($patient['medical_history']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Historique Psychologique :</strong></td>
                             <td><?= htmlspecialchars($patient['psychological_history']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Historique Social :</strong></td>
                             <td><?= htmlspecialchars($patient['social_history']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Radiologie :</strong></td>
                             <td><?= htmlspecialchars($patient['radiologie']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Liste Radiologie :</strong></td>
                             <td><?= htmlspecialchars($patient['radiologie_liste']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Médecin traitant :</strong></td>
                             <td><?= htmlspecialchars($patient['medecin_traitant']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Remarques Personnelles :</strong></td>
                             <td><?= htmlspecialchars($patient['personal_notes']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Date d'admission :</strong></td>
                             <td><?= htmlspecialchars($patient['created_at']); ?></td>
+                            <td>
+                                <div class="action">
+                                    <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
+                                    <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

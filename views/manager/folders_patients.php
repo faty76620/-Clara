@@ -60,7 +60,6 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                     <div class="reset"><a href="folders_patients.php" class="btn-reset"><i class="fas fa-redo"></i></a></div> 
                 </div>
             </form>
-        
 
             <!-- ONGLET POUR FILTRER LES LISTES -->
             <div class="tabs">
@@ -107,7 +106,6 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                                             <a href="../../views/manager/edit-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card edit"><i class="fas fa-edit"></i></a>
                                             <a href="../../controllers/delete-patient.php?id=<?= htmlspecialchars($patient['patient_id']) ?>" class="btn-card delete" onclick="return confirm('Voulez-vous vraiment supprimer ce patient ?');"><i class="fas fa-trash-alt"></i></a>
                                         </div>
-
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

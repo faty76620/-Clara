@@ -1,4 +1,3 @@
-
 <?php
 // CHARGEMENT DES DÉPENDANCES
 require_once __DIR__ . '/../config.php';
@@ -12,8 +11,8 @@ require_once MODEL_DIR . '/logs.php';
 // VÉRIFICATION DE LA MÉTHODE POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     die("Requête invalide.");
-}
 
+}
 $conn = getConnexion();
 
 try {
@@ -76,38 +75,43 @@ try {
     }
 
     // Utiliser l'ID du patient existant si non créé
-    if (!isset($patient_id) && isset($_POST['patient_id'])) {
-        $patient_id = intval($_POST['patient_id']);
+if (!isset($patient_id) && isset($_POST['patient_id'])) {
+    $patient_id = intval($_POST['patient_id']);
+}
+
+if (
+    isset($_POST['care_type'], $_POST['care_description'], $_POST['care_start_date'],  $_POST['care_end_date'], $_POST['time_slot'], $_POST['designed_caregiver']) &&
+    isset($patient_id)
+) {
+    $care_type = htmlspecialchars(trim($_POST['care_type']));
+    $care_description = htmlspecialchars(trim($_POST['care_description']));
+    $care_start_date = htmlspecialchars(trim($_POST['care_start_date'])); 
+    $care_end_date = htmlspecialchars(trim($_POST['care_end_date']));     
+    $days_of_week = isset($_POST['days']) ? implode(',', $_POST['days']) : '';
+    $time_slot = htmlspecialchars(trim($_POST['time_slot']));
+    $categorie = isset($_POST['categorie']) ? implode(',', $_POST['categorie']) : '';
+    $frequence = htmlspecialchars(trim($_POST['frequence'] ?? ''));
+    $designed_caregiver = trim($_POST['designed_caregiver']);
+   
+
+    $success = createCareSession($conn, [
+        'patient_id' => $patient_id,
+        'care_type' => $care_type,
+        'care_description' => $care_description,
+        'care_start_date' => $care_start_date,   
+        'care_end_date' => $care_end_date,
+        'days_of_week' => $days_of_week,
+        'time_slot' => $time_slot,
+        'categorie' => $categorie,
+        'frequence' => $frequence,
+        'designed_caregiver' => $designed_caregiver,
+       
+    ]);
+
+    if (!$success) {
+        throw new Exception("Erreur lors de la création du soin.");
     }
-
-    if (
-        isset($_POST['care_type'], $_POST['care_description'], $_POST['care_hours'], $_POST['designed_caregiver']) &&
-        !empty($_POST['care_type']) && !empty($_POST['care_description']) &&
-        !empty($_POST['care_hours']) && !empty($_POST['designed_caregiver']) && isset($patient_id)
-    ) {
-        $care_type = htmlspecialchars(trim($_POST['care_type']));
-        $care_description = htmlspecialchars(trim($_POST['care_description']));
-        $days_of_week = isset($_POST['days']) ? implode(',', $_POST['days']) : '';
-        $care_hours = htmlspecialchars(trim($_POST['care_hours']));
-        $categorie = isset($_POST['categorie']) ? implode(',', $_POST['categorie']) : '';
-        $frequence = htmlspecialchars(trim($_POST['frequence'] ?? ''));
-        $designed_caregiver = trim($_POST['designed_caregiver']);
-
-        $success = createCareSession($conn, [
-            'patient_id' => $patient_id,
-            'care_type' => $care_type,
-            'care_description' => $care_description,
-            'days_of_week' => $days_of_week,
-            'care_hours' => $care_hours,
-            'categorie' => $categorie,
-            'frequence' => $frequence,
-            'designed_caregiver' => $designed_caregiver
-        ]);
-
-        if (!$success) {
-            throw new Exception("Erreur lors de la création du soin.");
-        }
-    }
+}
 
     if (
         isset($_POST['temperature'], $_POST['blood_pressure'], $_POST['heart_rate'], $_POST['respiratory_rate']) &&

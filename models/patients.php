@@ -192,6 +192,41 @@ function getPatients($conn, $search = '', $establishmentId = null) {
     }
 }
 
+// FONCTION QUI PERMET D'AFFICHER LES PATIENT DONT L'ID DU SOIGNANT EST MENTIONNER DANS SA TABLE
+function getAssignedPatientsWithCare($conn, $user_id, $search = '') {
+    try {
+        $query = "SELECT patients.*, care.care_id, care.time_slot, care.care_type, 
+                         care.care_start_date, care.care_end_date, care.days_of_week
+                  FROM care
+                  INNER JOIN patients ON care.patient_id = patients.patient_id
+                  WHERE care.designed_caregiver = :user_id";
+
+        if (!empty($search)) {
+            $query .= " AND (
+                patients.patient_id LIKE :search
+                OR patients.firstname LIKE :search
+                OR patients.lastname LIKE :search
+                OR patients.date_of_birth LIKE :search
+            )";
+        }
+
+        $query .= " ORDER BY patients.lastname ASC";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        if (!empty($search)) {
+            $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        error_log("Erreur récupération patients + soins : " . $e->getMessage());
+        return false;
+    }
+}
+
 
 ?>
 

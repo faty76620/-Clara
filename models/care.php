@@ -6,26 +6,28 @@ function createCareSession($conn, $data) {
             $data[$key] = htmlspecialchars(trim($value));
         }
 
-        $stmt = $conn->prepare("INSERT INTO care (
-            patient_id, care_type, care_description, days_of_week, care_hours, 
-            date_modified, categorie, frequence, designed_caregiver
-        ) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO care (patient_id, care_type, care_description, days_of_week, time_slot, categorie, frequence,
+                                            designed_caregiver, date_modified, care_start_date, care_end_date) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
 
         return $stmt->execute([
             $data['patient_id'], 
             $data['care_type'], 
-            $data['care_description'], 
+            $data['care_description'],
             $data['days_of_week'],
-            $data['care_hours'],
+            $data['time_slot'],
             $data['categorie'],
             $data['frequence'],
-            $data['designed_caregiver']
+            $data['designed_caregiver'],
+            $data['care_start_date'],   
+            $data['care_end_date'],     
         ]);
     } catch (Exception $e) {
         error_log("Erreur lors de l'insertion du soin : " . $e->getMessage());
         return false;
     }
 }
+
 
 // FONCTION POUR RÉCUPÉRER UN SOIN PAR SON ID
 function getCareById($conn, $care_id) {
@@ -57,9 +59,10 @@ function getCareByPatient($conn, $patient_id) {
 function getCareByPatientWithCaregiver($conn, $patient_id) {
     try {
         $sql = "
-            SELECT c.care_id, c.care_type, c.care_description, c.days_of_week, c.care_hours, 
-                   c.categorie, c.frequence, c.date_modified,
-                   u.firstname AS caregiver_firstname, u.lastname AS caregiver_lastname
+            SELECT c.care_id, c.care_type, c.care_description, c.care_start_date, c.care_end_date, c.days_of_week, c.time_slot, 
+            c.categorie, c.frequence, c.date_modified,
+            u.firstname AS caregiver_firstname, u.lastname AS caregiver_lastname
+
             FROM care c
             JOIN users u ON c.designed_caregiver = u.id 
             WHERE c.patient_id = ?  
@@ -75,16 +78,19 @@ function getCareByPatientWithCaregiver($conn, $patient_id) {
 }
 
 // FONCTION POUR METTRE À JOUR UN SOIN
-function updateCare($conn, $id, $user_id, $care_type, $care_description, $categorie, $frequence, $days_of_week, $care_hours, $designed_caregiver) {
+function updateCare($conn, $id, $user_id, $care_type, $care_description, $care_start_date, $care_end_date, $care_date, $categorie, $frequence, $days_of_week, $time_slot, $designed_caregiver) {
     try {
         $sql = "UPDATE care 
                 SET user_id = :user_id,
                     care_type = :care_type, 
                     care_description = :care_description, 
+                    care_start_date = :care_start_date, 
+                    care_end_date = :care_end_date, 
+                    care_date = :care_date,
                     categorie = :categorie, 
                     frequence = :frequence,
-                    days = :days,
-                    care_hours = :care_hours,
+                    days_of_week = :days,
+                    time_slot = :time_slot,
                     designed_caregiver = :designed_caregiver,
                     date_modified = NOW()
                 WHERE care_id = :id";
@@ -94,10 +100,13 @@ function updateCare($conn, $id, $user_id, $care_type, $care_description, $catego
             'user_id' => $user_id,
             'care_type' => $care_type,
             'care_description' => $care_description,
+            'care_start_date' => $care_start_date,   
+            'care_end_date' => $care_end_date, 
+            'care_date' => $care_date,
             'categorie' => $categorie,
             'frequence' => $frequence,
             'days' => $days_of_week,
-            'care_hours' => $care_hours,
+            'time_slot' => $time_slot,
             'designed_caregiver' => $designed_caregiver,
             'id' => $id
         ]);
@@ -107,31 +116,5 @@ function updateCare($conn, $id, $user_id, $care_type, $care_description, $catego
     }
 }
 
-// FONCTION POUR RÉCUPÉRER LES SOINS D'UN PATIENT AVEC INFOS DU SOIGNANT
-function getCareByPatientWithUser($conn, $patient_id) {
-    try {
-        $sql = "
-            SELECT 
-                c.care_id, 
-                c.care_type, 
-                c.care_description, 
-                c.days_of_week, 
-                c.care_hours, 
-                c.categorie, 
-                c.date_modified, 
-                u.firstname AS user_firstname, 
-                u.lastname AS user_lastname
-            FROM care c
-            JOIN users u ON c.user_id = u.id
-            WHERE c.patient_id = ?
-            ORDER BY c.date_modified DESC
-        ";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$patient_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-        error_log("Erreur récupération soins + user : " . $e->getMessage());
-        return false;
-    }
-}
+
 ?>

@@ -35,12 +35,10 @@ function createCaregiver($conn, $data) {
 // FONCTION QUI PERMET DE CHERCHER LE SOIGNANT ET RECUPERER SES INFOS
 function getCaregivers($conn, $search = '', $establishmentId = null) {
     try {
-        $query = "SELECT caregiver.*, users.firstname, users.lastname, e.firstname AS establishment_name
+        $query = "SELECT caregiver.*, users.id AS user_id, users.firstname, users.lastname, e.firstname AS establishment_name
                   FROM caregiver 
                   JOIN users ON caregiver.user_id = users.id 
                   LEFT JOIN establishments e ON users.establishment_id = e.id";
-
-        // Conditions
         $conditions = [];
         if ($establishmentId !== null) {
             $conditions[] = "users.establishment_id = :establishmentId";
@@ -53,15 +51,13 @@ function getCaregivers($conn, $search = '', $establishmentId = null) {
                              OR e.firstname LIKE :search)";
         }
 
-        // Ajouter WHERE si nécessaire
         if (!empty($conditions)) {
             $query .= " WHERE " . implode(" AND ", $conditions);
         }
 
         $query .= " ORDER BY caregiver.id DESC";
         $stmt = $conn->prepare($query);
-
-        // Bind params
+        
         if ($establishmentId !== null) {
             $stmt->bindValue(':establishmentId', $establishmentId, PDO::PARAM_INT);
         }

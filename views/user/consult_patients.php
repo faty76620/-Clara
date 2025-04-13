@@ -15,9 +15,6 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $manager_establishment_id = $_SESSION['establishment_id'] ?? null;
 $patients = getPatients($conn, $search, $manager_establishment_id);
 
-$establishmentId = $_SESSION['establishment_id'] ?? null;
-$caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
-
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +32,7 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
     <script defer src="/clara/assets/js.js"></script>
     <title>Dossiers patients</title>
 </head>
-<body>
+<body class="body-background">
     <?php include TEMPLATE_DIR . '/header_user.php'; ?>
     <?php
         if (isset($_SESSION['success'])) {
@@ -50,7 +47,7 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
     ?>
     
     <main class="dashboard">
-        <div class="container-title"><h2>Informations</h2></div>
+        <div class="container-title"><h2>Dossiers patients</h2></div>
 
             <!-- FORMULAIRE DE RECHERCHE -->
             <form method="GET">
@@ -61,18 +58,8 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                 </div>
             </form>
         
-            <!-- ONGLET POUR FILTRER LES LISTES -->
-            <div class="tabs">
-                <button id="btn-patient" class="tab-button active" onclick="showTab('patient')">
-                    <i class="fas fa-user-injured"></i> <span class="tab-text">Patients</span>
-                </button>
-                <button id="btn-caregiver" class="tab-button" onclick="showTab('caregiver')">
-                    <i class="fas fa-user-md"></i> <span class="tab-text">Soignants</span>
-                </button>    
-            </div>
-
             <!-- TABLEAU DES PATIENTS -->
-            <section class="tab-content active" id="patient">
+            <section id="patient">
                 <table class="table-responsive">
                     <thead>
                         <tr>
@@ -130,60 +117,6 @@ $caregivers = getCaregivers($conn, $search ?? '', $establishmentId);
                     <?php endif; ?>
                 </div>
             </section>
-        <!-- TABLEAU DES SOIGNANTS -->
-        <section class="tab-content" id="caregiver">
-            <table class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>date inscription</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Etablissement</th>
-                        <th>Détails</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($caregivers)) : ?>
-                        <?php foreach ($caregivers as $caregiver) : ?>
-                            <tr>
-                                <td><?= htmlspecialchars($caregiver['user_id']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['updated_at']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['lastname']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['firstname']) ?></td>
-                                <td><?= htmlspecialchars($caregiver['establishment_name']) ?></td>
-                                <td>
-                                    <a href="details-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']) ?>" class="btn-card details">Détails</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <tr>
-                            <td colspan="7">Aucun soignant trouvé.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-             <!-- VERSION CARTE POUR LES SOIGNANTS -->
-            <div class="cards-container">
-                <?php if (!empty($caregivers)) : ?>
-                    <?php foreach ($caregivers as $caregiver) : ?>
-                        <div class="card-session">
-                            <h3><?= htmlspecialchars($caregiver['lastname']) ?>&nbsp;&nbsp;<?= htmlspecialchars($caregiver['firstname']); ?></h3>
-                            <p><strong>ID :</strong> <?= htmlspecialchars($caregiver['user_id']) ?></p>
-                            <p><strong>Date inscription :</strong> <?= htmlspecialchars($caregiver['updated_at']) ?></p>
-                            <p><strong>Etablissement :</strong> <?= htmlspecialchars($caregiver['establishment_name']) ?></p>
-                            <div class="card-actions">
-                                <a href="details-caregiver.php?id=<?= htmlspecialchars($caregiver['user_id']); ?>" class="btn-card detail-plus">Détails</a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                <p>Aucun soignant.</p>
-                <?php endif; ?>
-            </div>
-        </section>
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function () {

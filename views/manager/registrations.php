@@ -169,11 +169,20 @@ require_once MODEL_DIR . '/establishment.php';
                     <legend>Soins</legend>
                     <div class="group-form">
                         <label>Type de soins :</label>
-                        <input type="text" name="care_type" placeholder="Type de soin" required>
+                        <input type="text" name="care_type" placeholder="Injection d'insuline" required>
                     </div>
                     <div class="group-form">
                         <label for="care_description">Description :</label>
                         <textarea name="care_description" id="care_description" required></textarea>
+                    </div>
+                    <div class="group-form">
+                        <label for="care_start_date">Date de début :</label>
+                        <input type="date" name="care_start_date" id="start_date" required>
+                    </div>
+
+                    <div class="group-form">
+                        <label for="end_date">Date de fin :</label>
+                        <input type="date" name="care_end_date" id="end_date" required>
                     </div>
                     <div class="group-form">
                         <label>Jours d'intervention :</label>
@@ -188,9 +197,9 @@ require_once MODEL_DIR . '/establishment.php';
                         </div>
                     </div>
                     <div class="group-form">
-                        <label for="care_hours">Heure du soin :</label>
-                        <input type="time" name="care_hours" id="care_hours" step="1" required>
-                    </div>
+                        <label for="time_slot">Créneau horaire :</label>
+                        <input type="text" name="time_slot" id="time_slot" required>
+                    </div>       
                     <div class="group-form">
                         <label>Catégories :</label>
                         <div class="checkbox">
@@ -206,10 +215,11 @@ require_once MODEL_DIR . '/establishment.php';
                     <div class="group-form">
                         <label for="designed_caregiver">Soignant assigné :</label>
                         <select name="designed_caregiver" id="designed_caregiver" required>
+                        <option value="">-- Sélectionnez --</option>
                             <?php 
-                            $caregivers = getCaregivers($conn, $search, $establishmentId = null);
+                            $caregivers = getCaregivers($conn, $establishmentId = null);
                             foreach ($caregivers as $caregiver): ?>
-                                <option value="<?= $caregiver['id'] ?>"><?= $caregiver['firstname'] . ' ' . $caregiver['lastname'] ?></option>
+                               <option value="<?= $caregiver['user_id'] ?>"><?= $caregiver['firstname'] . ' ' . $caregiver['lastname'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

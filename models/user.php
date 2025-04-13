@@ -1,22 +1,41 @@
 <?php
+
 // CRÉER UN MANAGER
 function createAdmin($conn, $data) {
     try {
+        // Vérification des données (si c'est pas null)
+        if (empty($data['username']) || empty($data['firstname']) || empty($data['lastname']) || empty($data['mail']) || empty($data['password']) || empty($data['establishment_id'])) {
+            error_log("Données administrateur incomplètes : " . print_r($data, true));
+            return false;
+        }
+
+        if (!filter_var($data['mail'], FILTER_VALIDATE_EMAIL)) {
+            error_log("Adresse e-mail invalide : " . $data['mail']);
+            return false;
+        }
+
+        if (strlen($data['username']) > 255) {
+            error_log("Nom d'utilisateur trop long : " . $data['username']);
+            return false;
+        }
+
         $stmt = $conn->prepare("INSERT INTO users 
             (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
             VALUES (:username, :firstname, :lastname, :mail, :password, :establishment_id, :role_id, 1, NOW(), NULL)");
 
-        return $stmt->execute([
+        $stmt->execute([
             ':username' => $data['username'],
-            ':firstname' => $data['firstname_admin'],
-            ':lastname' => $data['lastname_admin'],
-            ':mail' => $data['mail_admin'],
+            ':firstname' => $data['firstname'],
+            ':lastname' => $data['lastname'],
+            ':mail' => $data['mail'],
             ':password' => $data['password'],
             ':establishment_id' => $data['establishment_id'],
             ':role_id' => 2 // Le rôle de l'administrateur est fixe à 2
         ]);
+        return $conn->lastInsertId();
+
     } catch (PDOException $e) {
-        error_log("Erreur lors de la création de l'admin : " . $e->getMessage());
+        error_log("Erreur lors de la création de l'admin : " . $e->getMessage() . " - Données : " . print_r($data, true));
         return false;
     }
 }
@@ -24,25 +43,42 @@ function createAdmin($conn, $data) {
 // CREER UN UTILISATEUR SOIGNANT
 function createUser($conn, $data) {
     try {
+        // Vérification des données
+        if (empty($data['username']) || empty($data['firstname']) || empty($data['lastname']) || empty($data['mail']) || empty($data['password']) || empty($data['establishment_id'])) {
+            error_log("Données utilisateur incomplètes : " . print_r($data, true));
+            return false;
+        }
+
+        if (!filter_var($data['mail'], FILTER_VALIDATE_EMAIL)) {
+            error_log("Adresse e-mail invalide : " . $data['mail']);
+            return false;
+        }
+
+        if (strlen($data['username']) > 255) {
+            error_log("Nom d'utilisateur trop long : " . $data['username']);
+            return false;
+        }
+
         $stmt = $conn->prepare("INSERT INTO users 
             (username, firstname, lastname, mail, password, establishment_id, role_id, must_change_password, date_create, date_modify) 
             VALUES (:username, :firstname, :lastname, :mail, :password, :establishment_id, :role_id, 1, NOW(), NULL)");
-        
-        return $stmt->execute([
+
+        $stmt->execute([
             ':username' => $data['username'],
-            ':firstname' => $data['firstname_user'],
-            ':lastname' => $data['lastname_user'],
-            ':mail' => $data['mail_user'],
+            ':firstname' => $data['firstname'],
+            ':lastname' => $data['lastname'],
+            ':mail' => $data['mail'],
             ':password' => $data['password'],
             ':establishment_id' => $data['establishment_id'],
             ':role_id' => 3 // Le rôle de l'utilisateur est fixe à 3 pour un soignant
         ]);
+        return $conn->lastInsertId();
+
     } catch (PDOException $e) {
-        error_log("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
+        error_log("Erreur lors de la création de l'utilisateur : " . $e->getMessage() . " - Données : " . print_r($data, true));
         return false;
     }
 }
-
 
 // VERIFIER SI UN MANAGER EXISTE DEJA POUR ETABLISSEMENT
 function checkManagerExists($conn, $establishment_id) {
@@ -138,13 +174,32 @@ function getCaregiversByEstablishment($conn, $establishment_id, $search = '') {
 // METTRE A JOUR LE MOT DE PASSE
 function updateUserPassword($conn, $user_id, $hashed_password) {
     try {
+        // Vérification des données
+        if (empty($user_id) || empty($hashed_password)) {
+            error_log("Données de mise à jour du mot de passe incomplètes : user_id = " . $user_id);
+            return false;
+        }
+
+        // Vérification de la complexité du mot de passe (exemple)
+        if (strlen($hashed_password) < 8) {
+            error_log("Mot de passe trop court pour l'utilisateur : " . $user_id);
+            return false;
+        }
+
         $sql = "UPDATE users SET password = :password WHERE id = :user_id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        return $stmt->execute();
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            error_log("Erreur lors de la mise à jour du mot de passe pour l'utilisateur : " . $user_id . " - Erreur PDO : " . print_r($stmt->errorInfo(), true));
+            return false;
+        }
+
     } catch (PDOException $e) {
-        error_log("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
+        error_log("Erreur lors de la mise à jour du mot de passe pour l'utilisateur : " . $user_id . " - " . $e->getMessage());
         return false;
     }
 }
